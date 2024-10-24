@@ -32,7 +32,7 @@ func InsertNotification(notify *domain.Notification, users []*domain.User) (err 
 func DeleteNotification(notify *domain.Notification) (err error) {
 	db = util.GetDB()
 	tx := db.Begin()
-	err = tx.Where("notification_id = ?", notify.ID).Delete(&domain.NotificationUser{}).Error
+	err = tx.Model(domain.Notification{}).Delete(notify).Error
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -42,20 +42,21 @@ func DeleteNotification(notify *domain.Notification) (err error) {
 }
 
 // GetNotification 查找被通知用户的所有通知信息
-func GetNotification(user *domain.User) (n []*domain.Notification, err error) {
+func GetNotification(user *domain.User) (notify []*domain.Notification, err error) {
 	db = util.GetDB()
+	notify = make([]*domain.Notification, 10)
+	var notifyID []uint
 	tx := db.Begin()
-	var a []uint
-	err = tx.Model(domain.NotificationUser{}).Where("user_id = ?", user.ID).Find(&a).Error
+	err = tx.Model(domain.NotificationUser{}).Where("user_id = ?", user.ID).Pluck("notification_id", &notifyID).Error
 	if err != nil {
 		tx.Rollback()
 		return nil, err
 	}
-	err = tx.Model(domain.Notification{}).Where(a).Find(&n).Error
+	err = tx.Model(domain.Notification{}).Where("id IN (?)", notifyID).Find(&notify).Error
 	if err != nil {
 		tx.Rollback()
 		return nil, err
 	}
 	tx.Commit()
-	return n, err
+	return notify, err
 }

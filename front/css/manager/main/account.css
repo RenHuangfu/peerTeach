@@ -1,0 +1,320 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar {
+    width: 80px;
+    background-color: #6666ff;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #555;
+    border: none;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sidebar button:hover {
+    background-color: #777;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 80px; /* 侧边栏宽度 */
+}
+
+.top-bar {
+    background-color: #444;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-end; /* 使所有子元素右对齐 */
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 80px; /* 侧边栏宽度 */
+    right: 0;
+    z-index: 1000; /* 确保顶部栏在内容之上 */
+}
+
+.top-bar button {
+    background-color: #555;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.top-bar button:hover {
+    background-color: #777;
+}
+
+.top-bar .user-info {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar .user-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #f4f4f4;
+    margin-top: 50px; /* 顶部栏高度 */
+}
+
+/*-------------自定义内容-------------------------------*/
+.table-container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.top-bar-2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    padding: 10px 20px;
+}
+
+.top-bar-2 input[type="text"] {
+    padding: 8px;
+    width: 200px;
+}
+
+.top-bar-2 button {
+    background-color: #555;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.top-bar-2 button:hover {
+    background-color: #777;
+}
+
+.table-content {
+    background-color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #6666ff;
+    color: white;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #6666ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #3030b0;
+}
+
+/*发通知*/
+.form-container {
+    width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    height: 100px;
+}
+.form-group button {
+    padding: 8px 15px;
+    cursor: pointer;
+}
+.form-group .add-user-btn {
+    margin-left: 10px;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    width: 400px;
+    border-radius: 5px;
+}
+.modal-content h2 {
+    margin-top: 0;
+}
+.modal-content .user-list,
+.modal-content .selected-users {
+    width: 48%;
+    display: inline-block;
+    vertical-align: top;
+}
+.modal-content .user-list ul,
+.modal-content .selected-users ul {
+    list-style-type: none;
+    padding: 0;
+}
+.modal-content .user-list ul li {
+    cursor: pointer;
+    padding: 5px;
+}
+.modal-content .selected-users ul li {
+    padding: 5px;
+}
+.modal-content .buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+.modal-content .buttons button {
+    margin-left: 10px;
+}
+.modal-content .user-list ul li::before {
+    content: '☐ ';
+    display: inline-block;
+    margin-right: 5px;
+}
+.modal-content .user-list ul li.selected::before {
+    content: '☑ ';
+}
+
+h4{
+    display: block;
+    margin: 0 auto;
+}
+
+.user-list {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.selected-users {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.lists {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.cancel-button {
+    width: 30%;
+    background-color: #959598;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: block;
+    border-radius: 5px;
+}
+
+.submit-button {
+    width: 30%;
+    background-color: #6666ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: block;
+    border-radius: 5px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.cancel-button-s {
+    width: 20%;
+    padding: 10px;
+    background-color: #959598;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: block;
+    border-radius: 5px;
+}
+
+.submit-button-s {
+    width: 20%;
+    padding: 10px;
+    background-color: #6666ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: block;
+    border-radius: 5px;
+}
+
+#button-group {
+    display: flex;
+    flex-direction: row;
+    margin-top: 40px;
+    justify-content: center;
+    gap: 20px;
+}

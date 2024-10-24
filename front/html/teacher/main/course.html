@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>教师端主页</title>
+    <style type="text/css">
+        @import url("/css/teacher/main/course.css");
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <button onclick ="turnCourse()">课程班级</button>
+        <button onclick ="turnResource()">资源中心</button>
+        <button onclick ="turnUserInfo()">个人信息</button>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 顶部固定栏 -->
+        <div class="top-bar">
+            <button>查看通知</button>
+            <div class="user-info">
+                <img src="user-avatar.png" alt="用户头像">
+                <span>用户名称</span>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <div class="top-button">
+                <button id="createCourseModalButton">创建课程</button>
+                <button id="createClassModalButton">创建班级</button>
+                <button id="groupPostModalButton">群发公告</button>
+            </div>
+            <div class="table-container">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 自定义弹窗 -->
+<div id="customModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="modalMessage"></p>
+        <button id="modalConfirm">确定</button>
+        <button id="modalCancel">取消</button>
+    </div>
+</div>
+
+<!-- 编辑课程名称弹窗 -->
+<div id="editCourseModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>编辑课程名称</h2>
+        <input type="text" id="courseNameInput" class="underline-input" placeholder="输入新的课程名称">
+        <button id="saveCourseName">保存</button>
+        <button id="cancelEditCourse">取消</button>
+    </div>
+</div>
+
+<!-- 创建课程弹窗 -->
+<div id="createCourseModal" class="modal">
+    <div class="form-container" id="createCourse-container">
+        <span class="close">&times;</span>
+        <h2>创建课程</h2>
+        <label for="course-name">课程名称</label>
+        <input type="text" id="course-name" placeholder="请输入课程名称，少于10个字">
+        <button id="createCourse" onclick="submitForm()">确定</button>
+    </div>
+</div>
+
+<!-- 创建班级弹窗 -->
+<div id="createClassModal" class="modal">
+    <div class="form-container" id="class-form-container">
+        <span class="close">&times;</span>
+        <h2>创建班级</h2>
+        <div class="form-group">
+            <label for="course">选择课程</label>
+            <select id="course"></select>
+        </div>
+        <div class="form-group">
+            <label for="className">班级名称</label>
+            <input type="text" id="className" placeholder="输入班级名称">
+        </div>
+        <div class="form-button">
+            <button id="add-class" onclick="addNewClassInput()"><i class="fas fa-plus"></i> 添加班级</button>
+            <button id="confirm" onclick="confirmClasses()">确定</button>
+        </div>
+    </div>
+</div>
+
+<!-- 群发公告弹窗 -->
+<div id="groupPostModal" class="modal">
+    <div id="groupPost-container" class="form-container" >
+        <span class="close">&times;</span>
+        <h2>新建公告</h2>
+        <div class="form-group">
+            <span>发送班级：</span>
+            <span id="selected-classes"></span>
+            <button id="choose-class-btn" onclick="openChooseClassModal()">添加班级</button>
+        </div>
+        <div class="form-group">
+            <label for="title">标题</label>
+            <input type="text" id="title" name="title" placeholder="请输入公告标题">
+        </div>
+        <div class="form-group">
+            <label for="content">内容</label>
+            <textarea id="content" name="content" placeholder="请输入公告内容"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="attachment">附件</label>
+            <input type="file" id="attachment" name="attachment" multiple>
+        </div>
+        <div class="form-group">
+            <button id="confirm-post" class="submit-button">发送</button>
+        </div>
+    </div>
+</div>
+
+<!-- 悬浮框 -->
+<div id="choose-class-modal" class="modal">
+    <div id="choose-class-modal-content" class="modal-content">
+        <h2>添加班级</h2>
+        <div class="lists">
+            <div class="class-list">
+                <h4>班级列表</h4>
+                <ul id="course-list"></ul>
+            </div>
+            <div class="selected-classes">
+                <h4>已选择班级</h4>
+                <ul id="selected-class-list"></ul>
+            </div>
+        </div>
+        <div class="buttons">
+            <button class="cancel-button" onclick="closeChooseClassModal()">取消</button>
+            <button class="submit-button-s" onclick="confirmSelection()">确定</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/global/global.js"></script>
+<script type="text/javascript" src="/js/teacher/main/course.js"></script>
+</body>
+</html>

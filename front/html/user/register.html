@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>注册页面</title>
+    <link rel="stylesheet" href="/css/user/register.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">注册</div>
+    <!-- 姓名 -->
+    <div class="input-group">
+        <label for="name">姓名：</label>
+        <input type="text" id="name" placeholder="请输入姓名">
+    </div>
+    <!-- 邮箱 -->
+    <div class="input-group">
+        <label for="email">邮箱：</label>
+        <input type="text" id="email" placeholder="请输入邮箱">
+    </div>
+    <!-- 学校 -->
+    <div class="input-group">
+        <label for="school">学校：</label>
+        <input type="text" id="school" placeholder="请输入学校">
+    </div>
+    <!-- 身份选择 -->
+    <div class="input-group">
+        <label for="identity">身份：</label>
+        <select id="identity">
+            <option value="teacher">老师</option>
+            <option value="student">学生</option>
+        </select>
+    </div>
+    <!-- 密码 -->
+    <div class="input-group">
+        <label for="password">密码：</label>
+        <input type="password" id="password" placeholder="请输入密码">
+    </div>
+    <!-- 确认密码 -->
+    <div class="input-group">
+        <label for="confirm">确认密码：</label>
+        <input type="password" id="confirm" placeholder="请再次输入密码">
+    </div>
+    <!-- 密保问题 -->
+    <div class="input-group">
+        <label for="question">密保问题：</label>
+        <input type="text" id="question" placeholder="请输入密保问题">
+    </div>
+    <!-- 密保问题答案 -->
+    <div class="input-group">
+        <label for="answer">密保问题答案：</label>
+        <input type="text" id="answer" placeholder="请输入密保问题答案">
+    </div>
+    <!-- 注册按钮 -->
+    <button type="button" id="registerButton">注册</button>
+</div>
+<script src="/js/user/register.js"></script>
+</body>
+</html>

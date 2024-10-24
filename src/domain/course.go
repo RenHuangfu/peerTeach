@@ -1,51 +1,68 @@
 package domain
 
 import (
-	"gorm.io/gorm"
 	"time"
 )
 
 // Course 课程
 type Course struct {
-	gorm.Model
-	Name      *string
-	TeacherID uint
-	Teacher   Teacher `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	ID      uint      `gorm:"primary_key"`
+	Created time.Time `gorm:"column:created;autoCreateTime"`
+	Updated time.Time `gorm:"column:updated;autoUpdateTime"`
+	Name    *string
+	UserID  uint
+	User    User `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
 // Class 班级
 type Class struct {
-	gorm.Model
+	ID       uint      `gorm:"primary_key"`
+	Created  time.Time `gorm:"column:created;autoCreateTime"`
+	Updated  time.Time `gorm:"column:updated;autoUpdateTime"`
 	Name     *string
 	CourseID uint
-	Course   Course    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Students []Student `gorm:"many2many:exam_questions;"`
+	Course   Course `gorm:"constraint:OnDelete:CASCADE;"`
+	Users    []User `gorm:"many2many:class_users;constraint:OnDelete:CASCADE;"`
 }
 
 // Announcement 公告
 type Announcement struct {
-	gorm.Model
+	ID      uint      `gorm:"primary_key"`
+	Created time.Time `gorm:"column:created;autoCreateTime"`
+	Updated time.Time `gorm:"column:updated;autoUpdateTime"`
+	FileNum uint
+	UserID  uint
+	Title   *string `gorm:"type:text"`
 	Content *string `gorm:"type:text"`
-	ClassID uint
-	Class   Class `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	User    User    `gorm:"constraint:OnDelete:CASCADE;"`
+	Classes []Class `gorm:"many2many:announcement_classes;constraint:OnDelete:CASCADE;"`
 }
 
 // ClassRoom 课堂
 type ClassRoom struct {
-	gorm.Model
-	Name       *string
+	ID         uint      `gorm:"primary_key" json:"ClassroomID"`
+	Created    time.Time `gorm:"column:created;autoCreateTime" json:"time"`
+	Updated    time.Time `gorm:"column:updated;autoUpdateTime"`
+	Name       *string   `json:"name"`
 	SchoolTime time.Time
 	ClassID    uint
 	Class      Class `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
-// ClassStudent 班级学生连接表
-type ClassStudent struct {
-	ClassID   uint `gorm:"primaryKey"`
-	StudentId uint `gorm:"primaryKey"`
+// ClassUser 班级学生连接表
+type ClassUser struct {
+	ClassID   uint  `gorm:"primaryKey"`
+	Class     Class `gorm:"foreignKey:ID;references:ClassID;constraint:OnDelete:CASCADE;"`
+	UserID    uint  `gorm:"primaryKey"`
+	User      User  `gorm:"foreignKey:ID;references:UserID;constraint:OnDelete:CASCADE;"`
+	CreatedAt time.Time
 }
 
-func (c *Class) AfterDelete(tx *gorm.DB) (err error) {
-	err = tx.Where("class_id = ?", c.ID).Delete(&Class{}).Error
-	return err
+// AnnouncementClass 通知班级连接表
+type AnnouncementClass struct {
+	ClassID        uint         `gorm:"primaryKey"`
+	Class          Class        `gorm:"foreignKey:ID;references:ClassID;constraint:OnDelete:CASCADE;"`
+	AnnouncementID uint         `gorm:"primaryKey"`
+	Announcement   Announcement `gorm:"foreignKey:ID;references:AnnouncementID;constraint:OnDelete:CASCADE;"`
+	CreatedAt      time.Time
 }

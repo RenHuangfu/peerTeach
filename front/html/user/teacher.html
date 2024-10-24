@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/user/teacher.css">
+    <link rel="stylesheet" href="/css/layui/layui.css">
+    <title>页面布局示例</title>
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <button onclick="turnCourse()">课程班级</button>
+            <button onclick="turnResource()">资源中心</button>
+            <button onclick="turnUserInfo()">个人信息</button>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 顶部固定栏 -->
+            <div class="top-bar">
+                <button>查看通知</button>
+                <div class="user-info">
+                    <img src="user-avatar.png" alt="用户头像">
+                    <span>用户名称</span>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content">  
+            <!-- 这里可以放置主要内容 -->
+                <div class="form-container">
+                <!-- 头像 -->
+                <div class="avatar">
+                    <img id="avatarImage" src="/file/avatar_1.jpg" alt="头像" onclick="showAvatarModal()">
+                </div>
+                <!-- 身份认证 -->
+                <div class="identity">身份认证: 教师</div>
+                <!-- ID 信息 -->
+                <div class="user-id">ID: 1234567891</div>
+                
+                <!-- 表单 -->
+                <form>
+                    <div class="input-group">
+                        <label for="name">姓名：</label>
+                        <input type="text" id="name" placeholder="请输入姓名">
+                    </div>
+                    <div class="input-group">
+                        <label for="school">学校：</label>
+                        <input type="text" id="school" placeholder="请输入学校">
+                    </div>
+                    <button type="button" id="confirmButton">保存</button>
+                </form>
+                </div>
+
+                <div class="modal" id="avatarModal">
+                    <div class="upload-container">
+                        <h2>上传头像</h2>
+                        <div class="upload-section">
+                            <!-- 上传图片按钮 -->
+                            <div class="upload-box" id="uploadBox">
+                                <span class="upload-icon">+</span>
+                                <span>上传图片</span>
+                                <input type="file" id="fileInput" accept="image/*" onchange="previewImage(event)">
+                            </div>
+                            <!-- 图片预览区域 -->
+                            <div class="preview-box" id="previewBox">
+                                <img id="previewImage" src="/file/avatar_1.jpg" alt="头像预览">
+                            </div>
+                        </div>
+                        <button type="button" class="cancel-button" onclick="hideAvatarModal()">取消</button>
+                        <button type="button" class="save-button" onclick="saveAvatar()">保存</button>
+                    </div>
+                </div>
+
+            <!-- 这里可以放置主要内容 -->
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/js/global/global.js"></script>
+<script src="/js/layui/layui.js"></script>
+<script src="/js/user/teacher.js"></script>
+</html>

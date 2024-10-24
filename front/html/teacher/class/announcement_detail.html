@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雪课堂</title>
+    <link rel="stylesheet" href="/css/teacher/class/announcement_detail.css">
+    <script src="/js/teacher/class/announcement_detail.js"></script>
+    <script src="/js/global/global.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <button onclick ="turnCourse()">课程班级</button>
+            <button onclick ="turnResource()">资源中心</button>
+            <button onclick ="turnUserInfo()">个人信息</button>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 顶部固定栏 -->
+            <div class="top-bar">
+                <button>查看通知</button>
+                <div class="user-info">
+                    <img src="user-avatar.png" alt="用户头像">
+                    <span>用户名称</span>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 水平导航栏 -->
+
+                <!-- 公告详情 -->
+                <div class="announcement">  
+                    <div class="announcement-header">    
+                        <div class="announcement-title" id="announcement-title">该公告已被删除</div>
+                        <div class="announcement-time" id="announcement-time"></div>
+                    </div>    
+                    <div class="announcement-content" id="announcement-content">                        
+                        <p></p>
+                        <div class="files" id="files"></div> 
+                    </div>
+                    <div class="announcement-actions">
+                        <button id="deleteBtn" class="delete-icon" onclick="deleteAnno()">                      
+                            <img src="img/delete.jpg" alt="Delete">                  
+                        </button>        
+                    </div>
+                </div>  
+
+                <!-- 弹窗模态框 -->  
+                <div id="myModal" class="modal">  
+                    <p>您确定要删除该公告吗？</p> 
+                    <div class="modal-content">   
+                        <button id="confirmBtn" onclick="confirm()">确定</button>  
+                        <button id="cancelBtn" onclick="cancel()">取消</button>  
+                    </div>                     
+                </div>  
+            </div>
+        </div>
+    </div>
+</body>
+</html>

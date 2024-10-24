@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雪课堂</title>
+    <link rel="stylesheet" href="/css/student/class/post_detail.css">
+    <script src="/js/student/class/post_detail.js"></script>
+    <script src="/js/global/global.js"></script>
+</head>
+<body>
+<div class="container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <button onclick ="turnCourse()">课程班级</button>
+        <button onclick ="turnUserInfo()">个人信息</button>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 顶部固定栏 -->
+        <div class="top-bar">
+            <button>查看通知</button>
+            <div class="user-info">
+                <img src="user-avatar.png" alt="用户头像">
+                <span>用户名称</span>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <!-- 水平导航栏 -->
+            <div class="introduce">
+                <ul class="horizontal-list">
+                    <li id="class-link" data-page="/class">课堂</li>
+                    <li id="manage-link" data-page="/member">成员</li>
+                    <li id="discussion-link" data-page="/post" class="active">讨论区</li>
+                    <li id="anno-link" data-page="/announcement">公告</li>
+                </ul>
+                <button>上课</button>
+            </div>
+
+            <div class="post" id="post">
+                <div class="mainpost">
+                    <div class="post-title">
+                        <span class="title" id="title"></span>
+                        <span class="post-delete-btn" onclick="deletePost()">删除</span>
+                    </div>
+                    <div class="post-info">
+                        <img id="photo" alt="Post Photo">
+                        <div>
+                            <span id="name"></span>
+                            <span id="time"></span>
+                        </div>
+                    </div>
+                    <div class="post-content" id="content"></div>
+                    <div class="post-pictures" id="post-pictures"></div>
+                </div>
+                <div class="comment-list" id="comment-list">
+                    <!-- 评论列表将动态插入 -->
+                </div>
+            </div>
+            <div class="comment-box">
+                <textarea id="comment-content" placeholder="请输入评论..."></textarea>
+                <button onclick="addComment()">发送</button>
+                <div class="comment-section">
+                        <span class="comment-btn">
+                            <img src="img/comment.jpg" alt="Comment Icon">
+                        </span>
+                    <span id="comment"></span>
+                </div>
+                <div class="like-section">
+                        <span class="like-btn" >
+                            <img src="img/islike.jpg">
+                        </span>
+                    <span id="like"></span>
+                </div>
+            </div>
+
+            <div id="imageModal" class="modal">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <img class="modal-content" id="modalImage">
+            </div>
+
+            <!-- 弹窗模态框 -->
+            <div id="myModal_1" class="modal_1">
+                <p>您确定要删除该讨论吗？</p>
+                <div class="modal-content1">
+                    <button id="confirmBtn1" onclick="confirm1()">确定</button>
+                    <button id="cancelBtn1" onclick="cancel1()">取消</button>
+                </div>
+            </div>
+
+            <!-- 弹窗模态框 -->
+            <div id="myModal_2" class="modal_2">
+                <p>您确定要删除该评论吗？</p>
+                <div class="modal-content2">
+                    <button id="confirmBtn2" onclick="confirm2()">确定</button>
+                    <button id="cancelBtn2" onclick="cancel2()">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

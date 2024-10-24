@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雪课堂</title>
+    <link rel="stylesheet" href="/css/student/class/announcement_detail.css">
+    <script src="/js/global/global.js"></script>
+    <script src="/js/student/class/announcement_detail.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <button onclick ="turnCourse()">课程班级</button>
+            <button onclick ="turnUserInfo()">个人信息</button>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 顶部固定栏 -->
+            <div class="top-bar">
+                <button>查看通知</button>
+                <div class="user-info">
+                    <img src="user-avatar.png" alt="用户头像">
+                    <span>用户名称</span>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <!-- 水平导航栏 -->
+                <div class="introduce">
+                    <ul class="horizontal-list">
+                        <li id="class-link" data-page="/class">课堂</li>
+                        <li id="manage-link" data-page="/member">成员</li>
+                        <li id="discussion-link" data-page="/post">讨论区</li>
+                        <li id="anno-link" data-page="/announcement" class="active">公告</li>
+                    </ul>
+                    <button>上课</button>
+                </div>
+
+                <!-- 公告详情 -->
+                <div class="announcement">  
+                    <div class="announcement-header">    
+                        <div class="announcement-title" id="announcement-title">公告标题</div>                       
+                        <div class="announcement-time" id="announcement-time">发布时间：2023-10-01 12:00</div>    
+                    </div>    
+                    <div class="announcement-content" id="announcement-content">                        
+                        <p>这是公告的详细内容。可以包含多行文本和其他信息。</p> 
+                        <div class="files" id="files"></div>    
+                    </div>
+<!--                    <div class="announcement-actions">  -->
+<!--                        <button id="exitBtn" class="exit-icon" onclick="exit()">                      -->
+<!--                            <img src="img/pre.jpg" alt="Exit">                     -->
+<!--                        </button>      -->
+<!--                    </div>-->
+                </div>  
+            </div>
+        </div>
+    </div>
+</body>
+</html>

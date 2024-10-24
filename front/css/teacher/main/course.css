@@ -1,0 +1,514 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f4f4;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar {
+    width: 80px;
+    background-color: #6666ff;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #555;
+    border: none;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.sidebar button:hover {
+    background-color: #777;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 80px; /* 侧边栏宽度 */
+}
+
+.top-bar {
+    background-color: #444;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-end; /* 使所有子元素右对齐 */
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 80px; /* 侧边栏宽度 */
+    right: 0;
+    z-index: 1000; /* 确保顶部栏在内容之上 */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.top-bar button {
+    background-color: #555;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.top-bar button:hover {
+    background-color: #777;
+}
+
+.top-bar .user-info {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.top-bar .user-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #f4f4f4;
+    margin-top: 50px; /* 顶部栏高度 */
+    /*padding-top: 70px;*/
+}
+
+/*-------------自定义内容-------------------------------*/
+.table-container {
+    width: 100%; /* 使容器宽度占满父元素 */
+    max-width: 1200px; /* 可选：设置最大宽度 */
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap; /* 使表格水平排列 */
+    gap: 20px; /* 设置子元素之间的间距 */
+}
+
+.table-wrapper {
+    width: 380px; /* 固定表格宽度 */
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* 设置子元素之间的间距 */
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+table {
+    width: 100%; /* 使表格宽度占满容器 */
+    border-collapse: collapse;
+    border: 1px solid #ccc; /* 灰色边框 */
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+th:first-child, td:first-child {
+    width: 60%; /* 第一列宽度为 60% */
+}
+
+th:nth-child(2), td:nth-child(2) {
+    width: 40%; /* 第二列宽度为 40% */
+}
+
+th, td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background: #6666ff;
+    color: white;
+}
+
+button {
+    padding: 8px 15px;
+    background: #6666ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background: #3030b0;
+}
+
+tr:hover {
+    background-color: #f0f0f0; /* 光标移动到行上时变灰 */
+}
+
+.top-button {
+    display: flex;
+    justify-content: flex-end; /* 使所有子元素右对齐 */
+    margin-bottom: 20px;
+}
+
+.top-button button {
+    margin-left: 10px; /* 元素间距 */
+    width: 120px; /* 设置按钮的宽度 */
+    height: 50px; /* 设置按钮的高度 */
+}
+
+h2 {
+    margin: 0; /* 设置上下左右的外边距为0 */
+    font-size: 24px;
+    color: #333;
+}
+
+.title-button button {
+    margin-right: 10px; /* 元素间距 */
+}
+
+/* 自定义弹窗样式 */
+.modal {
+    display: none; /* 默认隐藏 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content button {
+    margin: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 编辑课程名称弹窗样式 */
+#editCourseModal .modal-content {
+    width: 40%;
+}
+
+#editCourseModal .modal-content h2 {
+    margin-top: 0;
+}
+
+#editCourseModal .modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+}
+
+#editCourseModal .modal-content button {
+    width: 45%;
+    margin: 5px;
+}
+
+/*------图标样式----------*/
+.trash-button {
+    width: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: #646262;
+}
+
+.trash-button:hover {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: #333;
+}
+
+.edit-button {
+    width: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: #646262;
+}
+
+.edit-button:hover {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: #333;
+}
+
+/*创建课程弹窗*/
+.form-container {
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 100%; /* 使容器宽度占满父元素 */
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h2 {
+    margin-bottom: 30px;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold
+}
+
+.form-container input[type="text"] {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-container button {
+    /*padding: 10px 20px;*/
+    width: 60%;
+    height: 40px;
+    background-color: #6666ff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto
+}
+
+.form-container button:hover {
+    background-color: #3030b0;
+}
+
+#course-name {
+    margin-bottom: 40px;
+    width: 380px;
+}
+
+/*创建班级*/
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+
+#add-class {
+    padding: 10px;
+    color: #6666ff;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #6666ff;
+    background-color: transparent;
+    cursor: pointer;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+#add-class:hover {
+    background-color: #3030b0;
+    color: white;
+}
+
+/*群发公告*/
+.modal-content .selected-classes {
+    width: 48%;
+    display: inline-block;
+    vertical-align: top;
+}
+.modal-content .class-list ul,
+.modal-content .selected-classes ul {
+    list-style-type: none;
+    padding: 0;
+}
+.modal-content .class-list ul li {
+    cursor: pointer;
+    padding: 5px;
+}
+.modal-content .class-list ul li.course {
+    font-weight: bold;
+}
+
+.modal-content .class-list ul li.course::after {
+    content: ' ▶';
+    display: inline-block;
+    margin-left: 5px;
+}
+.modal-content .class-list ul li.course.open::after {
+    content: ' ▼';
+}
+.modal-content .class-list ul li.class::before {
+    content: '☐ ';
+    display: inline-block;
+    margin-right: 5px;
+}
+.modal-content .class-list ul li.class.selected::before {
+    content: '☑ ';
+}
+
+.class-list {
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.selected-classes {
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.lists {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.lists h4{
+    display: block;
+    margin: 0 auto;
+}
+
+.submit-button {
+    width: 60%;
+    padding: 10px;
+    background-color: #6666ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    margin-top: 40px;
+    border-radius: 5px;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.cancel-button {
+    width: 20%;
+    padding: 10px;
+    background-color: #959598;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: block;
+    border-radius: 5px;
+}
+
+.submit-button-s {
+    width: 20%;
+    padding: 10px;
+    background-color: #6666ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: block;
+    border-radius: 5px;
+}
+
+.form-group textarea {
+    height: 150px;
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#groupPost-container {
+    width: 800px;
+}
+
+#selected-classes {
+    border-bottom: 1px solid #ccc;
+}
+
+#choose-class-btn {
+    margin-top: 10px;
+}
+
+#createCourse-container{
+    max-width: 400px;
+}
+
+#class-form-container {
+    max-width: 400px;
+}
+
+#groupPost-container {
+    max-width: 600px;
+}

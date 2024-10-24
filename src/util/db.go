@@ -19,8 +19,6 @@ func init() {
 	initDB := GetDB()
 	err := initDB.AutoMigrate(
 		&domain.User{},
-		&domain.Teacher{},
-		&domain.Student{},
 		&domain.Course{},
 		&domain.Class{},
 		&domain.ClassRoom{},
@@ -36,18 +34,60 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	err = initDB.SetupJoinTable(&domain.Class{}, "Users", &domain.ClassUser{})
+	if err != nil {
+		panic(err)
+	}
+	err = initDB.AutoMigrate(&domain.ClassUser{})
+	if err != nil {
+		panic(err)
+	}
+
 	err = initDB.SetupJoinTable(&domain.Notification{}, "Users", &domain.NotificationUser{})
 	if err != nil {
 		panic(err)
 	}
-	err = initDB.SetupJoinTable(&domain.Class{}, "Students", &domain.ClassStudent{})
+	err = initDB.AutoMigrate(&domain.NotificationUser{})
 	if err != nil {
 		panic(err)
 	}
-	err = initDB.SetupJoinTable(&domain.Exam{}, "Questions", &domain.ExamQuestion{})
+
+	err = initDB.SetupJoinTable(&domain.Announcement{}, "Classes", &domain.AnnouncementClass{})
 	if err != nil {
 		panic(err)
 	}
+	err = initDB.AutoMigrate(&domain.AnnouncementClass{})
+	if err != nil {
+		panic(err)
+	}
+
+	err = initDB.SetupJoinTable(&domain.Post{}, "Users", &domain.PostUser{})
+	if err != nil {
+		panic(err)
+	}
+	err = initDB.AutoMigrate(&domain.PostUser{})
+	if err != nil {
+		panic(err)
+	}
+
+	err = initDB.SetupJoinTable(&domain.Comment{}, "Users", &domain.CommentUser{})
+	if err != nil {
+		panic(err)
+	}
+	err = initDB.AutoMigrate(&domain.CommentUser{})
+	if err != nil {
+		panic(err)
+	}
+
+	//err = initDB.SetupJoinTable(&domain.Exam{}, "Questions", &domain.ExamQuestion{})
+	//if err != nil {
+	//	panic(err)
+	//}
+	//err = initDB.AutoMigrate(&domain.ExamQuestion{})
+	//if err != nil {
+	//	panic(err)
+	//}
 }
 
 // openDB 连接db

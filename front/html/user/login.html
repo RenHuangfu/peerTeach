@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>登录页面</title>
+<link rel="stylesheet" href="/css/user/login.css">
+</head>
+<body>
+<div class="container">
+    <div class="header">登录</div>
+    <div class="input-group">
+        <label for="username">邮箱：</label>
+        <input type="text" id="username" placeholder="请输入邮箱">
+    </div>
+    <div class="input-group">
+        <label for="password">密码：</label>
+        <input type="text" id="password" placeholder="请输入密码">
+    </div>
+    <div class="buttons">
+        <button type="button" id="loginButton">登录</button>
+        <button type="button" onclick="window.location.href='register'">注册</button>
+    </div>
+    <div class="forgot">
+        <button type="button">忘记密码</button>
+    </div>
+</div>
+
+<script src="/js/user/login.js"></script>
+</body>
+</html>

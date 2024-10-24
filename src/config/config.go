@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	"path/filepath"
 	"sync"
 )
 
@@ -38,11 +39,27 @@ type AppConf struct {
 	RunMode string `yaml:"run_mode" mapstructure:"run_mode"` // 运行模式
 }
 
+// RedisConf 配置
+type RedisConf struct {
+	Host     string `yaml:"rhost" mapstructure:"rhost"` // db主机地址
+	Port     int    `yaml:"rport" mapstructure:"rport"` // db端口
+	DB       int    `yaml:"rdb" mapstructure:"rdb"`
+	PassWord string `yaml:"passwd" mapstructure:"passwd"`
+	PoolSize int    `yaml:"poolsize" mapstructure:"poolsize"`
+}
+
+type Cache struct {
+	SessionExpired int `yaml:"session_expired" mapstructure:"session_expired"`
+	UserExpired    int `yaml:"user_expired" mapstructure:"user_expired"`
+}
+
 // GlobalConfig 业务配置结构体
 type GlobalConfig struct {
-	AppConfig AppConf `yaml:"app" mapstructure:"app"`
-	DbConfig  DbConf  `yaml:"db" mapstructure:"db"`   // db配置
-	LogConfig LogConf `yaml:"log" mapstructure:"log"` // 日志配置
+	AppConfig   AppConf   `yaml:"app" mapstructure:"app"`
+	DbConfig    DbConf    `yaml:"db" mapstructure:"db"`       // db配置
+	LogConfig   LogConf   `yaml:"log" mapstructure:"log"`     // 日志配置
+	RedisConfig RedisConf `yaml:"redis" mapstructure:"redis"` // redis配置
+	Cache       Cache     `yaml:"cache" mapstructure:"cache"` // cache配置
 }
 
 // GetGlobalConf 获取全局配置文件
@@ -56,8 +73,9 @@ func readConf() {
 	viper.SetConfigType("yml")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("./config/")
-	viper.AddConfigPath("../config/")
-	viper.AddConfigPath("../../config/")
+	viper.AddConfigPath("./src/config/")
+	viper.AddConfigPath("../src/config/")
+	viper.AddConfigPath("../../src/config/")
 	err := viper.ReadInConfig()
 	if err != nil {
 		panic("read config file err:" + err.Error())
@@ -68,6 +86,46 @@ func readConf() {
 	}
 	//log.Infof("config === %+v", config)
 }
+
+// dir name
+const (
+	UpDir    = ".."
+	Front    = "front"
+	Html     = "html"
+	User     = "user"
+	Student  = "student"
+	Teacher  = "teacher"
+	Main     = "main"
+	Class    = "class"
+	Resource = "resource"
+)
+
+var (
+	IndexPath                     = filepath.Join(UpDir, Front, Html, "index.html")
+	ManagerPath                   = filepath.Join(UpDir, Front, Html, "manager/main/account.html")
+	LoginPath                     = filepath.Join(UpDir, Front, Html, User, "login.html")
+	RegisterPath                  = filepath.Join(UpDir, Front, Html, User, "register.html")
+	TeacherInfoPath               = filepath.Join(UpDir, Front, Html, User, "teacher.html")
+	StudentInfoPath               = filepath.Join(UpDir, Front, Html, User, "student.html")
+	TeacherCoursePath             = filepath.Join(UpDir, Front, Html, Teacher, Main, "course.html")
+	StudentCoursePath             = filepath.Join(UpDir, Front, Html, Student, Main, "course.html")
+	TeacherClassPath              = filepath.Join(UpDir, Front, Html, Teacher, Class, "class.html")
+	StudentClassPath              = filepath.Join(UpDir, Front, Html, Student, Class, "class.html")
+	TeacherPostDetailPath         = filepath.Join(UpDir, Front, Html, Teacher, Class, "post_detail.html")
+	StudentPostDetailPath         = filepath.Join(UpDir, Front, Html, Student, Class, "post_detail.html")
+	TeacherAnnouncementDetailPath = filepath.Join(UpDir, Front, Html, Teacher, Class, "announcement_detail.html")
+	StudentAnnouncementDetailPath = filepath.Join(UpDir, Front, Html, Student, Class, "announcement_detail.html")
+	TeacherResourcePath           = filepath.Join(UpDir, Front, Html, Teacher, Resource, "resource.html")
+	TeacherPaperPath              = filepath.Join(UpDir, Front, Html, Teacher, Resource, "paperdetail.html")
+)
+
+// session key
+// const (
+// 	AccountKey = "account"
+// 	CartKey    = "cart"
+// 	ProductKey = "product"
+// 	OrderKey   = "order"
+// )
 
 //// InitConfig 初始化日志
 //func InitConfig() {

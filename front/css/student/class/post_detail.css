@@ -1,0 +1,505 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar {
+    width: 80px;
+    background-color: #6666ff;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #555;
+    border: none;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sidebar button:hover {
+    background-color: #777;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 80px; /* 侧边栏宽度 */
+}
+
+.top-bar {
+    background-color: #444;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 80px; /* 侧边栏宽度 */
+    right: 0;
+    z-index: 1000; /* 确保顶部栏在内容之上 */
+}
+
+.top-bar button {
+    background-color: #555;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.top-bar button:hover {
+    background-color: #777;
+}
+
+.top-bar .user-info {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar .user-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #f4f4f4;
+    margin-top: 50px; /* 顶部栏高度 */
+}
+
+
+/* 水平导航栏 */
+.introduce{
+    display: flex;
+    /* margin-top: 1%; */
+    font-size: large;
+    width: 100%;
+    height: 10%;
+    text-align: center;
+    border-bottom: 2px solid #777;
+    /* border: 5px solid #000; */
+}
+
+.horizontal-list {  
+    list-style-type: none; /* 移除默认的列表样式 */  
+    padding: 0; /* 移除默认的填充 */  
+    display: flex; /* 使用Flexbox布局使列表项横向排列 */ 
+    margin-left: 10%;
+    margin-top: 0;
+    margin-bottom: 5px;
+    margin-right: 0;
+} 
+
+.horizontal-list li {  
+    margin-right: 50px;  
+    display: flex; /* 将列表项设置为flex容器 */  
+    align-items: center; /* 垂直居中内容 */  
+}  
+
+.horizontal-list li:hover{
+    color: rgb(102, 102, 255, 0.5);
+    border-bottom: 2px solid #6666ff;
+}
+
+.horizontal-list li.active{
+    border-bottom: 2px solid #6666ff;
+}
+
+.introduce button{
+    background-color: #6666ff;
+    color: #f4f4f4;
+    margin-left: 40%;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    font-size: larger;
+    border: none;
+    width: 10%;
+}
+
+.introduce button:hover{
+    background-color: #3030b0;
+    color: #f4f4f4;
+}
+
+.post {  
+    margin-top: 2%;  
+    margin-left: 5%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}  
+
+.mainpost{
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #ccc;  
+    padding-bottom: 2%;
+}
+
+.post-title {  
+    display: flex;
+}   
+
+.title{
+    font-size: 4ch;  
+    font-weight: bold;
+    width: 80%;
+}
+
+.post-delete-btn{  
+    margin-left: 10%;
+    visibility: hidden;
+}  
+
+.post-delete-btn.active{
+    visibility: visible;
+}
+
+
+.post-delete-btn:hover{
+    color: #6666ff;
+}
+
+.post-info {  
+    display: flex;  
+    margin-top: 10px;  
+}  
+.post-info img {  
+    max-width: 30px;  
+    max-height: 30px;  
+    margin-right: 10px;  
+    border-radius: 50%;
+}  
+
+.post-content {  
+    margin-top: 10px;  
+}  
+
+.post-pictures {  
+    display: flex;  
+    flex-wrap: wrap;  
+    margin-top: 10px;  
+}  
+
+.post-pictures img {  
+    width: 200px; /* 根据需要调整图片宽度 */ 
+    height: auto;
+    object-fit: cover; 
+    margin: 5px;  
+    border-radius: 5px; /* 可选：添加圆角 */  
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 可选：添加阴影效果 */  
+}
+
+.comment-list {  
+    margin-bottom: 50px;  
+}  
+
+.comment {  
+    padding: 10px 0;  
+    display: flex;
+    flex-direction: column;
+}  
+
+.comment-photo {  
+    max-width: 30px;  
+    max-height: 30px;  
+    margin-right: 10px;  
+    border-radius: 50%;
+}  
+
+.comment-userinfo{
+    display: flex;
+}
+
+.comment-info {  
+    display: flex;  
+    flex-direction: column;
+    font-size: smaller;
+    color: #555;
+    /* margin-bottom: 5px;   */
+}  
+
+.comment_Content{
+    display: flex; 
+    /* border:  3px solid #444; */
+}
+
+.comment-content {  
+    margin-left: 40px; 
+    font-size: 2ch;
+    width: 80%;
+    /* border:  3px solid #444; */
+    /* align-items: center;   */
+}  
+
+.comment-like-btn {  
+    cursor: pointer;  
+    margin-left: 10px;  
+    margin-bottom: 0;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    /* border:  3px solid #444; */
+}  
+
+.comment_Content span{
+    margin-bottom: 0px;
+}
+
+.comment-delete-btn{  
+    margin-left: 30px;
+    visibility: hidden;
+    border: none;
+    background-color: #f4f4f4;
+    margin-bottom: 0;
+    padding: 0;
+    height: 20px;
+    /* border:  3px solid #444; */
+}  
+
+.comment-delete-btn.active{
+    visibility: visible;
+}
+
+.comment-delete-btn:hover{
+    color: #6666ff;
+}
+
+.comment-isuser .comment-delete-btn {  
+    display: inline-block;  
+}  
+
+.comment-box {  
+    position: fixed;  
+    bottom: 0;  
+    width: calc(100% - 30px);  
+    padding: 10px 0;  
+    margin-left: -1%;
+    /* width: 100%; */
+    background-color: #f4f4f4;  
+    /* border-top: 1px solid #ccc;   */
+    display: flex;  
+    align-items: center;
+}  
+
+.comment-box textarea { 
+    margin-left: 6%; 
+    width: 65%;  
+    height: 30px;  
+    /* border-radius: 25px; */
+    overflow-y: scroll;
+}  
+
+.comment-box textarea::-webkit-scrollbar{
+    width: 5px;
+    background-color: transparent;
+}
+
+.comment-box textarea::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background-color: #444;
+}
+
+.comment-box button {  
+    margin-left: 10px;  
+    width: 100px;
+    height: 35px;
+    border-radius: 5px;
+    background-color: #6666ff;
+    color: #f4f4f4; 
+} 
+
+.comment-box button:hover{
+    background-color: #3030b0;
+    color: #f4f4f4; 
+}
+
+.like-section {  
+    /* width: 20%; */
+    height: 30px; 
+    display: flex;  
+    align-items: center;  
+    margin-left: 10px;
+}  
+
+.like-btn {  
+    cursor: pointer;  
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;  
+}  
+
+.like-btn img{ 
+    width: 30px;
+    height: 30px;
+}
+
+.comment-section {  
+    /* width: 20%; */
+    height: 30px; 
+    display: flex;  
+    align-items: center;  
+    margin-left: 10px;
+}  
+
+.comment-btn {  
+    cursor: pointer;  
+    width: 30px;
+    height: 30px; 
+    margin-right: 10px; 
+}  
+
+.comment-btn img{ 
+    width: 30px;
+    height: 30px;
+}
+
+.modal {  
+    display: none;   
+    position: fixed;   
+    z-index: 1;   
+    left: 150px;  
+    top: 150px;  
+    width: 70%;   
+    height: 70%;   
+    overflow: auto;    
+    background-color: rgba(0,0,0,0.9); 
+    /* border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);   */
+    padding-top: 60px;  
+}  
+  
+.modal-content {  
+    margin: auto;  
+    display: block;  
+    width: 80%;  
+    max-height: 500px;  
+    width: auto;  
+    object-fit: contain; /* 保持比例 */  
+}  
+  
+.close {  
+    position: absolute;  
+    top: 15px;  
+    right: 35px;  
+    color: #f1f1f1;  
+    font-size: 40px;  
+    font-weight: bold;  
+    transition: 0.3s;  
+}  
+  
+.close:hover,  
+.close:focus {  
+    color: #bbb;  
+    text-decoration: none;  
+    cursor: pointer;  
+}
+
+.modal_1 {  
+    display: flex;  
+    flex-direction: column;
+    position: fixed;  
+    top: 50%;  
+    left: 50%;  
+    transform: translate(-50%, -50%);  
+    width: 300px;
+    height: 200px;
+    background: white;  
+    border: 1px solid #ccc;  
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1),
+    0 0 0 1000px rgba(255, 255, 255, 0.7);
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    visibility: hidden;
+}  
+
+.modal_1.active{
+    visibility: visible;
+}
+
+.modal_1-content {  
+    display: flex;
+} 
+
+.modal_1-content button {  
+    padding: 10px 20px;  
+    margin: 10px;  
+    font-size: 16px;  
+    cursor: pointer;  
+    border-radius: 5px;
+    background-color: #6666ff;
+    color: #f4f4f4;
+}  
+
+.modal_1-content button:hover{
+    background-color: #3030b0;
+    color: #f4f4f4;
+} 
+
+.modal_2 {  
+    display: flex;  
+    flex-direction: column;
+    position: fixed;  
+    top: 50%;  
+    left: 50%;  
+    transform: translate(-50%, -50%);  
+    width: 300px;
+    height: 200px;
+    background: white;  
+    border: 1px solid #ccc;  
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1),
+    0 0 0 1000px rgba(255, 255, 255, 0.7);
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    visibility: hidden;
+}  
+
+.modal_2.active{
+    visibility: visible;
+}
+
+.modal_2-content {  
+    display: flex;
+} 
+
+.modal_2-content button {  
+    padding: 10px 20px;  
+    margin: 10px;  
+    font-size: 16px;  
+    cursor: pointer;  
+    border-radius: 5px;
+    background-color: #6666ff;
+    color: #f4f4f4;
+}  
+
+.modal_2-content button:hover{
+    background-color: #3030b0;
+    color: #f4f4f4;
+} 

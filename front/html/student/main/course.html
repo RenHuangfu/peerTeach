@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="/css/layui/layui.css">
+    <link rel="stylesheet" href="/css/student/main/course.css">
+    <script src="/js/global/global.js"></script>
+    <title>学生端主页</title>
+</head>
+<body>
+<div class="container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <button onclick ="turnCourse()">课程班级</button>
+        <button onclick ="turnUserInfo()">个人信息</button>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 顶部固定栏 -->
+        <div class="top-bar">
+            <button>查看通知</button>
+            <div class="user-info">
+                <img src="user-avatar.png" alt="用户头像">
+                <span>用户名称</span>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <!-- 这里可以放置主要内容 -->
+            <div class="top-button">
+                <button onclick="openModal()">加入班级</button>
+            </div>
+            <!-- 这里可以放置主要内容 -->
+            <div class="table-container">
+                <!-- 表格将在这里动态生成 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 悬浮窗 -->
+<div id="modal" class="modal">
+    <div id="class-modal-content" class="modal-content">
+        <h2>加入班级</h2>
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="form-group">
+            <label for="invite-code">班级邀请码：</label>
+            <input type="text" id="invite-code" placeholder="请输入班级邀请码">
+        </div>
+        <div class="form-group">
+            <button onclick="submitInviteCode()">确定</button>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/js/layui/layui.js"></script>
+<script type="text/javascript" src="/js/student/main/course.js"></script>
+</html>
