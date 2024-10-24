@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// ClassRoom 课堂
 type ClassRoom struct {
 	gorm.Model
 	Name       string

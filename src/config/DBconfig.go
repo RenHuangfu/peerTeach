@@ -23,11 +23,12 @@ func Init() {
 		&domain.Comment{},
 		&domain.Exam{},
 		&domain.Post{},
+		&domain.Notification{},
 	)
 	if err != nil {
 		panic(err)
 	}
-	err = db.SetupJoinTable(&domain.Notification{}, "User", &domain.NotificationUser{})
+	err = db.SetupJoinTable(&domain.Notification{}, "Users", &domain.NotificationUser{})
 	if err != nil {
 		panic(err)
 	}

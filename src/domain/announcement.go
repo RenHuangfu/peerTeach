@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Announcement 公告
 type Announcement struct {
 	gorm.Model
 	Content  string `gorm:"type:text"`
