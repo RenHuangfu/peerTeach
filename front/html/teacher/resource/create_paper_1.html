@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>选择题目</title>
+    <link rel="stylesheet" href="/css/teacher/resource/create_paper_1.css" type="text/css">
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="main-content">
+            <div class="content">
+                <button id="toggleButton2" class="button">我的题库</button>
+                <button id="toggleButton3" class="button">题库</button>
+                <div id="content2">
+                    <div class="dropdown">
+                        <button class="dropdown-button" id="dropdownButton">筛选</button>
+                        <div class="dropdown-content" id="dropdownMenu">
+                            <div class="custom-select-container" id="customSelectContainer1">
+                                <div class="custom-select" id="custom-select1">学科：/</div>
+                                <div class="custom-select-options" id="customSelectOptions1">
+                                    <a>/</a>
+                                </div>
+                            </div>
+                            <div class="custom-select-container" id="customSelectContainer2">
+                                <div class="custom-select" id="custom-select2">课程：/</div>
+                                <div class="custom-select-options" id="customSelectOptions2">
+                                    <a>/</a>
+                                </div>
+                            </div>
+                            <div class="custom-select-container" id="customSelectContainer3">
+                                <div class="custom-select" id="custom-select3">章节：/</div>
+                                <div class="custom-select-options" id="customSelectOptions3">
+                                    <a>/</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="myTable2" border="1">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>序号</th>
+                                <th>题目</th>
+                                <th>最后修改时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="pagination" id="pagination2">
+                        <button id="toggleButton7">上一页</button>
+                        <input id="pageNumber2" type="number" value="1" min="1" />
+                        <button id="toggleButton8">转跳</button>
+                        <button id="toggleButton9">下一页</button>
+                    </div>
+
+                </div>
+                <div id="content3" style="display: none;">
+                    <div class="dropdown">
+                        <button class="dropdown-button" id="dropdownButton2">筛选</button>
+                        <div class="dropdown-content" id="dropdownMenu2">
+                            <div class="custom-select-container" id="customSelectContainer4">
+                                <div class="custom-select" id="custom-select4">学科：/</div>
+                                <div class="custom-select-options" id="customSelectOptions4">
+                                    <a>/</a>
+                                </div>
+                            </div>
+                            <div class="custom-select-container" id="customSelectContainer5">
+                                <div class="custom-select" id="custom-select5">课程：/</div>
+                                <div class="custom-select-options" id="customSelectOptions5">
+                                    <a>/</a>
+                                </div>
+                            </div>
+                            <div class="custom-select-container" id="customSelectContainer6">
+                                <div class="custom-select" id="custom-select6">章节：/</div>
+                                <div class="custom-select-options" id="customSelectOptions6">
+                                    <a>/</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <table id="myTable3" border="1">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>序号</th>
+                                <th>题目</th>
+                                <th>最后修改时间</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <div class="pagination" id="pagination3">
+                        <button id="toggleButton10">上一页</button>
+                        <input id="pageNumber3" type="number" value="1" min="1" />
+                        <button id="toggleButton11">转跳</button>
+                        <button id="toggleButton12">下一页</button>
+                    </div>
+                </div>
+                <div>
+                    <button id="import_button">导入</button>
+                </div>
+            </div>
+            <script src="/js/teacher/resource/create_paper_1.js">
+
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>

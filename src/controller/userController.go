@@ -15,6 +15,19 @@ func ViewManager(c *gin.Context) {
 	req.ResponseWithHtml(c)
 }
 
+func ViewNotice(c *gin.Context) {
+	NoticePath, err := service.GetNoticePath(c)
+	if err != nil {
+		req := service.HttpResponse{}
+		req.ResponseError(c, 10008, "")
+		return
+	}
+	req := service.HttpResponse{
+		HtmlPath: NoticePath,
+	}
+	req.ResponseWithHtml(c)
+}
+
 func ViewLogin(c *gin.Context) {
 	req := service.HttpResponse{
 		HtmlPath: config.LoginPath,
@@ -106,4 +119,15 @@ func PostInfo(c *gin.Context) {
 	} else {
 		rsp.ResponseError(c, service.CodeLoginErr, "no request")
 	}
+}
+
+func PostNotice(c *gin.Context) {
+	rsp := &service.HttpResponse{}
+	data, err := service.GetNotice(c)
+	if err != nil {
+		fmt.Println(err)
+		rsp.ResponseError(c, service.CodeRegisterErr, err.Error())
+		return
+	}
+	rsp.ResponseWithData(c, data)
 }

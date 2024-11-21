@@ -90,3 +90,12 @@ func UpdateInfo(c *gin.Context, r *constant.InfoRequest) (err error) {
 	})
 	return
 }
+
+func GetNotice(c *gin.Context) (data interface{}, err error) {
+	session := sessions.Default(c)
+	user := session.Get(constant.UserSession)
+	data, err = persistence.GetNotification(&domain.User{
+		ID: user.(domain.User).ID,
+	})
+	return
+}

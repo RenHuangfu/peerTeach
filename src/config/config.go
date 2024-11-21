@@ -107,6 +107,8 @@ var (
 	RegisterPath                  = filepath.Join(UpDir, Front, Html, User, "register.html")
 	TeacherInfoPath               = filepath.Join(UpDir, Front, Html, User, "teacher.html")
 	StudentInfoPath               = filepath.Join(UpDir, Front, Html, User, "student.html")
+	StudentNoticePath             = filepath.Join(UpDir, Front, Html, Student, Main, "notice.html")
+	TeacherNoticePath             = filepath.Join(UpDir, Front, Html, Teacher, Main, "notice.html")
 	TeacherCoursePath             = filepath.Join(UpDir, Front, Html, Teacher, Main, "course.html")
 	StudentCoursePath             = filepath.Join(UpDir, Front, Html, Student, Main, "course.html")
 	TeacherClassPath              = filepath.Join(UpDir, Front, Html, Teacher, Class, "class.html")

@@ -87,7 +87,7 @@ func InsertComment(c *domain.Comment) (err error) {
 		tx.Rollback()
 		return
 	}
-	err = tx.Raw("update posts set comment = content + 1 where id = ?", c.PostID).Error
+	err = tx.Exec("update posts set comment = comment + 1 where id = ?", c.PostID).Error
 	if err != nil {
 		tx.Rollback()
 		return
@@ -119,7 +119,7 @@ func DeleteComment(c *domain.Comment) (err error) {
 		tx.Rollback()
 		return
 	}
-	err = tx.Raw("update posts set comment = content - 1 where id = ?", c.PostID).Error
+	err = tx.Exec("update posts set comment = comment - 1 where id = ?", c.PostID).Error
 	if err != nil {
 		tx.Rollback()
 		return

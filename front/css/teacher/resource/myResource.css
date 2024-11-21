@@ -86,29 +86,64 @@ html {
 
 .content {
     flex: 1;
-    padding: 50px 60px;
-    background-color: #f4f4f4;
+    background-color: white;
     margin-top: 50px;
 }
 
-.button {
+
+/*--------------自定义内容------------------*/
+.introduce{
+    display: flex;
+    margin: 0 auto;
+    font-size: large;
+    width: 100%;
+    height: 80px;
+    text-align: center;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
+    background-color: white;
+
+    position: fixed;
+    top: 50px;
+
+    padding-left: 5%;
+}
+
+.introduce .button{
+    background-color: #6666ff;
+    color: #f4f4f4;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
     padding: 10px 15px;
-    margin: 5px;
+    transition: background 0.2s ease;
+}
+
+#createPaper{
+    margin-left: 45%;
+}
+
+#createQuestion{
+    margin-left: 10px;
+}
+
+.introduce .button:hover{
+    background-color: #3030b0;
+    color: #f4f4f4;
+}
+
+.tag-button {
+    padding: 10px;
     background-color: white;
     color: black;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
+    font-size: 18px;
 }
 
-.button:hover {
-    background-color: seashell;
-}
-
-.button:disabled {
-    background-color: #3e8e41;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 150, 0, 0.5);
+.tag-button:disabled {
+    font-weight: bold;
+    border-bottom: 2px solid #6666ff;
 }
 
 table {
@@ -131,8 +166,8 @@ th {
 
 .pagination {
     width: 30%;
-    margin: 0 auto;
-    background-color: #f4f4f4;
+    margin: 30px auto;
+    background-color: white;
 }
 
 .btn-img {
@@ -148,13 +183,14 @@ th {
 }
 
 .dropdown-button {
-    float:right;
-    margin-right:15%;
-    margin-bottom:30px;
+    float: right;
+    margin-right: 15%;
+    margin-bottom: 30px;
     padding: 10px 20px;
-    background-color: #3498db;
+    background-color: #6666ff;
     color: white;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
 }
@@ -162,37 +198,38 @@ th {
 .dropdown-content {
     display: none;
     position: absolute;
-    right:20%;
-    top:200px;
+    right: 20%;
+    top: 200px;
     background-color: white;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
     min-width: 180px;
     z-index: 1;
 }
 
-    .dropdown-content a {
-        color: black;
-        padding: 12px 16px;
-        width:100%;
-        text-decoration: none;
-        display: block;
-    }
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    width: 100%;
+    text-decoration: none;
+    display: block;
+}
 
-        .dropdown-content a:hover {
-            background-color: #ddd;
-        }
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
 
 .custom-select-container {
     position: relative;
-    width:100%;
+    width: 100%;
     display: block;
 }
 
 .custom-select {
-    width:100%;
-    padding: 10px 0px;
-    background-color: #3498db;
-    color: white;
+    width: 100%;
+    padding: 10px 10px;
+    border-radius: 5px;
+    background-color: white;
+    color: black;
     border: 1px solid #ccc;
     cursor: pointer;
     font-size: 16px;
@@ -200,30 +237,142 @@ th {
 }
 
 .custom-select-options {
-    width:100%;
-    margin:0 auto;
+    width: 100%;
+    margin: 0 auto;
     position: absolute;
     top: 0;
-    left: 100%;
+    left: 112%;
     background-color: white;
     border: 1px solid #ccc;
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    display: none; /* Ĭ������ */
+    display: none;
+    /* Ĭ������ */
 }
 
-    .custom-select-options a {
-        width:90%;
-        margin:0 auto;
-        display: block;
-        padding: 5px 0px;
-        color: black;
-        text-decoration: none;
-    }
+.custom-select-options a {
+    width: 90%;
+    margin: 0 auto;
+    display: block;
+    padding: 5px 0px;
+    color: black;
+    text-decoration: none;
+}
 
-        .custom-select-options a:hover {
-            background-color: #ddd;
-        }
+.custom-select-options a:hover {
+    background-color: #ddd;
+}
 
 .custom-select-container.open .custom-select-options {
-    display: block; /* ���ʱ��ʾ����ѡ�� */
+    display: block;
+    /* ���ʱ��ʾ����ѡ�� */
+}
+
+/* 链接未选中时的样式，与普通文本一致 */
+.custom-link {
+    text-decoration: none;
+    /* 去掉下划线 */
+    color: inherit;
+    /* 使用父元素的颜色 */
+    cursor: text;
+    /* 改变鼠标样式为文本光标 */
+}
+
+/* 鼠标悬停时的样式 */
+.custom-link:hover {
+    text-decoration: underline;
+    /* 添加下划线（可选） */
+    color: #555;
+    /* 颜色稍微变深 */
+    cursor: pointer;
+    /* 鼠标变为指针 */
+}
+
+/* 点击选中时的样式 */
+.custom-link:active {
+    color: #333;
+    /* 颜色变得更深 */
+    text-decoration: none;
+    /* 去掉下划线 */
+}
+
+.modal-background {
+    display: none;
+    /* Ĭ������ */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* ��͸������ */
+    justify-content: center;
+    z-index: 1000;
+    text-align: center
+}
+
+.modal-content2 {
+    position: relative;
+    width: 80%;
+    height: 80%;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    /* ��ֹ������� */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* iframe ��ʽ */
+.modal-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* �رհ�ť */
+.close-btn2 {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.table-content {
+    width: 80%;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    transform:translateY(50px);
+}
+
+#content1,
+#content2,
+#content3 {
+    margin-top: 100px;
+}   
+
+#myTable1,
+#myTable2, 
+#myTable3 {
+    width: 100%;
+    margin: 0 auto;
+}
+
+#myTable2, 
+#myTable3 {
+    transform:translateY(-50px);
+}
+
+/*-----------iframe-----------*/
+iframe{
+    width: 400px;
+    height: 300px;
+    border: none;
 }

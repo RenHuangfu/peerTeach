@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -22,27 +23,28 @@ body, html {
     height: 100%;
 }
 
-    .sidebar button {
-        display: block;
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        background-color: #555;
-        border: none;
-        color: white;
-        text-align: left;
-        cursor: pointer;
-    }
+.sidebar button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #555;
+    border: none;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
 
-        .sidebar button:hover {
-            background-color: #777;
-        }
+.sidebar button:hover {
+    background-color: #777;
+}
 
 .main-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-left: 80px; /* ²à±ßÀ¸¿í¶È */
+    margin-left: 80px;
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 }
 
 .top-bar {
@@ -54,40 +56,43 @@ body, html {
     align-items: center;
     position: fixed;
     top: 0;
-    left: 80px; /* ²à±ßÀ¸¿í¶È */
+    left: 80px;
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     right: 0;
-    z-index: 1000; /* È·±£¶¥²¿À¸ÔÚÄÚÈİÖ®ÉÏ */
+    z-index: 1000;
+    /* È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ */
 }
 
-    .top-bar button {
-        background-color: #555;
-        border: none;
-        color: white;
-        padding: 8px 12px;
-        cursor: pointer;
-    }
+.top-bar button {
+    background-color: #555;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+}
 
-        .top-bar button:hover {
-            background-color: #777;
-        }
+.top-bar button:hover {
+    background-color: #777;
+}
 
-    .top-bar .user-info {
-        display: flex;
-        align-items: center;
-    }
+.top-bar .user-info {
+    display: flex;
+    align-items: center;
+}
 
-        .top-bar .user-info img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-        }
+.top-bar .user-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
 
 .content {
     flex: 1;
     padding: 20px;
     background-color: #f4f4f4;
-    margin-top: 50px; /* ¶¥²¿À¸¸ß¶È */
+    margin-top: 50px;
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¶ï¿½ */
 }
 
 .main {
@@ -96,17 +101,52 @@ body, html {
 }
 
 table {
-    width: 100%; /* ±í¸ñ¿í¶È */
-    border-collapse: collapse; /* ºÏ²¢±ß¿ò */
-    margin: 30px 0; /* ±í¸ñÉÏÏÂÍâ±ß¾à */
+    width: 100%;
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    border-collapse: collapse;
+    /* ï¿½Ï²ï¿½ï¿½ß¿ï¿½ */
+    margin: 30px 0;
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¾ï¿½ */
 }
 
-th, td {
-    border: 1px solid #dddddd; /* µ¥Ôª¸ñ±ß¿ò */
-    text-align: left; /* µ¥Ôª¸ñÎÄ±¾×ó¶ÔÆë */
-    padding: 8px; /* µ¥Ôª¸ñÄÚ±ß¾à */
+th,
+td {
+    border: 1px solid #dddddd;
+    /* ï¿½ï¿½Ôªï¿½ï¿½ß¿ï¿½ */
+    text-align: left;
+    /* ï¿½ï¿½Ôªï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    padding: 8px;
+    /* ï¿½ï¿½Ôªï¿½ï¿½ï¿½Ú±ß¾ï¿½ */
 }
 
 th {
-    background-color: #f2f2f2; /* ±íÍ·±³¾°ÑÕÉ« */
+    background-color: #f2f2f2;
+    /* ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É« */
+}
+
+.custom-link {
+    text-decoration: none;
+    /* å»æ‰ä¸‹åˆ’çº¿ */
+    color: inherit;
+    /* ä½¿ç”¨çˆ¶å…ƒç´ çš„é¢œè‰² */
+    cursor: text;
+    /* æ”¹å˜é¼ æ ‡æ ·å¼ä¸ºæ–‡æœ¬å…‰æ ‡ */
+}
+
+/* é¼ æ ‡æ‚¬åœæ—¶çš„æ ·å¼ */
+.custom-link:hover {
+    text-decoration: underline;
+    /* æ·»åŠ ä¸‹åˆ’çº¿ï¼ˆå¯é€‰ï¼‰ */
+    color: #555;
+    /* é¢œè‰²ç¨å¾®å˜æ·± */
+    cursor: pointer;
+    /* é¼ æ ‡å˜ä¸ºæŒ‡é’ˆ */
+}
+
+/* ç‚¹å‡»é€‰ä¸­æ—¶çš„æ ·å¼ */
+.custom-link:active {
+    color: #333;
+    /* é¢œè‰²å˜å¾—æ›´æ·± */
+    text-decoration: none;
+    /* å»æ‰ä¸‹åˆ’çº¿ */
 }

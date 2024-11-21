@@ -5,6 +5,15 @@ import (
 	"time"
 )
 
+type Notice struct {
+	Text     string    `json:"text" gorm:"content"`
+	SendTime time.Time `json:"send_time" gorm:"created"`
+}
+
+type NoticeRes struct {
+	Notices []*Notice `json:"notices"`
+}
+
 type InfoResponse struct {
 	ID     uint    `json:"user_id" gorm:"id"`
 	Name   *string `json:"user_name" gorm:"name"`

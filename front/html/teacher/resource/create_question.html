@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面布局示例</title>
+    <link rel="stylesheet" href="/css/teacher/resource/create_question.css" type="text/css">
+    <link rel="stylesheet" href="/css/layui/css/layui.css" type="text/css">
+    <script src="/js/layui/layui.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <button>课程班级</button>
+            <button>资源中心</button>
+        </div>
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 顶部固定栏 -->
+            <div class="top-bar">
+                <button>查看通知</button>
+                <div class="user-info">
+                    <img src="user-avatar.png" alt="用户头像">
+                    <span>用户名称</span>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content">
+                <div id="question-container">
+                    <h1>创建题目</h1>
+                    <div id="form-container">
+                        <div style="padding:40px">
+                            <p contenteditable="true" style="text-align:center; font-size:24px" id="title"> 在此编辑题干</p>
+                            <div class="radio-group">
+                                <input type="radio" id="option1" name="options" value="option1" checked>
+                                <label for="option1">选择题</label>
+
+                                <input type="radio" id="option2" name="options" value="option2">
+                                <label for="option2">判断题</label>
+                            </div>
+                            <div id="options">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div style=" width: 10%; margin: 0 auto;margin-top: 20px;">
+                        <button onclick="showPopup()">创建</button>
+                    </div>
+                </div>
+
+                <div id="popup">
+                    <button class="close-btn" onclick="hidePopup()">×</button>
+                    <h3>上传题目</h3>
+                    <div>
+                        <a>学科：</a>
+                        <select id="dropdown1">
+                            <option value="">/</option>
+                        </select>
+                    </div>
+                    <br>
+                    <!-- 第二个下拉菜单 -->
+                    <div>
+                        <a>课程：</a>
+                        <select id="dropdown2">
+                            <option value="">/</option>
+                        </select>
+                    </div>
+                    <br>
+                    <!-- 第三个下拉菜单 -->
+                    <div>
+                        <a>章节：</a>
+                        <select id="dropdown3">
+                            <option value="">/</option>
+                        </select>
+                    </div>
+                    <br>
+                    <!-- 下拉菜单 -->
+                    <div>
+                        <a>是否发布到公共题库：</a>
+                        <select id="dropdown4">
+                            <option value=true>是</option>
+                            <option value=false>否</option>
+                        </select>
+                    </div>
+                    <p id="error_message" style="color: rgb(217, 13, 13); font-size: 12px;">  </p>
+                    <button onclick="create_question()">上传</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="/js/teacher/resource/create_question.js">
+    </script>
+</body>
+
+</html>

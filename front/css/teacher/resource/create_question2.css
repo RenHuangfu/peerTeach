@@ -1,0 +1,60 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.radio-group {
+    display: flex;
+    gap: 10px; /* 按钮之间的间距 */
+    padding-left:120px;
+}
+
+    .radio-group input[type="radio"] {
+        display:none
+    }
+
+    .radio-group label {
+        display: inline-block;
+        padding: 4px 12px; /* 减小 padding 以减少高度 */
+        background-color: #f0f0f0; /* 默认背景色 */
+        border-radius: 20px; /* 圆角边框 */
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        font-size: 14px; /* 调整字体大小 */
+        line-height: 1; /* 设置 line-height 使文本居中 */
+        height: 24px; /* 固定高度 */
+        display: flex;
+        align-items: center;
+    }
+
+        /* 鼠标悬停效果 */
+        .radio-group label:hover {
+            background-color: #e0e0e0;
+        }
+
+    /* 选中状态的样式 */
+    .radio-group input[type="radio"]:checked + label {
+        background-color: #007bff; /* 选中后的背景色 */
+        color: #fff; /* 选中后的文本颜色 */
+    }

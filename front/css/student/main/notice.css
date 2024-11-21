@@ -1,0 +1,211 @@
+/* 通用样式 */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar {
+    width: 80px;
+    background-color: #6666ff;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #555;
+    border: none;
+    color: white;
+    text-align: left;
+    cursor: pointer;
+}
+
+.sidebar button:hover {
+    background-color: #777;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 80px; /* 侧边栏宽度 */
+}
+
+.top-bar {
+    background-color: #444;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-end; /* 使所有子元素右对齐 */
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 80px; /* 侧边栏宽度 */
+    right: 0;
+    z-index: 1000; /* 确保顶部栏在内容之上 */
+}
+
+.top-bar button {
+    background-color: #555;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.top-bar button:hover {
+    background-color: #777;
+}
+
+.top-bar .user-info {
+    display: flex;
+    align-items: center;
+}
+
+.top-bar .user-info img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.content {
+    flex: 1;
+    padding: 20px;
+    background-color: #f4f4f4;
+    margin-top: 50px; /* 顶部栏高度 */
+}
+
+/*-------------自定义内容-------------------------------*/
+
+/* 通知列表页面样式 */
+.notification-container {
+    width: 600px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 24px;
+    text-align: left;
+    padding: 10px 20px;
+    color: #333;
+}
+
+/* 通知项样式 */
+#notification-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 20px;
+}
+
+.notification-item {
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.notification-item p {
+    margin: 5px 0;
+}
+
+.message {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.timestamp, .recipients {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 分页按钮 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.prev-button, .next-button {
+    padding: 8px 16px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    margin: 0 10px;
+    transition: background-color 0.3s;
+}
+
+.prev-button:hover, .next-button:hover {
+    background-color: #f0f0f0;
+}
+
+.page-indicator {
+    font-size: 14px;
+    color: #666;
+}
+
+/* 通知详情页面样式 */
+.details-container {
+    width: 600px;
+    padding: 20px;
+    text-align: left;
+}
+
+#notification-details {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+#modal {
+    display: none; /* 默认隐藏 */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.notification-details-container{
+    width:300px;
+    background-color: white;
+    margin: 0 auto;
+    margin-top: 15%;
+    padding: 20px;
+}

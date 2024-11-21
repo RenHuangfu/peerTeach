@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面布局示例</title>
+    <link rel="stylesheet" href="/css/teacher/resource/paper_analyse.css" type="text/css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <button>课程班级</button>
+            <button>资源中心</button>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 顶部固定栏 -->
+            <div class="top-bar">
+                <button>查看通知</button>
+                <div class="user-info">
+                    <img src="user-avatar.png" alt="用户头像">
+                    <span>用户名称</span>
+                </div>
+
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content">
+
+                <!-- 这里可以放置主要内容 -->
+                <div class="main" id="_main">
+                    <p id="title"></p>
+                    <div style="margin-bottom:20px">
+                        <span>选择课程</span>
+                        <select id="classes">
+                            <option value="-1">全部课程</option>
+                        </select>
+                    </div>
+                </div>
+
+                <script src="/js/teacher/resource/paper_analyse.js">
+
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

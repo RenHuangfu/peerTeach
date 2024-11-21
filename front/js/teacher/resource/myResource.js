@@ -1,6 +1,8 @@
 const toggleButton1 = document.getElementById('toggleButton1');
 const toggleButton2 = document.getElementById('toggleButton2');
 const toggleButton3 = document.getElementById('toggleButton3');
+const createPaper = document.getElementById('createPaper');
+const createQuestion = document.getElementById('createQuestion');
 const pageNumber = document.getElementById('pageNumber');
 const pageNumber2 = document.getElementById('pageNumber2');
 const pageNumber3 = document.getElementById('pageNumber3');
@@ -27,6 +29,8 @@ const options4 = document.getElementById('customSelectOptions4');
 const options5 = document.getElementById('customSelectOptions5');
 const options6 = document.getElementById('customSelectOptions6');
 var data, data2, data3, haveGotSubjects = false, lastGotQ = new Array(3), nowGotQ = new Array('/', '/', '/'), lastGotQ2 = new Array(3), nowGotQ2 = new Array('/', '/', '/');
+var subject_list = new Array();
+
 const maxRows = 10;
 toggleButton1.disabled = true;
 toggleButton1.onclick = function () {
@@ -56,6 +60,15 @@ toggleButton3.onclick = function () {
     content3.style.display = 'block';
     if (!data3) getdata3();
 };
+
+createPaper.onclick = function () {
+    window.location.href = '../../../html/teacher/resource/create_paper.html';
+}
+
+createQuestion.onclick = function () {
+    window.location.href = '../../../html/teacher/resource/create_question.html';
+}
+
 document.getElementById('toggleButton4').onclick = function () {
     const currentPage = Number(pageNumber.value);
     const minPage = Number(pageNumber.min);
@@ -228,18 +241,17 @@ document.addEventListener('click', function (event) {
                         custom_select2.textContent = "课程：/"
                         custom_select3.textContent = "章节：/"
                         if (clickedElement.textContent != '/') {
-                            (async () => {
-                                const _data = await getCourses(custom_select1.textContent.slice(3));
+                            
+                                const _data = getCourses(custom_select1.textContent.slice(3));
                                 if (_data != null) {
                                     var i = 0;
-                                    while (_data.data.courses[i]) {
+                                    while (_data[i]) {
                                         const row = document.createElement('a');
-                                        row.textContent = _data.data.courses[i];
+                                        row.textContent = _data[i].name;
                                         options2.appendChild(row);
                                         i++;
                                     }
                                 }
-                            })();
                         }
                     }
                     container1.classList.remove('open');
@@ -252,18 +264,16 @@ document.addEventListener('click', function (event) {
                         while (options3.children[1]) options3.children[1].remove();
                         custom_select3.textContent = "章节：/"
                         if (clickedElement.textContent != '/') {
-                            (async () => {
-                                const _data = await getSections(custom_select2.textContent.slice(3));
+                                const _data = getSections(custom_select1.textContent.slice(3),custom_select2.textContent.slice(3));
                                 if (_data != null) {
                                     var i = 0;
-                                    while (_data.data.sections[i]) {
+                                    while (_data[i]) {
                                         const row = document.createElement('a');
-                                        row.textContent = _data.data.sections[i];
+                                        row.textContent = _data[i];
                                         options3.appendChild(row);
                                         i++;
                                     }
                                 }
-                            })();
                         }
                     }
                     container2.classList.remove('open');
@@ -288,18 +298,16 @@ document.addEventListener('click', function (event) {
                         custom_select5.textContent = "课程：/"
                         custom_select6.textContent = "章节：/"
                         if (clickedElement.textContent != '/') {
-                            (async () => {
-                                const _data = await getCourses(custom_select4.textContent.slice(3));
+                                const _data = getCourses(custom_select4.textContent.slice(3));
                                 if (_data != null) {
                                     var i = 0;
-                                    while (_data.data.courses[i]) {
+                                    while (_data[i]) {
                                         const row = document.createElement('a');
-                                        row.textContent = _data.data.courses[i];
+                                        row.textContent = _data[i].name;
                                         options5.appendChild(row);
                                         i++;
                                     }
                                 }
-                            })();
                         }
                     }
                     container4.classList.remove('open');
@@ -309,20 +317,18 @@ document.addEventListener('click', function (event) {
                         custom_select5.textContent = "课程：" + clickedElement.textContent;
                         while (options6.children[1]) options6.children[1].remove();
                         custom_select6.textContent = "章节：/"
-                        if (clickedElement.textContent != '/')
-                            getSections(custom_select5.textContent.slice(3));
-                        (async () => {
-                            const _data = await getSections(custom_select5.textContent.slice(3));
+                        if (clickedElement.textContent != '/'){
+                            const _data = getSections(custom_select4.textContent.slice(3),custom_select5.textContent.slice(3));
                             if (_data != null) {
                                 var i = 0;
-                                while (_data.data.sections[i]) {
+                                while (_data[i]) {
                                     const row = document.createElement('a');
-                                    row.textContent = _data.data.sections[i];
+                                    row.textContent = _data[i];
                                     options6.appendChild(row);
                                     i++;
                                 }
                             }
-                        })();
+                        }
                     }
                     container5.classList.remove('open');
                     break;
@@ -356,14 +362,14 @@ function fillTable(data) {
     while (tbody.firstChild) tbody.removeChild(tbody.firstChild);
     for (let i = (pageNumber.value - 1) * maxRows; i < pageNumber.value * maxRows; i++) {
         const row = document.createElement('tr');
-        row.onclick = function(){
-            window.location.href=("/paperDetail?paper_id="+data[i].paperId)
-        }
+
         if (data[i]) {
             row.innerHTML = `
                                         <td>${i + 1}</td>
-                                        <td>${data[i].title}</td>
-                                        <td>${formatDate(data[i].LastChangeTime)}</td>
+                                        <td>
+                                            <a class="custom-link" href="paperdetail.html?paperId=${data[i].paperId}">${data[i].title}</a>
+                                        </td>
+                                        <td>${data[i].LastChangeTime}</td>
                                         <td>
                                             <button class="btn-img" onclick="editRow()">
                                                 <img src="" alt="编辑">
@@ -393,13 +399,12 @@ function fillTable2(data) {
         const row2 = document.createElement('tr');
         if (data[i]) {
             row2.innerHTML = `
-                                        <td>${data[i].questionId}</td>
-                                        <td>${data[i].title}</td>
+                                        <td>${i + 1}</td>
+                                        <td>
+                                            <a class="custom-link" onclick="openIframeModal(${data[i].questionId})">${data[i].title}</a>
+                                        </td>
                                         <td>${data[i].LastChangeTime}</td>
                                         <td>
-                                            <button class="btn-img" onclick="editRow()">
-                                                <img src="" alt="编辑">
-                                            </button>
                                             <button class="btn-img" onclick="deleteRow()">
                                                 <img src="" alt="删除">
                                             </button>
@@ -427,14 +432,13 @@ function fillTable3(data) {
         // 如果有数据，填充数据，否则填充空单元格
         if (data[i]) {
             row3.innerHTML = `
-                                <td>${data[i].questionId}</td>
-                                <td>${data[i].title}</td>
+                                <td>${i + 1}</td>
+                                <td>
+                                    <a class="custom-link" onclick="openIframeModal(${data[i].questionId})">${data[i].title}</a>
+                                </td>
                                 <td>${data[i].LastChangeTime}</td>
                                 <td>
-                                    <button class="btn-img" onclick="editRow()">
-                                        <img src="" alt="编辑">
-                                        </button>
-                                        <button class="btn-img" onclick="deleteRow()">
+                                    <button class="btn-img" onclick="deleteRow()">
                                         <img src="" alt="删除">
                                     </button>
                                 </td>
@@ -452,24 +456,16 @@ function fillTable3(data) {
     }
 }
 
-
-function getdata() {//获取试卷概要
-    var resourceData = {
-        get_paper:{isRequest:true},
-        get_question:{isRequest:false},
-        get_global_question:{isRequest:false},
-    }
-    fetch('/resource', {
+function getdata() {
+    fetch('https://mock.apipost.net/mock/3610001ac4e5000/mock/3610001ac4e5000/mock/3610001ac4e5000/?apipost_id=23834377b60061', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(resourceData)
+        }
     })
         .then(response => response.json())
         .then(_data => {
             data = _data.data.papers;
-            console.log(data);
             pageNumber.max = Math.floor(data.length / 10) + 1;
             if (pageNumber.max === 0) pageNumber.max = 1;
             fillTable(data);
@@ -479,18 +475,12 @@ function getdata() {//获取试卷概要
         });
 }
 
-function getdata2() {//获取‘我的题库’
-    var resourceData = {
-        get_paper:{isRequest:false},
-        get_question:{isRequest:true},
-        get_global_question:{isRequest:false},
-    }
-    fetch('/resource', {
+function getdata2() {
+    fetch('https://mock.apipost.net/mock/3610001ac4e5000/mock/3610001ac4e5000/?apipost_id=23915fdb760071', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(resourceData)
+        }
     })
         .then(response => response.json())
         .then(_data => {
@@ -505,18 +495,12 @@ function getdata2() {//获取‘我的题库’
         });
 }
 
-function getdata3() {//获取题库
-    var resourceData = {
-        get_paper:{isRequest:false},
-        get_question:{isRequest:false},
-        get_global_question:{isRequest:true},
-    }
-    fetch('/resource', {
+function getdata3() {
+    fetch('https://mock.apipost.net/mock/3610001ac4e5000/?apipost_id=3ac4e71c360000', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(resourceData)
+        }
     })
         .then(response => response.json())
         .then(_data => {
@@ -532,65 +516,71 @@ function getdata3() {//获取题库
 }
 
 function getSubjects() {
-    fetch('https://mock.apipost.net/mock/3610001ac4e5000/?apipost_id=3c0e668ff56007', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
+    if(!haveGotSubjects) {
+        console.log("getSubjects:",subject_list);
+        if (subject_list.subjects[0]) haveGotSubjects = true;
+        var i = 0;
+        while (subject_list.subjects[i]) {
+            const row2 = document.createElement('a');
+            row2.textContent = subject_list.subjects[i].name;
+            row2.value = subject_list.subjects[i].name;
+            const row3 = document.createElement('a');
+            row3.textContent = subject_list.subjects[i].name;
+            row3.value = subject_list.subjects[i].name;
+            options1.appendChild(row2);
+            options4.appendChild(row3);
+            i++;
         }
-    })
-        .then(response => response.json())
-        .then(_data => {
-            if (_data.data.subjects[0]) haveGotSubjects = true;
-            var i = 0;
-            while (_data.data.subjects[i]) {
-                const row2 = document.createElement('a');
-                row2.textContent = _data.data.subjects[i];
-                const row3 = document.createElement('a');
-                row3.textContent = _data.data.subjects[i];
-                options1.appendChild(row2);
-                options4.appendChild(row3);
-                i++;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-
-async function getCourses(subject) {
-    try {
-        const response = await fetch('https://mock.apipost.net/mock/3610001ac4e5000/?apipost_id=3ed61525760000', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ subject })
-        });
-
-        const _data = await response.json();
-        return _data;
-    } catch (error) {
-        console.error('Error:', error);
-        return null;
     }
 }
 
-async function getSections(course) {
-    try {
-        const response = await fetch('https://mock.apipost.net/mock/3610001ac4e5000/?apipost_id=3f05a0fd76000c', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ course })
-        });
+function getCourses(subject_name) {
+    return subject_list.subjects.find(sub => sub.name === subject_name).courses;
+}
 
-        const _data = await response.json();
-        return _data;
-    } catch (error) {
-        console.error('Error:', error);
-        return null;
+function getSections(subject_name,course_name) {
+    const subject = subject_list.subjects.find(sub => sub.name === subject_name);
+    const course = subject.courses.find(c => c.name === course_name);
+    return course.sections;
+}
+
+function getClassification() {
+    $(document).ready(function () {
+        // 使用 $.getJSON 方法加载本地 JSON 文件
+        $.getJSON('data.json', function (data) {
+            // 成功加载 JSON 文件后的处理
+            subject_list = data;
+            console.log(subject_list);
+        }).fail(function (xhr, status, error) {
+            // 处理错误
+            console.error('Error loading JSON file:', error);
+        });
+    });
+}
+
+function openIframeModal() {
+    const modal = document.getElementById('iframeModal');
+    modal.style.display = 'flex';
+
+    const iframe = document.createElement('iframe');
+    iframe.src = 'question_detail.html';  // 目标页面 URL
+    iframe.className = 'modal-iframe';
+
+    // 把 iframe 添加到模态框内容区域
+    const modalContent = modal.querySelector('.modal-content2');
+    modalContent.appendChild(iframe);
+    iframe.postMessage(questionIds, '*');
+}
+
+function closeIframeModal() {
+    const modal = document.getElementById('iframeModal');
+    modal.style.display = 'none';
+
+    const iframe = modal.querySelector('iframe');
+    if (iframe) {
+        iframe.remove();
     }
 }
 
+getClassification();
 getdata();

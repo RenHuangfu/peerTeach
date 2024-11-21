@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面布局示例</title>
+    <link rel="stylesheet" href="/css/teacher/main/notice.css">
+    <script src="/js/global/global.js"></script>
+    <style>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <button onclick="turnCourse()">课程班级</button>
+            <button onclick="turnResource()">资源中心</button>
+            <button onclick="turnUserInfo()">个人信息</button>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 顶部固定栏 -->
+            <div class="top-bar">
+                <button>查看通知</button>
+                <div class="user-info">
+                    <img src="user-avatar.png" alt="用户头像">
+                    <span>用户名称</span>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content">  
+            <!-- 这里可以放置主要内容 -->
+                <div class="notification-container">
+                    <h1>历史通知</h1>
+                    
+                    <div id="notification-list">
+                        <!-- 通知列表将动态加载到这里 -->
+                    </div>
+            
+                    <!-- 分页控件 -->
+                    <div class="pagination">
+                        <button class="prev-button" onclick="prevPage()">上一页</button>
+                        <span id="page-indicator" class="page-indicator">1/5</span>
+                        <button class="next-button" onclick="nextPage()">下一页</button>
+                    </div>
+                </div>
+                <div id="modal" style="display: none;">
+                    <div class="notification-details-container">
+                        <h1>通知详情</h1>
+                        <div id="notification-details">
+                            <!-- 详情内容将动态加载到这里 -->
+                        </div>
+                        <button onclick="closeModal()">关闭</button>
+                    </div>
+                </div>
+            <!-- 这里可以放置主要内容 -->
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/js/teacher/main/notice.js"></script>
+</html>

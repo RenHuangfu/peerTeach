@@ -13,6 +13,7 @@ import (
 var getRoute = map[string]func(*gin.Context){
 	"/":                    controller.ViewLogin,
 	"/manager":             controller.ViewManager,
+	"/notice":              controller.ViewNotice,
 	"/user_info":           controller.ViewInfo,
 	"/login":               controller.ViewLogin,
 	"/register":            controller.ViewRegister,
@@ -27,6 +28,7 @@ var getRoute = map[string]func(*gin.Context){
 var postRoute = map[string]func(*gin.Context){
 	"/":                    controller.Login,
 	"/file":                controller.UploadFile,
+	"/notice":              controller.PostNotice,
 	"/user_info":           controller.PostInfo,
 	"/login":               controller.Login,
 	"/register":            controller.Register,
@@ -48,6 +50,7 @@ func RegisterRoute() {
 	r.LoadHTMLGlob("../front/html/manager/**/*")
 	r.Static("/css", "../front/css")
 	r.Static("/js", "../front/js")
+	r.Static("/html", "../front/html")
 	r.Static("/file", "../file")
 	r.Static("/img", "../front/images/class")
 

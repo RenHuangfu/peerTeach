@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"peerTeach/constant"
 	"peerTeach/domain"
 	"peerTeach/util"
 )
@@ -42,21 +43,11 @@ func DeleteNotification(notify *domain.Notification) (err error) {
 }
 
 // GetNotification 查找被通知用户的所有通知信息
-func GetNotification(user *domain.User) (notify []*domain.Notification, err error) {
+func GetNotification(user *domain.User) (r constant.NoticeRes, err error) {
 	db = util.GetDB()
-	notify = make([]*domain.Notification, 10)
-	var notifyID []uint
-	tx := db.Begin()
-	err = tx.Model(domain.NotificationUser{}).Where("user_id = ?", user.ID).Pluck("notification_id", &notifyID).Error
-	if err != nil {
-		tx.Rollback()
-		return nil, err
-	}
-	err = tx.Model(domain.Notification{}).Where("id IN (?)", notifyID).Find(&notify).Error
-	if err != nil {
-		tx.Rollback()
-		return nil, err
-	}
-	tx.Commit()
-	return notify, err
+	r.Notices = make([]*constant.Notice, 10)
+	err = db.Raw("select n.content,n.created from notifications as n "+
+		"join notification_users as n_u on n_u.notification_id = n.id "+
+		"and n_u.user_id = ?", user.ID).Scan(&r.Notices).Error
+	return
 }

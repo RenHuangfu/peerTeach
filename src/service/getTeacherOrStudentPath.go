@@ -82,3 +82,18 @@ func GetInfoPath(c *gin.Context) (string, error) {
 		return "", errors.New(fmt.Sprintf("identity is valid"))
 	}
 }
+
+func GetNoticePath(c *gin.Context) (string, error) {
+	u, err := GetUserBySession(c)
+	if err != nil {
+		return "", err
+	}
+	switch u.Identity {
+	case "student":
+		return config.StudentNoticePath, nil
+	case "teacher":
+		return config.TeacherNoticePath, nil
+	default:
+		return "", errors.New(fmt.Sprintf("identity is valid"))
+	}
+}
