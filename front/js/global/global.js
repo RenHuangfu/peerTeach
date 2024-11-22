@@ -11,6 +11,10 @@ function turnUserInfo(){
     window.location.href = "/user_info";
 }
 
+function turnNotice(){
+    window.location.href = "/notice";
+}
+
 function formatDate(dateString){
     const date = new Date(dateString);
 

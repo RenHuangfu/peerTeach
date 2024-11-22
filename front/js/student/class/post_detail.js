@@ -70,7 +70,7 @@ function get(){
     })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
+            console.log(data.data);
             postData.title = data.data.post_detail.post_title;
             postData.time = data.data.post_detail.create_time;
             postData.name = data.data.post_detail.user_name;
@@ -85,16 +85,22 @@ function get(){
                 postData.picture.push();
                 photo_num--;
             }
-            // postData.picture = data.photo_num;
-            postData.comments = data.data.comments.map(post => ({
-                id: post.comment_id,
-                name : post.user_name,
-                time : post.create_time,
-                content : post.comment_content,
-                like : post.comment_likes,
-                islike : post.islike,
-                isuser : post.isself
-            }));
+            console.log("comment:",postData.comment)
+            if(postData.comment!==0){
+                postData.comments = data.data.comments.map(post => ({
+                    id: post.comment_id,
+                    name : post.user_name,
+                    time : post.create_time,
+                    content : post.comment_content,
+                    like : post.comment_likes,
+                    islike : post.islike,
+                    isuser : post.isself
+                }));
+            }
+            else if(postData.comment===0)
+            {
+                postData.comments = [];
+            }
             renderPost(postData);
         })
         .catch(error => {
@@ -136,15 +142,22 @@ function renderPost(postData) {
 
     // 渲染帖子点赞按钮和点赞数
     const likeBtn = document.querySelector('.like-btn');
-    likeBtn.src = postData.islike ? 'img/islike.jpg' : 'img/like.jpg';
+
+    if(postData.islike){
+        likeBtn.src ='/img/islike.jpg';
+    }else{
+        likeBtn.src ='/img/like.jpg';
+    }
+    let likeBtnSpan = document.getElementById("like-btn-span");
     likeBtn.classList.toggle('liked', postData.islike);
     document.querySelector('.like-section span:last-child').textContent = postData.like;
-    likeBtn.addEventListener('click', () => {
+    likeBtn.onclick = function (event) {
+
         var data = {
             get_post_detail:{isRequest:false},
             delete_post:{isRequest:false},
             delete_comment:{isRequest:false},
-            like_post:{isRequest: true,post_id:postId},
+            like_post:{isRequest: true,post_id:parseInt(postId)},
             like_comment:{isRequest:false},
             create_comment:{isRequest:false}
         }
@@ -171,7 +184,7 @@ function renderPost(postData) {
             .catch(error => {
                 console.error('Error:',error);
             });
-    });
+    };
 
     document.querySelector('.comment-section span:last-child').textContent = postData.comment;
 
@@ -195,8 +208,10 @@ function renderPost(postData) {
         picturesContainer.appendChild(img);
     }
 
-    readerComment();
-
+    if(postData.comment)
+    {
+        readerComment();
+    }
 }
 function readerComment(){
     // 渲染评论列表
@@ -273,7 +288,7 @@ function readerComment(){
                 delete_post:{isRequest: false},
                 delete_comment:{isRequest:false},
                 like_post:{isRequest:false},
-                like_comment:{isRequest:true,post_id:postId,comment_id:comment.id},
+                like_comment:{isRequest:true,post_id:parseInt(postId),comment_id:parseInt(comment.id)},
                 create_comment:{isRequest:false}
             }
             fetch('/post_detail',{
@@ -292,7 +307,7 @@ function readerComment(){
                 .then(data => {
                     console.log("Response data:",data);
                     comment.islike = !comment.islike;
-                    comment.like += comment.like ? 1 : -1;
+                    comment.like += comment.islike ? 1 : -1;
                     commentLike.textContent = comment.like;
                     commentLikeBtn.src = comment.islike ? 'img/islike.jpg' : 'img/like.jpg';
                 })
@@ -336,7 +351,7 @@ function addComment() {
         delete_comment:{isRequest:false},
         like_post:{isRequest:false},
         like_comment:{isRequest:false},
-        create_comment:{isRequest:true,post_id:postId,create_time:time,comment_content:commentContent}
+        create_comment:{isRequest:true,post_id:parseInt(postId), content:commentContent}
     }
     fetch('/post_detail',{
         method: "POST",
@@ -354,10 +369,10 @@ function addComment() {
         .then(data => {
             console.log("Response data:",data);
             var newComment = {};
-            newComment.id = data.newcomment.comment_id;
-            newComment.name = data.newcomment.user_name;
-            newComment.photo = data.newcomment.UserPhoto;
-            newComment.time = time;
+            newComment.id = data.data.comment_id;
+            newComment.name = "111";
+            newComment.photo = "/avatar.jpg";
+            newComment.time = formatDate(time);
             newComment.content = commentContent;
             newComment.like = 0;
             newComment.islike = false;
@@ -365,6 +380,7 @@ function addComment() {
             postData.comments.push(newComment);
             postData.comment += 1;
             document.getElementById('comment-content').value = '';
+            document.getElementById('comment').textContent = postData.comment;
             readerComment();
         })
         .catch(error => {
@@ -425,7 +441,7 @@ function confirm2(){
     var data = {
         get_post_detail:{isRequest:false},
         delete_post:{isRequest: false},
-        delete_comment:{isRequest:true,post_id:postId,comment_id: DeleteMessageId},
+        delete_comment:{isRequest:true,post_id:parseInt(postId),comment_id: parseInt(DeleteMessageId)},
         like_post:{isRequest:false},
         like_comment:{isRequest:false},
         create_comment:{isRequest:false}
@@ -449,6 +465,8 @@ function confirm2(){
             if (index !== -1) {
                 postData.comments.splice(index, 1);
                 readerComment();
+                postData.comment-=1;
+                document.getElementById('comment').textContent = postData.comment;
             }
             let popup = document.querySelector('.modal_2');
             popup.classList.remove('active');

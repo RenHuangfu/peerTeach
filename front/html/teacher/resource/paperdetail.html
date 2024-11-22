@@ -6,11 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>页面布局示例</title>
     <link rel="stylesheet" href="/css/teacher/resource/paperdetail.css" type="text/css">
+    <script src="/js/global/global.js"></script>
 </head>
 
 <body>
-            <!-- 内容区域 -->
-            <div class="content">
+<div class="container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <button onclick ="turnCourse()">课程班级</button>
+        <button onclick ="turnResource()">资源中心</button>
+        <button onclick ="turnUserInfo()">个人信息</button>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 顶部固定栏 -->
+        <div class="top-bar">
+            <button  onclick ="turnNotice()">查看通知</button>
+            <div class="user-info">
+                <img src="user-avatar.png" alt="用户头像">
+                <span>用户名称</span>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
                 <button style="position: fixed; top: 180px; right: 150px; ">
                     <a class="custom-link" onclick="jumpToAnalysePage()">查看统计分析</a>
                 </button>
@@ -23,7 +43,8 @@
 
                 </script>
             </div>
-
+        </div>
+    </div>
 </body>
 
 </html>

@@ -27,7 +27,7 @@ func GetQuestion(c *gin.Context, req *constant.ResourceRequest) (data *constant.
 }
 
 func GetGlobalQuestion(req *constant.ResourceRequest) (data *constant.QuestionResponse, err error) {
-	data, err = persistence.GetGlobalQuestion(&req.GetQuestion)
+	data, err = persistence.GetGlobalQuestion(&req.GetGlobalQuestion)
 	return
 }
 
@@ -40,6 +40,7 @@ func InsertQuestion(c *gin.Context, req *constant.QuestionReq) (data interface{}
 		Section:  &req.Section,
 		Course:   &req.Course,
 		IsPublic: req.IsPublic,
+		Options:  req.Options,
 		UserID:   user.(domain.User).ID,
 	}
 	err = persistence.InsertQuestion(que)

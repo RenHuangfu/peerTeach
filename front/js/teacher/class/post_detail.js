@@ -97,6 +97,10 @@ function get(){
                     isuser : post.isself
                 }));
             }
+            else if(postData.comment===0)
+            {
+                postData.comments = [];
+            }
             renderPost(postData);
         })
         .catch(error => {
@@ -105,7 +109,7 @@ function get(){
 }
 
 window.addEventListener('load', function () {
-    // 页面完全加载后执行的代码      
+    // 页面完全加载后执行的代码
     get();
 });
 
@@ -118,8 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function renderPost(postData) {
-    // 渲染帖子标题和删除按钮  
-    // const postTitle = document.querySelector('.post-title span:first-child');  
+    // 渲染帖子标题和删除按钮
+    // const postTitle = document.querySelector('.post-title span:first-child');
     // postTitle.textContent = postData.title;
     document.getElementById('title').textContent = postData.title;
     const deleteBtn = document.querySelector('.post-delete-btn');
@@ -130,7 +134,7 @@ function renderPost(postData) {
     }
     deleteBtn.addEventListener('click', () => confirmDelete1());
 
-    // 渲染帖子信息  
+    // 渲染帖子信息
     document.querySelector('.post-info img').src = postData.photo;
     document.getElementById('name').textContent = postData.name;
     document.getElementById('time').textContent = postData.time;
@@ -185,7 +189,7 @@ function renderPost(postData) {
     document.querySelector('.comment-section span:last-child').textContent = postData.comment;
 
     const picturesContainer = document.getElementById('post-pictures');
-    // picturesContainer.classList.add('post-pictures');  
+    // picturesContainer.classList.add('post-pictures');
     picturesContainer.innerHTML = '';
 
     if (Array.isArray(postData.picture)) {
@@ -193,8 +197,8 @@ function renderPost(postData) {
             const img = document.createElement('img');
             img.src = pictureUrl;
             img.alt = 'Post Picture';
-            img.style.cursor = 'pointer'; // 添加鼠标指针样式  
-            img.addEventListener('click', () => openModal(pictureUrl)); // 添加点击事件  
+            img.style.cursor = 'pointer'; // 添加鼠标指针样式
+            img.addEventListener('click', () => openModal(pictureUrl)); // 添加点击事件
             picturesContainer.appendChild(img);
         });
     } else if (typeof postData.picture === 'string') {
@@ -204,7 +208,7 @@ function renderPost(postData) {
         picturesContainer.appendChild(img);
     }
 
-    if(postData.comment!==0)
+    if(postData.comment)
     {
         readerComment();
     }
@@ -220,13 +224,13 @@ function readerComment(){
 
         const commentUserInfo = document.createElement('div');
         commentUserInfo.classList.add('comment-userinfo');
-        // 评论照片  
+        // 评论照片
         const commentPhoto = document.createElement('img');
         commentPhoto.src = comment.photo;
         commentPhoto.classList.add('comment-photo');
         commentUserInfo.appendChild(commentPhoto);
 
-        // 评论信息  
+        // 评论信息
         const commentInfo = document.createElement('div');
         commentInfo.classList.add('comment-info');
 
@@ -240,7 +244,7 @@ function readerComment(){
         commentUserInfo.appendChild(commentInfo);
         commentDiv.appendChild(commentUserInfo);
 
-        // 评论内容和点赞按钮  
+        // 评论内容和点赞按钮
         const commentContentWrapper = document.createElement('div');
         commentContentWrapper.classList.add('comment_Content');
 
@@ -376,6 +380,7 @@ function addComment() {
             postData.comments.push(newComment);
             postData.comment += 1;
             document.getElementById('comment-content').value = '';
+            document.getElementById('comment').textContent = postData.comment;
             readerComment();
         })
         .catch(error => {
@@ -460,6 +465,8 @@ function confirm2(){
             if (index !== -1) {
                 postData.comments.splice(index, 1);
                 readerComment();
+                postData.comment-=1;
+                document.getElementById('comment').textContent = postData.comment;
             }
             let popup = document.querySelector('.modal_2');
             popup.classList.remove('active');

@@ -16,14 +16,16 @@ function loadNotifications(page) {
     const end = start + notificationsPerPage;
     const pageNotifications = notifications.slice(start, end);
 
+
     // 创建通知项
     pageNotifications.forEach(notification => {
         const notificationItem = document.createElement("div");
         notificationItem.classList.add("notification-item");
         notificationItem.innerHTML = `
             <p class="message">${notification.text}</p>
-            <p class="timestamp">接收时间：${notification.send_time}</p>
+            <p class="timestamp">接收时间：${formatDate(notification.send_time)}</p>
         `;
+        console.log(notification.id)
         notificationItem.onclick = () => viewDetails(notification.id);
         notificationList.appendChild(notificationItem);
     });
@@ -58,19 +60,24 @@ document.addEventListener("DOMContentLoaded", function() {
         get_notification:{isRequest:true}
     }
 
-    fetch("/main/notice", {
-            method: "POST", // 指定请求方法为 POST
-            headers: {
+    fetch("/notice", {
+        method: "POST", // 指定请求方法为 POST
+        headers: {
             "Content-Type": "application/json" // 设置请求头
-            },
-            body: JSON.stringify(data) // 将数据转换为 JSON 字符串并作为请求体发送
-        })
-         // 替换为实际的 API 地址
+        },
+        body: JSON.stringify(data) // 将数据转换为 JSON 字符串并作为请求体发送
+    })
+        // 替换为实际的 API 地址
         .then(response => response.json())
         .then(data => {
             console.log(data)
             if (data && data.data && data.data.notices) {
                 notifications = data.data.notices;
+                var noticeId=0;
+                notifications.forEach(notification=>{
+                    notification.id = noticeId;
+                    noticeId++;
+                })
                 loadNotifications(1);
             } else {
                 console.warn("未找到通知数据。");
@@ -85,6 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // 查看详情
 function viewDetails(id) {
     const notification = notifications.find(n => n.id === id);
+    console.log("id:",id)
     if (notification) {
         // // 确保所有需要的信息都在这里
         // localStorage.setItem("notificationDetails", JSON.stringify(notification));
@@ -93,7 +101,7 @@ function viewDetails(id) {
         const detailsContainer = document.getElementById('notification-details');
         detailsContainer.innerHTML = `
             <p class="message"><strong>消息内容：</strong>${notification.text}</p>
-            <p class="timestamp"><strong>接收时间：</strong>${notification.send_time}</p>
+            <p class="timestamp"><strong>接收时间：</strong>${formatDate(notification.send_time)}</p>
         `;
     }
 }

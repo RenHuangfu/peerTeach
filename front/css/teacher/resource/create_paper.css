@@ -42,7 +42,7 @@ body, html {
     flex: 1;
     display: flex;
     flex-direction: column;
-    margin-left: 80px; /* ²à±ßÀ¸¿í¶È */
+    margin-left: 80px; /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 }
 
 .top-bar {
@@ -54,9 +54,9 @@ body, html {
     align-items: center;
     position: fixed;
     top: 0;
-    left: 80px; /* ²à±ßÀ¸¿í¶È */
+    left: 80px; /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     right: 0;
-    z-index: 1000; /* È·±£¶¥²¿À¸ÔÚÄÚÈÝÖ®ÉÏ */
+    z-index: 1000; /* È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ */
 }
 
     .top-bar button {
@@ -85,9 +85,8 @@ body, html {
 
 .content {
     flex: 1;
-    padding: 20px;
     background-color: #f4f4f4;
-    margin-top: 50px; /* ¶¥²¿À¸¸ß¶È */
+    margin-top: 50px; /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¶ï¿½ */
 }
 
 .main {
@@ -96,35 +95,22 @@ body, html {
 }
 
 table {
-    width: 100%; /* ±í¸ñ¿í¶È */
-    border-collapse: collapse; /* ºÏ²¢±ß¿ò */
-    margin: 30px 0; /* ±í¸ñÉÏÏÂÍâ±ß¾à */
+    width: 100%; /* ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    border-collapse: collapse; /* ï¿½Ï²ï¿½ï¿½ß¿ï¿½ */
+    margin: 30px 0; /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¾ï¿½ */
 }
 
 th, td {
-    border: 1px solid #dddddd; /* µ¥Ôª¸ñ±ß¿ò */
-    text-align: left; /* µ¥Ôª¸ñÎÄ±¾×ó¶ÔÆë */
-    padding: 8px; /* µ¥Ôª¸ñÄÚ±ß¾à */
+    border: 1px solid #dddddd; /* ï¿½ï¿½Ôªï¿½ï¿½ß¿ï¿½ */
+    text-align: left; /* ï¿½ï¿½Ôªï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
+    padding: 8px; /* ï¿½ï¿½Ôªï¿½ï¿½ï¿½Ú±ß¾ï¿½ */
 }
 
 th {
-    background-color: #f2f2f2; /* ±íÍ·±³¾°ÑÕÉ« */
+    background-color: #f2f2f2; /* ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É« */
 }
 
-.modal-background {
-    display: none; /* Ä¬ÈÏÒþ²Ø */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* °ëÍ¸Ã÷±³¾° */
-    justify-content: center;
-    z-index: 1000;
-    text-align: center
-}
-
-/* Ä£Ì¬¿òÄÚÈÝ */
+/* Ä£Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 .modal-content {
     width: 300px;
     margin:0 auto;
@@ -135,7 +121,11 @@ th {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* ¹Ø±Õ°´Å¥ */
+#question-modal-content{
+    width: 800px;
+}
+
+/* ï¿½Ø±Õ°ï¿½Å¥ */
 .close-btn {
     float:right;
     background-color: red;
@@ -148,7 +138,7 @@ th {
     cursor: pointer;
 }
 
-/* µ¯´°ÄÚµÄÁ½¸ö°´Å¥ */
+/* ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¥ */
 .modal-button {
     padding: 10px 20px;
     margin: 10px;
@@ -171,18 +161,18 @@ th {
     height: 80%;
     background-color: white;
     border-radius: 8px;
-    overflow: hidden; /* ·ÀÖ¹ÄÚÈÝÒç³ö */
+    overflow: hidden; /* ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* iframe ÑùÊ½ */
+/* iframe ï¿½ï¿½Ê½ */
 .modal-iframe {
     width: 100%;
     height: 100%;
     border: none;
 }
 
-/* ¹Ø±Õ°´Å¥ */
+/* ï¿½Ø±Õ°ï¿½Å¥ */
 .close-btn2 {
     position: absolute;
     top: 10px;

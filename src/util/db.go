@@ -80,14 +80,14 @@ func init() {
 		panic(err)
 	}
 
-	//err = initDB.SetupJoinTable(&domain.Exam{}, "Questions", &domain.ExamQuestion{})
-	//if err != nil {
-	//	panic(err)
-	//}
-	//err = initDB.AutoMigrate(&domain.ExamQuestion{})
-	//if err != nil {
-	//	panic(err)
-	//}
+	err = initDB.SetupJoinTable(&domain.Exam{}, "Questions", &domain.ExamQuestion{})
+	if err != nil {
+		panic(err)
+	}
+	err = initDB.AutoMigrate(&domain.ExamQuestion{})
+	if err != nil {
+		panic(err)
+	}
 }
 
 // openDB 连接db

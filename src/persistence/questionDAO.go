@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"fmt"
 	"peerTeach/constant"
 	"peerTeach/domain"
 	"peerTeach/util"
@@ -46,7 +47,7 @@ func InsertExam(e *domain.Exam, q []*domain.Question) (err error) {
 	for _, v := range q {
 		err = tx.Model(domain.ExamQuestion{}).Create(&domain.ExamQuestion{
 			QuestionID: v.ID,
-			ExamId:     e.ID,
+			ExamID:     e.ID,
 		}).Error
 		if err != nil {
 			tx.Rollback()
@@ -113,10 +114,12 @@ func GetPaperDetail(e *domain.Exam) (r *constant.PaperResponseDetail, err error)
 		tx.Rollback()
 		return nil, err
 	}
+	fmt.Println(e.ID)
 	err = tx.Raw("select q.id as question_id,q.created as time,q.name as title,q.options as options "+
 		"from questions as q where q.id in "+
-		"(select q.id from exam_questions as q join exams as e "+
+		"(select q.question_id from exam_questions as q join exams as e "+
 		"on q.exam_id = e.id and e.id = ?)", e.ID).Scan(&r.Questions).Error
+	fmt.Println(r.Questions)
 	if err != nil {
 		tx.Rollback()
 		return nil, err
@@ -126,8 +129,16 @@ func GetPaperDetail(e *domain.Exam) (r *constant.PaperResponseDetail, err error)
 
 func GetQuestionDetail(q *domain.Question) (question *constant.QuestionDetail, err error) {
 	db = util.GetDB()
-	err = db.Raw("select q.id as question_id,q.created as time,q.name as title,q.options as options "+
-		"from questions as q where q.id = ?", q.ID).Scan(&question).Error
+	//err = db.Raw("select q.id as question_id,q.created as time,q.name as title,q.options as options "+
+	//	"from questions as q where q.id = ?", q.ID).Scan(&question).Error
+	id := q.ID
+	err = db.Find(q, id).Error
+	question = &constant.QuestionDetail{
+		QuestionID: q.ID,
+		Title:      q.Name,
+		Time:       q.Created,
+		Options:    q.Options,
+	}
 	if err != nil {
 		return nil, err
 	}

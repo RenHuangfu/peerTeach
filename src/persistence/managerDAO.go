@@ -43,11 +43,14 @@ func DeleteNotification(notify *domain.Notification) (err error) {
 }
 
 // GetNotification 查找被通知用户的所有通知信息
-func GetNotification(user *domain.User) (r constant.NoticeRes, err error) {
+func GetNotification(user *domain.User) (r *constant.NoticeRes, err error) {
 	db = util.GetDB()
-	r.Notices = make([]*constant.Notice, 10)
-	err = db.Raw("select n.content,n.created from notifications as n "+
+	notices := make([]constant.Notice, 10)
+	err = db.Raw("select n.content as content,n.created as created from notifications as n "+
 		"join notification_users as n_u on n_u.notification_id = n.id "+
-		"and n_u.user_id = ?", user.ID).Scan(&r.Notices).Error
+		"and n_u.user_id = ?", user.ID).Scan(&notices).Error
+	r = &constant.NoticeRes{
+		Notices: notices,
+	}
 	return
 }

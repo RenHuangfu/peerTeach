@@ -9,20 +9,22 @@
     <link rel="stylesheet" href="/css/layui/css/layui.css" type="text/css">
     <script src="/js/layui/layui.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/js/global/global.js"></script>
 </head>
 
 <body>
     <div class="container">
         <!-- 侧边栏 -->
         <div class="sidebar">
-            <button>课程班级</button>
-            <button>资源中心</button>
+            <button onclick ="turnCourse()">课程班级</button>
+            <button onclick ="turnResource()">资源中心</button>
+            <button onclick ="turnUserInfo()">个人信息</button>
         </div>
         <!-- 主内容区域 -->
         <div class="main-content">
             <!-- 顶部固定栏 -->
             <div class="top-bar">
-                <button>查看通知</button>
+                <button  onclick ="turnNotice()">查看通知</button>
                 <div class="user-info">
                     <img src="user-avatar.png" alt="用户头像">
                     <span>用户名称</span>
@@ -94,7 +96,7 @@
             </div>
         </div>
     </div>
-    <script src="/js/teacher/resource/create_question.js">
+    <script src="/js/teacher/resource/create_Question.js">
     </script>
 </body>
 

@@ -6,12 +6,12 @@ import (
 )
 
 type Notice struct {
-	Text     string    `json:"text" gorm:"content"`
-	SendTime time.Time `json:"send_time" gorm:"created"`
+	Content *string   `json:"text" gorm:"content"`
+	Created time.Time `json:"send_time" gorm:"created"`
 }
 
 type NoticeRes struct {
-	Notices []*Notice `json:"notices"`
+	Notices []Notice `json:"notices"`
 }
 
 type InfoResponse struct {
@@ -104,9 +104,9 @@ type AnnouncementResDetail struct {
 }
 
 type Paper struct {
-	PaperID        uint      `json:"paperId" gorm:"paper_id"`
-	Title          *string   `json:"title" gorm:"title"`
-	LastChangeTime time.Time `json:"LastChangeTime" gorm:"time"`
+	PaperID uint      `json:"paperId" gorm:"paper_id"`
+	Title   *string   `json:"title" gorm:"title"`
+	Time    time.Time `json:"LastChangeTime" gorm:"time"`
 }
 
 type PapersResponse struct {
@@ -114,14 +114,16 @@ type PapersResponse struct {
 }
 
 type Question struct {
-	QuestionID     uint      `json:"questionId" gorm:"question_id"`
-	Title          *string   `json:"title" gorm:"title"`
-	LastChangeTime time.Time `json:"LastChangeTime" gorm:"time"`
+	QuestionID uint      `json:"questionId" gorm:"question_id"`
+	Title      *string   `json:"title" gorm:"title"`
+	Time       time.Time `json:"LastChangeTime" gorm:"time"`
 }
 
 type QuestionDetail struct {
-	Question
-	domain.Options
+	QuestionID uint           `json:"questionId" gorm:"question_id"`
+	Title      *string        `json:"title" gorm:"title"`
+	Time       time.Time      `json:"LastChangeTime" gorm:"time"`
+	Options    domain.Options `json:"options"`
 }
 
 type QuestionResponse struct {

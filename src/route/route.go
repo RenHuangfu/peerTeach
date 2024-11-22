@@ -53,6 +53,8 @@ func RegisterRoute() {
 	r.Static("/html", "../front/html")
 	r.Static("/file", "../file")
 	r.Static("/img", "../front/images/class")
+	r.Static("/images/resource", "../front/images/resource")
+	r.Static("/json", "../front/json")
 
 	// session 注册
 	redisConfig := config.GetGlobalConf().RedisConfig

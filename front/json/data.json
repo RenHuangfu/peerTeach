@@ -1,0 +1,31 @@
+{
+  "subjects": [
+    {
+      "name":"math",
+      "courses": [
+        {
+          "name":"math1",
+          "sections":["section1", "section2", "section3"]
+        }
+      ]
+    },
+    {
+      "name":"english",
+      "courses": [
+        {
+          "name":"english1",
+          "sections":["section1", "section2", "section3"]
+        }
+      ]
+    },
+    {
+      "name":"physics",
+      "courses": [
+        {
+          "name":"physics1",
+          "sections":["section1", "section2", "section3"]
+        }
+      ]
+    }
+  ]
+}

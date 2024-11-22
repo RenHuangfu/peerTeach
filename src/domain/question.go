@@ -36,7 +36,7 @@ type Question struct {
 	Section  *string
 	Course   *string
 	Type     *string
-	IsPublic bool    `gorm:"default:true"`
+	IsPublic bool
 	Options  Options `gorm:"column:options;type:json"`
 	UserID   uint
 	User     User `gorm:"constraint:OnDelete:CASCADE;"`
@@ -71,7 +71,7 @@ type Exam struct {
 
 // ExamQuestion 试卷题目连接表
 type ExamQuestion struct {
-	ExamId     uint     `gorm:"primaryKey"`
+	ExamID     uint     `gorm:"primaryKey"`
 	Exam       Exam     `gorm:"foreignKey:ID;references:ExamID;constraint:OnDelete:CASCADE;"`
 	QuestionID uint     `gorm:"primaryKey"`
 	Question   Question `gorm:"foreignKey:ID;references:QuestionID;constraint:OnDelete:CASCADE;"`

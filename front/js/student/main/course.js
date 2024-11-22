@@ -109,7 +109,9 @@ function closeModal() {
 function submitInviteCode() {
     const inviteCode = document.getElementById('invite-code').value;
     // 解密邀请码获取班级 ID
-    let decryptedClassId = xorDecrypt(inviteCode);
+    let key = 543210; // 密钥
+    let decryptedClassId = xorDecrypt(inviteCode, key);
+    console.log(decryptedClassId)
     // 定义请求体
     var data = {
         get_course: {isRequest: false},
@@ -174,8 +176,10 @@ function insertCourseList(newData)
     console.log(class_list);
 }
 
-function xorDecrypt(inviteCode) {
-    let key = 9876543210; // 密钥
+
+function xorDecrypt(inviteCode, key) {
+    console.log("key:",key)
+    console.log("inviteCode:",inviteCode)
     // 将邀请码转换为整数
     let encryptedInt = parseInt(inviteCode, 36);
 
@@ -192,9 +196,7 @@ function xorDecrypt(inviteCode) {
     }
 
     // 将二进制字符串转换为整数
-    let classId = parseInt(classIdBinary, 2);
-
-    return classId;
+    return parseInt(classIdBinary, 2);
 }
 
 layui.use(function(){

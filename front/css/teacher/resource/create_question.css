@@ -89,7 +89,6 @@ html {
 
 .content {
     flex: 1;
-    padding: 20px;
     background-color: #f4f4f4;
     margin-top: 50px;
     /* �������߶� */
@@ -102,18 +101,18 @@ h1{
     text-align: center;
 }   
 
-#question-container {
-    width: 600px;
-    margin: 0 auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-}
+/*#question-container {*/
+/*    width: 600px;*/
+/*    margin: 0 auto;*/
+/*    background-color: white;*/
+/*    padding: 20px;*/
+/*    border-radius: 10px;*/
+/*}*/
 
-#form-container {
-    width: 100%;
-    margin: 0 auto;
-}
+/*#form-container {*/
+/*    width: 100%;*/
+/*    margin: 0 auto;*/
+/*}*/
 
 .radio-group {
     display: flex;
@@ -152,22 +151,22 @@ h1{
     /* ѡ�к���ı���ɫ */
 }
 
-#popup {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    background-color: white;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+/*#popup {*/
+/*    display: none;*/
+/*    position: fixed;*/
+/*    top: 50%;*/
+/*    left: 50%;*/
+/*    transform: translate(-50%, -50%);*/
+/*    padding: 20px;*/
+/*    background-color: white;*/
+/*    border: 1px solid #ddd;*/
+/*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);*/
+/*}*/
 
-#popup input[type="text"] {
-    width: 150px;
-    margin-right: 10px;
-}
+/*#popup input[type="text"] {*/
+/*    width: 150px;*/
+/*    margin-right: 10px;*/
+/*}*/
 
 .close-btn {
     float: right;

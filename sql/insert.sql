@@ -129,3 +129,8 @@ from comments as c, users as u
 where c.user_id = u.id and c.post_id = 1;
 
 select * from posts where class_id = 1;
+
+update users set password = '000',email = '000@qq.com',identity = 'teacher' where id = 1;
+
+select * from users;
+

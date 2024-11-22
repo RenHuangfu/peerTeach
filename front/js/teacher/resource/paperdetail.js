@@ -1,5 +1,5 @@
-const urlParams = new URLSearchParams(window.location.search);
-const paperId = urlParams.get("paperId");
+const paperId = localStorage["paperId"]
+console.log(paperId)
 
 function jumpToAnalysePage() {
     window.location.href = `paper_analyse.html?paperId=${paperId}`
@@ -42,21 +42,21 @@ function func1(data) {
                                         </tbody>
                                     `
         var j = 0;
-        while (data.question[i].option[j]) {
+        while (data.question[i].options.Options[j]) {
             var row2 = document.createElement('tr');
             row2.innerHTML = `
                                             <td>${String.fromCharCode(65 + j)}</td>
-                                            <td>${data.question[i].option[j].text}</td>
+                                            <td>${data.question[i].options.Options[j].text}</td>
                                             `
-            if (data.question[i].option[j].isCorrect) {
+            if (data.question[i].options.Options[j].IsCorrect) {
                 var init_img = document.createElement('img');
-                init_img.src = "correct.png"
+                init_img.src = "/images/resource/correct.png"
                 init_img.alt = "正确";
                 init_img.style = "width: 24px; height: 24px;";
             }
             else {
                 var init_img = document.createElement('img');
-                init_img.src = "incorrect.png"
+                init_img.src = "/images/resource/inCorrect.png"
                 init_img.alt = "不正确";
                 init_img.style = "width: 24px; height: 24px;";
             }
@@ -74,10 +74,16 @@ function func1(data) {
 
 function getPaper() {
     var data = {
-        paperId: -1
-    }
-    data.paperId = paperId;
-    fetch('https://mock.apipost.net/mock/3610001ac4e5000/?apipost_id=3afe5fb9b56011')
+        get_paper_detail:{isRequest: true, paper_id: parseInt(paperId)}
+    };
+
+    fetch('/resourceDetail', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -85,7 +91,8 @@ function getPaper() {
             return response.json();  // 将响应的 JSON 数据解析成对象
         })
         .then(_data => {
-            func1(_data)
+
+            func1(_data.data)
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);

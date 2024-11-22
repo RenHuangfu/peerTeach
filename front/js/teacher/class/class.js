@@ -526,9 +526,8 @@ function CancelDeleteStudent(){
     popup.classList.remove('active');
 }
 
-
-function xorEncrypt(classId) {
-    let key = 9876543210; // 密钥
+let key = 543210; // 密钥
+function xorEncrypt(classId, key) {
     // 将班级 ID 和密钥转换为二进制字符串
     let classIdBinary = classId.toString(2).padStart(32, '0'); // 假设班级 ID 是 32 位的整数
     let keyBinary = key.toString(2).padStart(32, '0'); // 假设密钥是 32 位的整数
@@ -552,7 +551,7 @@ function showInviteCode(){
     let popup = document.querySelector('.inviteModal');
     popup.classList.add('active');
     const codeInfo = document.getElementById('codeInfo');
-    codeInfo.textContent = xorEncrypt(classId);
+    codeInfo.textContent = xorEncrypt(parseInt(classId),key);
 }
 
 function closebtn(){
