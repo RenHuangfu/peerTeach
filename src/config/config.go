@@ -98,6 +98,7 @@ const (
 	Main     = "main"
 	Class    = "class"
 	Resource = "resource"
+	Lesson   = "lesson"
 )
 
 var (
@@ -119,6 +120,11 @@ var (
 	StudentAnnouncementDetailPath = filepath.Join(UpDir, Front, Html, Student, Class, "announcement_detail.html")
 	TeacherResourcePath           = filepath.Join(UpDir, Front, Html, Teacher, Resource, "resource.html")
 	TeacherPaperPath              = filepath.Join(UpDir, Front, Html, Teacher, Resource, "paperdetail.html")
+	TeacherBeforeLessonPath       = filepath.Join(UpDir, Front, Html, Teacher, Lesson, "beforelesson.html")
+	TeacherAtLessonPath           = filepath.Join(UpDir, Front, Html, Teacher, Lesson, "atlesson.html")
+	TeacherAfterLessonPath        = filepath.Join(UpDir, Front, Html, Teacher, Lesson, "afterlesson.html")
+	StudentAtLessonPath           = filepath.Join(UpDir, Front, Html, Student, Lesson, "atlesson.html")
+	StudentAfterLessonPath        = filepath.Join(UpDir, Front, Html, Student, Lesson, "afterlesson.html")
 )
 
 // session key

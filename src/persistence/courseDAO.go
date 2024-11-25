@@ -115,28 +115,28 @@ func DeleteClass(c *domain.Class) (err error) {
 	return err
 }
 
-// InsertClassRoom 插入课堂
-func InsertClassRoom(c *domain.ClassRoom) (err error) {
+// InsertLesson 插入课堂
+func InsertLesson(c *domain.Lesson) (err error) {
 	db = util.GetDB()
 	err = db.Create(c).Error
 	return err
 }
 
-// GetClassRoom 获取班级下所有课堂
-func GetClassRoom(c *domain.Class) (room []*domain.ClassRoom, err error) {
+// GetLesson 获取班级下所有课堂
+func GetLesson(c *domain.Class) (room []*domain.Lesson, err error) {
 	db = util.GetDB()
-	room = make([]*domain.ClassRoom, 10)
-	err = db.Model(domain.ClassRoom{}).Where("class_id = ?", c.ID).Find(&room).Error
+	room = make([]*domain.Lesson, 10)
+	err = db.Model(domain.Lesson{}).Where("class_id = ?", c.ID).Find(&room).Error
 	if err != nil {
 		return nil, err
 	}
 	return room, err
 }
 
-// DeleteClassRoom 删除课堂
-func DeleteClassRoom(c *domain.ClassRoom) (err error) {
+// DeleteLesson 删除课堂
+func DeleteLesson(c *domain.Lesson) (err error) {
 	db = util.GetDB()
-	err = db.Delete(&domain.ClassRoom{}, c.ID).Error
+	err = db.Delete(&domain.Lesson{}, c.ID).Error
 	return err
 }
 

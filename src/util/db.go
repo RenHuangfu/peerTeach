@@ -21,7 +21,7 @@ func init() {
 		&domain.User{},
 		&domain.Course{},
 		&domain.Class{},
-		&domain.ClassRoom{},
+		&domain.Lesson{},
 		&domain.Question{},
 		&domain.AnswerRecord{},
 		&domain.Announcement{},

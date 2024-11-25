@@ -42,22 +42,6 @@ type Question struct {
 	User     User `gorm:"constraint:OnDelete:CASCADE;"`
 }
 
-// AnswerRecord 答题记录
-type AnswerRecord struct {
-	ID            uint      `gorm:"primary_key"`
-	Created       time.Time `gorm:"column:created;autoCreateTime"`
-	Updated       time.Time `gorm:"column:updated;autoUpdateTime"`
-	AnswerContent *string   `gorm:"type:text"`
-	AnswerReason  *string   `gorm:"type:text"`
-	Likes         uint
-	UserID        uint
-	QuestionID    uint
-	ClassRoomID   uint
-	User          User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Question      Question  `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	ClassRoom     ClassRoom `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-}
-
 // Exam 试卷
 type Exam struct {
 	ID        uint      `gorm:"primary_key"`

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link type="text/css" rel="stylesheet" href="../../../css/teacher/lesson/beforelesson.css" />
+    <script type="text/javascript" src=""></script>
+    <title>页面布局示例</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- 侧边栏 -->
+      <div class="sidebar">
+        <button>课程班级</button>
+        <button>资源中心</button>
+      </div>
+
+      <!-- 主内容区域 -->
+      <div class="main-content">
+        <!-- 顶部固定栏 -->
+        <div class="top-bar">
+          <button>查看通知</button>
+          <div class="user-info">
+            <img src="user-avatar.png" alt="用户头像" />
+            <span>用户名称</span>
+          </div>
+        </div>
+        <div class="part-container">
+          <!-- PPT预览区-->
+          <div class="swiper-container">
+            <span style="
+                font-size: 24px;
+                text-align: center;
+                display: block;
+                margin-top: 20px;
+              " >PPT预览</span >
+            <button onclick="prevSlide()">上一张</button>
+            <button onclick="nextSlide()">下一张</button>
+            <div class="swiperproflie" id="swiperproflie1"></div>
+          </div>
+          <!--PPT内容显示区-->
+          <div class="slide-container">
+            <div class="slide-content">
+              <img
+                id="slideImage"
+                src=""
+                alt="ppt"
+                style="width: 100%; height: 100%"
+              />
+            </div>
+            <div class="button-container">
+              <button id="addSlide" onclick="openDialog1()">添加课件</button>
+              <button id="addQuestion" onclick="openDialog2()">添加试卷</button>
+            </div>
+            <div class="button-endclass">
+              <button onclick="goTopage8()">开课</button>
+            </div>
+          </div>
+          <!--题目预览区-->
+          <div class="swiper-container" style="right: 0">
+            <span style="
+                font-size: 24px;
+                text-align: center;
+                display: block;
+                margin-top: 20px;
+              " >题目预览</span>
+            <button onclick="prevSlide()">上一张</button>
+            <button onclick="nextSlide()">下一张</button>
+            <div class="swiperproflie" id="swiperproflie2"></div>
+          </div>
+          <!--上传课件-->
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="添加课件"
+            class="upslide-dialog"
+            id="myDialog1"
+            style="display: none"
+          >
+            <div class="upslide-dialog-header">
+              <span style="font-size: 25px">添加课件</span>
+              <button
+                type="button"
+                class="close-button"
+                aria-label="Close"
+                onclick="closeDialog1()"
+              >
+                <span>×</span>
+              </button>
+            </div>
+            <div class="upslide-dialog-body">
+              <div style="font-size: 20px">上传文件</div>
+              <div
+                class="cover-size"
+                style="
+                  font-size: 12px;
+                  line-height: 16px;
+                  margin: 10px 0px 10px;
+                "
+              >
+                请选择PPT上传
+              </div>
+              <input type="file" name="ppt" accept=".pdf, .doc, .docx" />
+            </div>
+            <div class="upslide-dialog-footer">
+              <button
+                type="button"
+                class="upload-button"
+                onclick="closeDialog1()"
+              >
+                <span> 取消</span>
+              </button>
+              <button
+                type="button"
+                class="upload-button"
+                onclick="closeDialog1()"
+              >
+                <span> 确定</span>
+              </button>
+            </div>
+          </div>
+
+          <!--上传题目-->
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="添加题目"
+            class="upslide-dialog"
+            id="myDialog2"
+            style="display: none"
+          >
+            <div class="upslide-dialog-header">
+              <button
+                type="button"
+                class="close-button2"
+                aria-label="Close"
+                onclick="closeDialog2()"
+              >
+                <span>×</span>
+              </button>
+              <div class="tab">
+                <button
+                  class="tablinks"
+                  onclick="select_way(event, 'paper')"
+                  id="defaultOpen"
+                >
+                  选择试卷
+                </button>
+                <button
+                  class="tablinks"
+                  onclick="select_way(event, 'question')"
+                >
+                  选择题目
+                </button>
+              </div>
+            </div>
+            <div class="tabcontent" id="question">
+              <div class="select-type">
+                <label for="subject" style="margin-right: 5px">学科：</label>
+                <select name="subject" id="subject" onchange="updateLessons()">
+                  <option value="">请选择</option>
+                  <!-- <option value="s1">计算机</option>
+                            <option value="s2">英语</option>
+                            <option value="s3">数学</option>
+                            <option value="s4">物理</option> -->
+                </select>
+                <label for="lesson" style="margin-right: 5px">课程：</label>
+                <select name="lesson" id="lesson" onchange="updateChapters()">
+                  <option value="">请选择</option>
+                  <!-- <option value="l1">英语一</option>
+                            <option value="l2">英语二</option>
+                            <option value="l3">英语三</option>
+                            <option value="l4">英语四</option> -->
+                </select>
+                <label for="chapter" style="margin-right: 5px">章节：</label>
+                <select name="chapter" id="chapter">
+                  <option value="">请选择</option>
+                  <!-- <option value="c1">章节一</option>
+                            <option value="c2">章节二</option>
+                            <option value="c3">章节三</option>
+                            <option value="c4">章节四</option> -->
+                </select>
+                <label for="type" style="margin-right: 5px">题目类型：</label>
+                <select name="type" id="type">
+                  <option value="t1">选择题</option>
+                  <option value="t2">判断题</option>
+                </select>
+                <button
+                  value="筛选"
+                  style="margin-left: 20px;color: #6666ff;"
+                  onclick="select_questiondisplay()"
+                >
+                  筛选
+                </button>
+              </div>
+              <div class="question-display" id="questionname">
+                <!-- <div class="question">
+                              1.若把操作系统看成计算机系统资源的管理者，下面（）不属于操作系统所管理的资源。
+                          </div>
+                          <div class="question">
+                              2.在早期无操作系统时代，下面关于人工操作方式的说法错误的是（）。
+                          </div>
+                          <div class="question">
+                              2.在早期无操作系统时代，下面关于人工操作方式的说法错误的是（）。
+                          </div> -->
+              </div>
+              <div class="upslide-dialog-footer">
+                <button
+                  type="button"
+                  class="upload-button"
+                  onclick="closeDialog2()"
+                >
+                  <span> 取消</span>
+                </button>
+                <button
+                  type="button"
+                  class="upload-button"
+                  onclick="closeDialog2()"
+                >
+                  <span> 确定</span>
+                </button>
+              </div>
+            </div>
+            <div class="tabcontent" id="paper">
+              <div id="papername">
+                <!--   <input type="radio" id="p1" name="paper" value="paper1">
+                        <label for="p1">编译原理试卷</label><br>
+                        <input type="radio" id="p2" name="paper" value="paper2">
+                        <label for="p2">软件工程试卷1</label><br>
+                        <input type="radio" id="p3" name="paper" value="paper2">
+                        <label for="p2">软件工程试卷2</label><br>
+                        <input type="radio" id="p4" name="paper" value="paper3">
+                        <label for="p3">操作系统试卷（2024）</label> -->
+              </div>
+
+              <div class="upslide-dialog-footer">
+                <button
+                  type="button"
+                  class="upload-button"
+                  onclick="closeDialog2()"
+                >
+                  <span> 取消</span>
+                </button>
+                <button
+                  type="button"
+                  class="upload-button"
+                  onclick="closeDialog2()"
+                >
+                  <span> 确定</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!--答题情况-->
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="答题情况"
+            class="upslide-dialog"
+            id="myDialog3"
+            style="display: none"
+          >
+            <div class="slide-content" id="questionresult">
+              <!-- <div class="text-container" style="margin-top: 5px;">答题情况</div>
+                        <div class="text-container">1.若把操作系统看成计算机系统资源的管理者，下面（）不属于操作系统所管理的资源。
+                        </div>
+                        <div class="text-container" style="background-color: rgb(141, 141, 141);">
+                            <div class="text1" style="flex:2;">选项</div>
+                            <div class="text1">小计</div>
+                            <div class="text1">比例</div>
+                            <div class="text1"></div>
+                        </div>
+                        <div class="text-container">
+                            <div class="text1" style="text-align:left;flex:2;">A.主存111111111111111111111111111111111111</div>
+                            <div class="text1">24</div>
+                            <div class="text1">24%</div>
+                            <div class="text1"><button onclick="openDialog4()">查看理由</button></div>
+                        </div>
+                        <div class="text-container">
+                            <div class="text1 " style="text-align:left;flex:2;">B.程序11111111111111111111111111111111111</div>
+                            <div class="text1">26</div>
+                            <div class="text1">26%</div>
+                            <div class="text1"><button onclick="openDialog4()">查看理由</button></div>
+                        </div>
+                        <div class="text-container">
+                            <div class="text1" style="text-align:left;flex:2;">C.CPU111111111111111111111111111111111111</div>
+                            <div class="text1">4</div>
+                            <div class="text1">4%</div>
+                            <div class="text1"><button onclick="openDialog4()">查看理由</button></div>
+                        </div>
+                        <div class="text-container">
+                            <div class="text1" style="text-align:left;flex:2;">D.中断1111111111111111111111111111111111111</div>
+                            <div class="text1">46</div>
+                            <div class="text1">46%</div>
+                            <div class="text1"><button onclick="openDialog4()">查看理由</button></div>
+                        </div>
+                        <div class="text-container">
+                            <div class="text1" style="text-align:center">正确率</div>
+                            <div class="text1" style="text-align:center">53%</div>
+                        </div> -->
+            </div>
+            <div class="upslide-dialog-footer">
+              <button class="upload-button" onclick="closeDialog3()">
+                关闭
+              </button>
+              <button class="upload-button" onclick="setTime()">
+                再次发布
+              </button>
+            </div>
+          </div>
+
+          <!--答题理由详情-->
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="答题理由"
+            class="upslide-dialog"
+            id="myDialog4"
+            style="display: none"
+          >
+            <div class="upslide-dialog-header">
+              <span style="font-size: 25px; padding: 20px 20px 10px"
+                >答题理由</span
+              >
+            </div>
+            <div class="upslide-dialog-body" id="reasonresult">
+              <!-- <div style="font-size: 20px;">A.主存</div>
+                      <div class="reason_container">
+                        <div class="reason_content">答题理由</div>
+                        <div class="reason_content" style="background-color: rgb(207, 207, 207);">我认为是这样的dddddddddddddddddddddddddddddddddddddd</div>
+                        <div class="reason_content" style="background-color: rgb(207, 207, 207);">我同意楼上</div>
+                        <div class="reason_content" style="background-color: rgb(207, 207, 207);">小猿搜题在手，，</div>
+                      </div> -->
+            </div>
+            <div class="upslide-dialog-footer">
+              <button class="upload-button" onclick="closeDialog4()">
+                关闭
+              </button>
+            </div>
+          </div>
+          <!--计时器-->
+          <div class="time-container" id="timer" style="display: none">
+            <button
+              type="button"
+              class="close-button2"
+              aria-label="Close"
+              onclick="closeTimer()"
+            >
+              <span>×</span>
+            </button>
+            <h1>发布题目</h1>
+            <h3>设置答题时间</h3>
+            <div class="input-group">
+              <label for="minutes">分钟:</label>
+              <input type="number" id="minutes" min="0" value="0" />
+              <label for="seconds">秒钟:</label>
+              <input type="number" id="seconds" min="0" value="0" />
+            </div>
+            <button id="startButton" class="start-btn">开始</button>
+            <button id="cancelButton" class="start-btn">取消</button>
+            <div id="countdownDisplay" class="countdown"></div>
+            <div id="alertBox" class="alert">
+              <p>时间已截止</p>
+              <!-- <button id="closeButton" class="upload-button">&times;</button>   -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

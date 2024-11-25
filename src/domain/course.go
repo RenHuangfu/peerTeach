@@ -38,17 +38,6 @@ type Announcement struct {
 	Classes []Class `gorm:"many2many:announcement_classes;constraint:OnDelete:CASCADE;"`
 }
 
-// ClassRoom 课堂
-type ClassRoom struct {
-	ID         uint      `gorm:"primary_key" json:"ClassroomID"`
-	Created    time.Time `gorm:"column:created;autoCreateTime" json:"time"`
-	Updated    time.Time `gorm:"column:updated;autoUpdateTime"`
-	Name       *string   `json:"name"`
-	SchoolTime time.Time
-	ClassID    uint
-	Class      Class `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-}
-
 // ClassUser 班级学生连接表
 type ClassUser struct {
 	ClassID   uint  `gorm:"primaryKey"`

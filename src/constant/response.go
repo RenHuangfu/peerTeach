@@ -134,3 +134,50 @@ type PaperResponseDetail struct {
 	Name      string            `json:"name"`
 	Questions []*QuestionDetail `json:"question"`
 }
+
+type LessonComment struct {
+	Content string `json:"content"`
+	Likes   uint   `json:"likes"`
+	IsLike  bool   `json:"is_like"`
+}
+
+type LessonDiscussionRes struct {
+	IsResponse bool             `json:"is_response"`
+	Comments   []*LessonComment `json:"comments"`
+}
+
+type LessonQuestionRes struct {
+	QuestionID uint   `json:"question_id"`
+	OptionNum  []uint `json:"option_num"`
+}
+
+type LessonQuestionResponse struct {
+	IsResponse  bool              `json:"is_response"`
+	QuestionRes LessonQuestionRes `json:"question_res"`
+}
+
+type LessonTeacherResponse struct {
+	DiscussionRes    LessonDiscussionRes    `json:"discussion_res"`
+	QuestionResponse LessonQuestionResponse `json:"question_response"`
+	InsertQuestion   struct {
+		IsResponse bool `json:"is_response"`
+		QuestionID uint `json:"question_id"`
+	} `json:"insert_question"`
+}
+
+type LessonQuestion struct {
+	IsResponse bool `json:"is_response"`
+	QuestionID uint `json:"question"`
+	Time       uint `json:"time"`
+}
+
+type LessonPPT struct {
+	IsResponse bool `json:"is_response"`
+	PPtID      uint `json:"PPtID"`
+}
+
+type LessonStudentResponse struct {
+	DiscussionRes LessonDiscussionRes `json:"discussion_res"`
+	QuestionRes   LessonQuestion      `json:"question_res"`
+	PPTRes        LessonPPT           `json:"PPTRes"`
+}

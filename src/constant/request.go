@@ -89,6 +89,7 @@ type ClassRequest struct {
 type QuestionReq struct {
 	IsRequest  bool           `json:"isRequest"`
 	QuestionID uint           `json:"question_id"`
+	PaperID    uint           `json:"paper_id"`
 	Title      string         `json:"title"`
 	Subject    string         `json:"subject"`
 	Section    string         `json:"section"`
@@ -152,4 +153,51 @@ type PostRequest struct {
 type AnnounceRequest struct {
 	GetAnnounceDetail  announceReq `json:"get_announce_detail"`
 	DeleteAnnouncement announceReq `json:"delete_announcement"`
+}
+
+type LessonReq struct {
+	IsRequest bool   `json:"is_request"`
+	Name      string `json:"lesson_name"`
+	UserID    uint   `json:"user_id"`
+	ExamID    uint   `json:"paper_id"`
+	ClassID   uint   `json:"class_id"`
+	LessonID  uint   `json:"lesson_id"`
+}
+
+type LessonRequest struct {
+	ReadyLesson LessonReq `json:"ready_lesson"`
+	AtLesson    LessonReq `json:"atLesson"`
+}
+
+// websocket
+
+type lessonShow struct {
+	IsRequest bool `json:"isRequest"`
+	ShowID    uint `json:"show_id"`
+	Time      uint `json:"time"`
+}
+
+type LessonTeacherRequest struct {
+	InsertQuestion QuestionReq `json:"insert_question"`
+	ShowPPT        lessonShow  `json:"show_ppt"`
+	ShowQuestion   lessonShow  `json:"show_question"`
+	OverLesson     lessonShow  `json:"over_lesson"`
+}
+
+type DiscussReq struct {
+	IsRequest bool   `json:"isRequest"`
+	Content   string `json:"content"`
+	CommentID uint   `json:"comment_id"`
+}
+
+type AnswerReq struct {
+	IsRequest  bool   `json:"isRequest"`
+	QuestionID uint   `json:"question_id"`
+	Option     []uint `json:"option"`
+}
+
+type LessonStudentRequest struct {
+	MakeDiscuss    DiscussReq `json:"make_discuss"`
+	MakeLike       DiscussReq `json:"make_like"`
+	AnswerQuestion AnswerReq  `json:"answer_question"`
 }

@@ -32,7 +32,7 @@ func PostClass(c *gin.Context) {
 		return
 	}
 	if req.GetLesson.IsRequest {
-		classrooms, err := persistence.GetClassRoom(&domain.Class{
+		classrooms, err := persistence.GetLesson(&domain.Class{
 			ID: req.GetLesson.ClassID,
 		})
 		if err != nil {

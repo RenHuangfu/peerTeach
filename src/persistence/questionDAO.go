@@ -145,25 +145,11 @@ func GetQuestionDetail(q *domain.Question) (question *constant.QuestionDetail, e
 	return
 }
 
-//func GetQuestionDetail() {
-//	db = util.GetDB()
-//	// 创建数据
-//	q := domain.Question{
-//		ID: 1,
-//		Options: domain.Options{
-//			Ops: []domain.Option{
-//				{Text: "000", IsCorrect: true},
-//				{Text: "000", IsCorrect: false},
-//				{Text: "000", IsCorrect: true},
-//			},
-//		},
-//		UserID: 1,
-//	}
-//	db.Create(&q)
-//	// 查询数据
-//	var question domain.Question
-//	db.First(&question, 1) // 查询 ID 为 1 的题目
-//
-//	fmt.Println(question)
-//	return
-//}
+func InsertQuestionToPaper(q *domain.Question, p *domain.Exam) (err error) {
+	db = util.GetDB()
+	db.Create(&domain.ExamQuestion{
+		ExamID:     p.ID,
+		QuestionID: q.ID,
+	})
+	return
+}
