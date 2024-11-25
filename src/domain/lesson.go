@@ -1,6 +1,10 @@
 package domain
 
-import "time"
+import (
+	"database/sql/driver"
+	"strings"
+	"time"
+)
 
 // Lesson 课堂
 type Lesson struct {
@@ -14,17 +18,26 @@ type Lesson struct {
 	Class      Class `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
+type AnswerOption []string
+
 // AnswerRecord 答题记录
 type AnswerRecord struct {
-	ID           uint      `gorm:"primary_key"`
-	Created      time.Time `gorm:"column:created;autoCreateTime"`
-	IsCorrect    bool
-	AnswerReason *string `gorm:"type:text"`
-	Likes        uint
-	UserID       uint
-	QuestionID   uint
-	LessonID     uint
-	User         User     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Question     Question `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Lesson       Lesson   `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	ID         uint      `gorm:"primary_key"`
+	Created    time.Time `gorm:"column:created;autoCreateTime"`
+	CorrectNum uint
+	OptionNum  AnswerOption
+	LessonID   uint
+	Lesson     Lesson `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+}
+
+func (a *AnswerOption) Scan(val interface{}) error {
+	s := val.([]uint8)
+	ss := strings.Split(string(s), "|")
+	*a = ss
+	return nil
+}
+
+func (a AnswerOption) Value() (driver.Value, error) {
+	str := strings.Join(a, "|")
+	return str, nil
 }

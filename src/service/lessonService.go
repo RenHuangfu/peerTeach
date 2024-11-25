@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -77,10 +76,80 @@ func GetDiscussion(l *domain.Lesson, u *domain.User) (r *constant.LessonDiscussi
 	return
 }
 
+func ReadyLesson(t *constant.Teacher, lts *constant.LessonTeacherRequest) (err error) {
+	lesson := &domain.Lesson{
+		Name:    &lts.ReadyLesson.Name,
+		ExamID:  lts.ReadyLesson.ExamID,
+		ClassID: lts.ReadyLesson.ClassID,
+	}
+	err = persistence.InsertLesson(lesson)
+	if err != nil {
+		return
+	}
+	if _, ok := persistence.Lessons.Load(lesson.ID); ok {
+		return
+	}
+	paper, _ := persistence.GetPaperDetail(&domain.Exam{
+		ID: lts.ReadyLesson.ExamID,
+	})
+	if paper == nil {
+		return
+	}
+	ques := paper.Questions
+	for _, v := range ques {
+		que := fmt.Sprintf("lesson_%d_question_%d", lesson.ID, v.QuestionID)
+		rdb.HSet(ctx, que, "content", v.Title)
+		rdb.HSet(ctx, que, "correct", 0)
+		rdb.HSet(ctx, que, "optionNum", len(v.Options.Ops))
+		for k, w := range v.Options.Ops {
+			rdb.HSet(ctx, que, fmt.Sprintf("option_%d", k), w.Text)
+			rdb.HSet(ctx, que, fmt.Sprintf("option_%d_count", k), 0)
+		}
+	}
+	discussion := fmt.Sprintf("lesson_%d_discussion", lesson.ID)
+	rdb.LPush(ctx, discussion, "课堂开始啦，同学们畅所欲言吧！")
+	cls := fmt.Sprintf("lesson_%d_comment_%d", lesson.ID, 0)
+	rdb.SAdd(ctx, cls, 0)
+	t.Lesson = t.NewLesson(lesson)
+	t.Lesson.Teacher = t
+	persistence.Lessons.Store(lesson.ID, t.Lesson)
+	go t.Lesson.Run()
+	WebSocketWrite(t.Conn, constant.LessonTeacherResponse{
+		ReadyLesson: struct {
+			IsResponse bool `json:"is_response"`
+			LessonID   uint `json:"lesson_id"`
+		}{IsResponse: true, LessonID: lesson.ID},
+	})
+	return
+}
+
+func LessonOver(lessonId uint) {
+	persistence.Lessons.Delete(lessonId)
+	que := fmt.Sprintf("lesson_%d_question_*", lessonId)
+	keys, _ := rdb.Keys(ctx, que).Result()
+	for _, v := range keys {
+		correct, _ := rdb.HGet(ctx, v, "correct").Result()
+		correctNum, _ := strconv.Atoi(correct)
+		strNum, _ := rdb.HGet(ctx, v, "optionNum").Result()
+		num, _ := strconv.Atoi(strNum)
+		opt := make([]string, num)
+		for i := 0; i < num; i++ {
+			opt[i], _ = rdb.HGet(ctx, v, fmt.Sprintf("option_%d_count", i)).Result()
+		}
+		_ = persistence.InsertAnswerRecord(&domain.AnswerRecord{
+			CorrectNum: uint(correctNum),
+			OptionNum:  opt,
+			LessonID:   lessonId,
+		})
+		rdb.Del(ctx, v)
+	}
+	rdb.Del(ctx, fmt.Sprintf("lesson_%d_discussion", lessonId))
+}
+
 func TeacherRunRead(t *constant.Teacher) {
 	defer func() {
 		_ = t.Conn.Close()
-		persistence.Lessons.Delete(t.Lesson.Lesson.ID)
+		LessonOver(t.Lesson.Lesson.ID)
 		t.OverLesson <- struct{}{}
 	}()
 	t.Conn.SetReadLimit(maxMessageSize)
@@ -99,7 +168,12 @@ func TeacherRunRead(t *constant.Teacher) {
 		if err != nil {
 			fmt.Println("err")
 		}
-		if lts.InsertQuestion.IsRequest {
+		if lts.ReadyLesson.IsRequest {
+			err = ReadyLesson(t, lts)
+			if err != nil {
+				return
+			}
+		} else if lts.InsertQuestion.IsRequest {
 			que := &domain.Question{
 				Name:     &lts.InsertQuestion.Title,
 				Subject:  &lts.InsertQuestion.Subject,
@@ -121,6 +195,7 @@ func TeacherRunRead(t *constant.Teacher) {
 			}
 			lq := fmt.Sprintf("lesson_%d_question_%d", t.Lesson.Lesson.ID, que.ID)
 			rdb.HSet(ctx, lq, "content", que.Name)
+			rdb.HSet(ctx, lq, "correct", 0)
 			for k, w := range que.Options.Ops {
 				rdb.HSet(ctx, lq, fmt.Sprintf("option_%d", k), w.Text)
 				rdb.HSet(ctx, lq, fmt.Sprintf("option_%d_count", k), 0)
@@ -145,7 +220,9 @@ func TeacherRunRead(t *constant.Teacher) {
 }
 
 func TeacherRunWrite(t *constant.Teacher) {
+	ticker := time.NewTicker(pingPeriod)
 	defer func() {
+		ticker.Stop()
 		_ = t.Conn.Close()
 	}()
 	for {
@@ -167,9 +244,9 @@ func TeacherRunWrite(t *constant.Teacher) {
 			n, _ := strconv.Atoi(opNum)
 			optNum := make([]uint, n)
 			for i := 0; i < n; i++ {
-				num, _ := rdb.HGet(ctx, que, fmt.Sprintf("option_%d_count", i)).Result()
-				snum, _ := strconv.Atoi(num)
-				optNum[i] = uint(snum)
+				strNum, _ := rdb.HGet(ctx, que, fmt.Sprintf("option_%d_count", i)).Result()
+				num, _ := strconv.Atoi(strNum)
+				optNum[i] = uint(num)
 			}
 			WebSocketWrite(t.Conn, constant.LessonTeacherResponse{
 				QuestionResponse: constant.LessonQuestionResponse{
@@ -180,6 +257,11 @@ func TeacherRunWrite(t *constant.Teacher) {
 					},
 				},
 			})
+		case <-ticker.C:
+			_ = t.Conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := t.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				return
+			}
 		}
 	}
 }
@@ -206,7 +288,13 @@ func StudentRunRead(s *constant.Student) {
 		if err != nil {
 			fmt.Println("err")
 		}
-		if lts.MakeLike.IsRequest {
+		if lts.ReadyLesson.IsRequest {
+			lesson, ok := persistence.Lessons.Load(lts.ReadyLesson.LessonID)
+			if !ok {
+				return
+			}
+			s.Lesson = lesson.(*constant.Lesson)
+		} else if lts.MakeLike.IsRequest {
 			cls := fmt.Sprintf("lesson_%d_comment_%d", s.Lesson.Lesson.ID, lts.MakeLike.CommentID)
 			rdb.SAdd(ctx, cls, s.Student.ID)
 			s.Lesson.NewMsg <- struct{}{}
@@ -216,6 +304,9 @@ func StudentRunRead(s *constant.Student) {
 			s.Lesson.NewMsg <- struct{}{}
 		} else if lts.AnswerQuestion.IsRequest {
 			que := fmt.Sprintf("lesson_%d_question_%d", s.Lesson.Lesson.ID, lts.AnswerQuestion.QuestionID)
+			if lts.AnswerQuestion.IsCorrect {
+				rdb.HIncrBy(ctx, que, "correct", 1)
+			}
 			for _, v := range lts.AnswerQuestion.Option {
 				option := fmt.Sprintf("option_%d_count", v)
 				rdb.HIncrBy(ctx, que, option, 1)
@@ -226,7 +317,9 @@ func StudentRunRead(s *constant.Student) {
 }
 
 func StudentRunWrite(s *constant.Student) {
+	ticker := time.NewTicker(pingPeriod)
 	defer func() {
+		ticker.Stop()
 		_ = s.Conn.Close()
 	}()
 	for {
@@ -254,42 +347,18 @@ func StudentRunWrite(s *constant.Student) {
 					PPtID:      ppt,
 				},
 			})
+		case <-ticker.C:
+			_ = s.Conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if err := s.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+				return
+			}
 		}
 	}
 }
 
-func BeginLesson(c *gin.Context, r *constant.LessonReq) (err error) {
+func BeginLesson(c *gin.Context) (err error) {
 	session := sessions.Default(c)
 	user := session.Get(constant.UserSession)
-	lesson := &domain.Lesson{
-		Name:    &r.Name,
-		ExamID:  r.ExamID,
-		ClassID: r.ClassID,
-	}
-	err = persistence.InsertLesson(lesson)
-	if err != nil {
-		return
-	}
-	paper, err := persistence.GetPaperDetail(&domain.Exam{
-		ID: r.ExamID,
-	})
-	if paper == nil {
-		return
-	}
-	ques := paper.Questions
-	for _, v := range ques {
-		que := fmt.Sprintf("lesson_%d_question_%d", lesson.ID, v.QuestionID)
-		rdb.HSet(ctx, que, "content", v.Title)
-		rdb.HSet(ctx, que, "optionNum", len(v.Options.Ops))
-		for k, w := range v.Options.Ops {
-			rdb.HSet(ctx, que, fmt.Sprintf("option_%d", k), w.Text)
-			rdb.HSet(ctx, que, fmt.Sprintf("option_%d_count", k), 0)
-		}
-	}
-	discussion := fmt.Sprintf("lesson_%d_discussion", lesson.ID)
-	rdb.LPush(ctx, discussion, "课堂开始啦，同学们畅所欲言吧！")
-	cls := fmt.Sprintf("lesson_%d_comment_%d", lesson.ID, 0)
-	rdb.SAdd(ctx, cls, 0)
 	conn, err := upGrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		fmt.Println("err")
@@ -301,20 +370,12 @@ func BeginLesson(c *gin.Context, r *constant.LessonReq) (err error) {
 		NewMsg:     make(chan struct{}),
 		OverLesson: make(chan struct{}),
 	}
-	teacher.Lesson = teacher.NewLesson(lesson)
-	teacher.Lesson.Teacher = teacher
-	persistence.Lessons.Store(lesson.ID, teacher.Lesson)
-	go teacher.Lesson.Run()
 	go TeacherRunRead(teacher)
 	go TeacherRunWrite(teacher)
 	return
 }
 
-func EnterIntoLesson(c *gin.Context, r *constant.LessonReq) (err error) {
-	lesson, ok := persistence.Lessons.Load(r.LessonID)
-	if !ok {
-		return errors.New("lesson is not exist")
-	}
+func EnterIntoLesson(c *gin.Context) (err error) {
 	session := sessions.Default(c)
 	user := session.Get(constant.UserSession)
 	conn, err := upGrader.Upgrade(c.Writer, c.Request, nil)
@@ -329,7 +390,6 @@ func EnterIntoLesson(c *gin.Context, r *constant.LessonReq) (err error) {
 		NewQuestion: make(chan *constant.QuestionShow),
 		NewPPT:      make(chan uint),
 	}
-	student.Lesson = lesson.(*constant.Lesson)
 	go StudentRunRead(student)
 	go StudentRunWrite(student)
 	return

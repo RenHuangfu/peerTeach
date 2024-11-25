@@ -112,6 +112,13 @@ func (l *Lesson) Run() {
 				close(student.NewPPT)
 			}
 			close(l.Teacher.NewMsg)
+			close(l.Teacher.OverLesson)
+			close(l.NewQuestion)
+			close(l.NewPPT)
+			close(l.NewMsg)
+			close(l.NewAnswer)
+			close(l.UnRegister)
+			close(l.Register)
 			return
 		}
 	}

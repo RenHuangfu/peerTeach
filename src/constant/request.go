@@ -178,6 +178,7 @@ type lessonShow struct {
 }
 
 type LessonTeacherRequest struct {
+	ReadyLesson    LessonReq   `json:"ready_lesson"`
 	InsertQuestion QuestionReq `json:"insert_question"`
 	ShowPPT        lessonShow  `json:"show_ppt"`
 	ShowQuestion   lessonShow  `json:"show_question"`
@@ -194,9 +195,11 @@ type AnswerReq struct {
 	IsRequest  bool   `json:"isRequest"`
 	QuestionID uint   `json:"question_id"`
 	Option     []uint `json:"option"`
+	IsCorrect  bool   `json:"is_correct"`
 }
 
 type LessonStudentRequest struct {
+	ReadyLesson    LessonReq  `json:"ready_lesson"`
 	MakeDiscuss    DiscussReq `json:"make_discuss"`
 	MakeLike       DiscussReq `json:"make_like"`
 	AnswerQuestion AnswerReq  `json:"answer_question"`

@@ -26,6 +26,7 @@ var getRoute = map[string]func(*gin.Context){
 	"/lesson":              controller.ViewLesson,
 	"/before_lesson":       controller.ViewBeforeLesson,
 	"/at_lesson":           controller.ViewAtLesson,
+	"/at_lesson/ws":        controller.AtLessonWebsocket,
 }
 
 var postRoute = map[string]func(*gin.Context){
@@ -41,8 +42,6 @@ var postRoute = map[string]func(*gin.Context){
 	"/announcement_detail": controller.PostAnnouncementDetail,
 	"/resource":            controller.PostResource,
 	"/resourceDetail":      controller.PostResourceDetail,
-	"/before_lesson":       controller.PostBeforeLesson,
-	"/at_lesson":           controller.PostAtLesson,
 	"/after_lesson":        controller.PostAfterLesson,
 }
 

@@ -163,6 +163,10 @@ type LessonTeacherResponse struct {
 		IsResponse bool `json:"is_response"`
 		QuestionID uint `json:"question_id"`
 	} `json:"insert_question"`
+	ReadyLesson struct {
+		IsResponse bool `json:"is_response"`
+		LessonID   uint `json:"lesson_id"`
+	} `json:"ready_lesson"`
 }
 
 type LessonQuestion struct {
