@@ -185,3 +185,13 @@ type LessonStudentResponse struct {
 	QuestionRes   LessonQuestion      `json:"question_res"`
 	PPTRes        LessonPPT           `json:"PPTRes"`
 }
+
+type QuestionAnswerRecord struct {
+	CorrectNum uint     `json:"correct_num" gorm:"correct_num"`
+	OptionNum  []string `json:"option_num" gorm:"option_num"`
+}
+
+type LessonAnswerRecord struct {
+	QuestionAnswerRecord []*QuestionAnswerRecord `json:"question_answer_record"`
+	LessonMemberNum      uint                    `json:"lesson_member_num" gorm:"lesson_member_num"`
+}

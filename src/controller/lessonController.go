@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"peerTeach/config"
+	"peerTeach/constant"
+	"peerTeach/domain"
 	"peerTeach/persistence"
 	"peerTeach/service"
 	"strconv"
@@ -74,20 +76,39 @@ func AtLessonWebsocket(c *gin.Context) {
 }
 
 func PostAfterLesson(c *gin.Context) {
-	u, err := service.GetUserBySession(c)
+	req := &constant.AfterLessonRequest{}
+	rsp := &service.HttpResponse{}
+	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(req)
+		rsp.ResponseError(c, service.CodeBodyBindErr, err.Error())
 		return
 	}
-	if u.Identity == "teacher" {
-		TeacherAfterLesson(c)
-		return
+	if req.LessonAnswerRecord.IsRequest {
+		data, err := persistence.GetAnswerRecordLesson(&domain.Lesson{
+			ID: req.LessonAnswerRecord.LessonID,
+		})
+		if err != nil {
+			rsp.ResponseError(c, service.CodeLoginErr, "")
+		}
+		rsp.ResponseWithData(c, data)
+	} else if req.ClassAnswerRecord.IsRequest {
+		data, err := persistence.GetAnswerRecordClass(&domain.Class{
+			ID: req.ClassAnswerRecord.ClassID,
+		})
+		if err != nil {
+			rsp.ResponseError(c, service.CodeLoginErr, "")
+		}
+		rsp.ResponseWithData(c, data)
+	} else if req.PaperAnswerRecord.IsRequest {
+		data, err := persistence.GetAnswerRecordExam(&domain.Exam{
+			ID: req.PaperAnswerRecord.PaperID,
+		})
+		if err != nil {
+			rsp.ResponseError(c, service.CodeLoginErr, "")
+		}
+		rsp.ResponseWithData(c, data)
 	} else {
-		StudentAfterLesson(c)
-		return
+		rsp.ResponseError(c, service.CodeLoginErr, "no request")
 	}
 }
-
-func StudentAfterLesson(c *gin.Context) {}
-
-func TeacherAfterLesson(c *gin.Context) {}

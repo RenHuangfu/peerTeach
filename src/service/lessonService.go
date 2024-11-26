@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"log"
+	"os"
 	"peerTeach/constant"
 	"peerTeach/domain"
 	"peerTeach/persistence"
@@ -106,10 +107,6 @@ func ReadyLesson(t *constant.Teacher, lts *constant.LessonTeacherRequest) (err e
 			rdb.HSet(ctx, que, fmt.Sprintf("option_%d_count", k), 0)
 		}
 	}
-	discussion := fmt.Sprintf("lesson_%d_discussion", lesson.ID)
-	rdb.LPush(ctx, discussion, "课堂开始啦，同学们畅所欲言吧！")
-	cls := fmt.Sprintf("lesson_%d_comment_%d", lesson.ID, 0)
-	rdb.SAdd(ctx, cls, 0)
 	t.Lesson = t.NewLesson(lesson)
 	t.Lesson.Teacher = t
 	persistence.Lessons.Store(lesson.ID, t.Lesson)
@@ -120,7 +117,35 @@ func ReadyLesson(t *constant.Teacher, lts *constant.LessonTeacherRequest) (err e
 			LessonID   uint `json:"lesson_id"`
 		}{IsResponse: true, LessonID: lesson.ID},
 	})
+	RecPPT(t.Conn)
 	return
+}
+
+func RecPPT(conn *websocket.Conn) {
+	_, pptData, err := conn.ReadMessage()
+	if err != nil {
+		fmt.Println("pptData error")
+	}
+	// 保存PPT文件到临时文件
+	tmpFile, err := os.CreateTemp("../temp/", "uploaded-*.pptx")
+	if err != nil {
+		log.Println("Failed to create temp file:", err)
+		return
+	}
+	defer os.Remove(tmpFile.Name())
+
+	err = os.WriteFile(tmpFile.Name(), pptData, 0644)
+	if err != nil {
+		log.Println("Failed to write PPT to temp file:", err)
+		return
+	}
+
+	// 转换PPT为JPG
+	err = util.ConvertPPTtoJPG(tmpFile.Name())
+	if err != nil {
+		log.Println("Failed to convert PPT to JPG:", err)
+		return
+	}
 }
 
 func LessonOver(lessonId uint) {
@@ -394,7 +419,3 @@ func EnterIntoLesson(c *gin.Context) (err error) {
 	go StudentRunWrite(student)
 	return
 }
-
-func StudentLesson(c *gin.Context) {}
-
-func TeacherLesson(c *gin.Context) {}

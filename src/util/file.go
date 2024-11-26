@@ -6,6 +6,7 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
+	"os/exec"
 	"path"
 	"strings"
 )
@@ -46,6 +47,19 @@ func UploadFile(file *multipart.FileHeader) (err error) {
 	_, copyErr := io.Copy(out, f) // 拷贝文件
 	if copyErr != nil {
 		return errors.New("function io.Copy() Filed, err:" + copyErr.Error())
+	}
+	return nil
+}
+
+func ConvertPPTtoJPG(pptFilePath string) error {
+	// 使用开源工具如unoconv或者Go的库（如unidoc）来转换PPT文件
+	// 这里是调用一个外部命令的示例：unoconv工具来转换PPT为JPG
+	// 请先安装unoconv并确保其路径正确
+
+	cmd := exec.Command("unoconv", "-f", "jpg", "-o", "../file/", pptFilePath) // 使用unoconv转换
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("error during conversion: %v", err)
 	}
 	return nil
 }

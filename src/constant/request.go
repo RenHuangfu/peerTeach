@@ -155,6 +155,19 @@ type AnnounceRequest struct {
 	DeleteAnnouncement announceReq `json:"delete_announcement"`
 }
 
+type AfterLessonReq struct {
+	IsRequest bool `json:"isRequest"`
+	LessonID  uint `json:"lesson_id"`
+	ClassID   uint `json:"class_id"`
+	PaperID   uint `json:"paper_id"`
+}
+
+type AfterLessonRequest struct {
+	LessonAnswerRecord AfterLessonReq `json:"lesson_answer_record"`
+	ClassAnswerRecord  AfterLessonReq `json:"class_answer_record"`
+	PaperAnswerRecord  AfterLessonReq `json:"paper_answer_record"`
+}
+
 type LessonReq struct {
 	IsRequest bool   `json:"is_request"`
 	Name      string `json:"lesson_name"`
@@ -162,11 +175,6 @@ type LessonReq struct {
 	ExamID    uint   `json:"paper_id"`
 	ClassID   uint   `json:"class_id"`
 	LessonID  uint   `json:"lesson_id"`
-}
-
-type LessonRequest struct {
-	ReadyLesson LessonReq `json:"ready_lesson"`
-	AtLesson    LessonReq `json:"atLesson"`
 }
 
 // websocket
