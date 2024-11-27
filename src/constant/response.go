@@ -48,6 +48,19 @@ type ClassResponse struct {
 	Classes []*DetailClass `json:"classes"`
 }
 
+type DetailLesson struct {
+	LessonID uint      `json:"lesson_id" gorm:"lesson_id"`
+	Created  time.Time `json:"created" gorm:"created"`
+	ExamID   uint      `json:"exam_id" gorm:"exam_id"`
+	PPTName  *string   `json:"ppt_name" gorm:"ppt_name"`
+	ClassID  uint      `json:"class_id" gorm:"class_id"`
+	Name     uint      `json:"name" gorm:"name"`
+}
+
+type LessonsResponse struct {
+	Lessons []*DetailLesson `json:"lessons"`
+}
+
 type AnnouncementResponse struct {
 	Id          uint      `json:"announcement_id" gorm:"id"`
 	Time        time.Time `json:"time" gorm:"time"`
@@ -154,6 +167,7 @@ type LessonQuestionRes struct {
 type LessonQuestionResponse struct {
 	IsResponse  bool              `json:"is_response"`
 	QuestionRes LessonQuestionRes `json:"question_res"`
+	CorrectNum  uint              `json:"correct_num"`
 }
 
 type LessonTeacherResponse struct {
@@ -187,11 +201,12 @@ type LessonStudentResponse struct {
 }
 
 type QuestionAnswerRecord struct {
-	CorrectNum uint     `json:"correct_num" gorm:"correct_num"`
-	OptionNum  []string `json:"option_num" gorm:"option_num"`
+	CorrectNum uint                `json:"correct_num" gorm:"correct_num"`
+	OptionNum  domain.AnswerOption `json:"option_num" gorm:"option_num"`
 }
 
 type LessonAnswerRecord struct {
+	PaperID              uint                    `json:"paper_id" gorm:"paper_id"`
 	QuestionAnswerRecord []*QuestionAnswerRecord `json:"question_answer_record"`
 	LessonMemberNum      uint                    `json:"lesson_member_num" gorm:"lesson_member_num"`
 }

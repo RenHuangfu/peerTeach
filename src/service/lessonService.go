@@ -273,6 +273,8 @@ func TeacherRunWrite(t *constant.Teacher) {
 				num, _ := strconv.Atoi(strNum)
 				optNum[i] = uint(num)
 			}
+			correctNum, _ := rdb.HGet(ctx, que, "correct").Result()
+			crt, _ := strconv.Atoi(correctNum)
 			WebSocketWrite(t.Conn, constant.LessonTeacherResponse{
 				QuestionResponse: constant.LessonQuestionResponse{
 					IsResponse: true,
@@ -280,6 +282,7 @@ func TeacherRunWrite(t *constant.Teacher) {
 						QuestionID: queId,
 						OptionNum:  optNum,
 					},
+					CorrectNum: uint(crt),
 				},
 			})
 		case <-ticker.C:

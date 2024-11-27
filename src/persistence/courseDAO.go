@@ -123,14 +123,16 @@ func InsertLesson(c *domain.Lesson) (err error) {
 }
 
 // GetLesson 获取班级下所有课堂
-func GetLesson(c *domain.Class) (room []*domain.Lesson, err error) {
+func GetLesson(c *domain.Class) (r *constant.LessonsResponse, err error) {
 	db = util.GetDB()
-	room = make([]*domain.Lesson, 10)
-	err = db.Model(domain.Lesson{}).Where("class_id = ?", c.ID).Find(&room).Error
+	r = &constant.LessonsResponse{}
+	r.Lessons = make([]*constant.DetailLesson, 10)
+	err = db.Raw("select id as lesson_id,created,exam_id,ppt_name,class_id,name "+
+		"from lessons where class_id = ?", c.ID).Scan(&r.Lessons).Error
 	if err != nil {
 		return nil, err
 	}
-	return room, err
+	return
 }
 
 // DeleteLesson 删除课堂

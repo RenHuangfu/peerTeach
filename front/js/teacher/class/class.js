@@ -1,44 +1,3 @@
-// //班级列表
-// const messages1 = [
-//     { id: 1, name: '第一次课', time: '10:00 AM' },
-//     { id: 2, name: '第二次课', time: '10:05 AM' },
-//     { id: 3, name: '第三次课', time: '10:05 AM' },
-//     { id: 4, name: '第二周第一次课', time: '10:05 AM' },
-//     { id: 5, name: '第二周第一次课', time: '10:05 AM' },
-//     { id: 6, name: '第二周第一次课', time: '10:05 AM' },
-//     // ... 添加更多消息项，确保每个消息都有唯一的id
-//     // 示例中只添加了少量消息，你可以根据需要添加更多
-// ];
-
-// //成员列表
-// const messages2 = [
-//     { id: 1, name: 'Alice', number: '1234567890' },
-//     { id: 2, name: 'Bob', number: '0987654321' },
-//     { id: 3, name: 'Charlie', number: '1122334455' },
-//     // ... 添加更多消息项，确保每个消息都有唯一的id
-// ];
-
-// //讨论列表
-// const messages3 = [
-//     { id: 1, title: '哈哈哈哈哈哈哈', user: 'User A', time: '10:00 AM', photo: 'img/photo.jpg', comment: 1, like: 10, islike: false },
-//     { id: 2, title: '啦啦啦啦啦啦啦啦啦', user: 'User B', time: '10:05 AM', photo: 'img/photo.jpg', comment: 2, like: 20, islike: true },
-//     { id: 3, title: '开心开心开心开心开心开心开心', user: 'User B', time: '10:05 AM', photo: 'img/photo.jpg', comment: 3, like: 15, islike: false },
-//     { id: 4, title: 'aaaaaaaaaaaa', user: 'User B', time: '10:05 AM', photo: 'img/photo.jpg', comment: 4, like: 8, islike: true },
-//     { id: 5, title: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', user: 'User B', time: '10:05 AM', photo: 'img/photo.jpg', comment: 5, like: 30, islike: false },
-//     { id: 6, title: 'lll', user: 'User B', time: '10:05 AM', photo: 'img/photo.jpg', comment: 6, like: 25, islike: true },
-//     // ... 添加更多消息项，确保每个消息都有唯一的id
-// ];
-
-// //公告列表
-// const messages4 = [
-//     { id: 1, title: '哈哈哈哈哈哈哈', user: 'User A', time: '10:00 AM' },
-//     { id: 2, title: '嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡', user: 'User B', time: '10:05 AM' },
-//     { id: 3, title: '嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡', user: 'User B', time: '10:05 AM' },
-//     { id: 4, title: '嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡', user: 'User B', time: '10:05 AM' },
-//     { id: 5, title: '嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡', user: 'User B', time: '10:05 AM' },
-//     { id: 6, title: '嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡嗡', user: 'User B', time: '10:05 AM' },
-//     // ... 添加更多消息项，确保每个消息都有唯一的id
-// ];
 
 var urlParams = new URLSearchParams(window.location.search);
 var classId = urlParams.get('class_id');
@@ -81,11 +40,12 @@ function showTab(tabId) {
         })
             .then(response => response.json())
             .then(data => {
-                if (data.data && Array.isArray(data.data)) {
-                    messages = data.data.map(post => ({
-                        id: post.ClassroomID,
+                console.log(data);
+                if (data.data.lessons && Array.isArray(data.data.lessons)) {
+                    messages = data.data.lessons.map(post => ({
+                        id: post.lesson_id,
                         name : post.name,
-                        time: post.time
+                        time: post.created
                     }));
                     console.log(messages);
                     renderMessages(currentPage);
@@ -246,7 +206,7 @@ function renderMessages(page) {
             details.appendChild(time);
 
             // 添加点击事件以根据id跳转
-            li.addEventListener('click', () => window.location.href = `course.html?id=${msg.id}`);
+            li.addEventListener('click', () => window.location.href = `/lesson?lesson_id=${msg.id}`);
 
             // 将详情元素添加到列表项中
             li.appendChild(details);

@@ -22,8 +22,13 @@ func GetAnswerRecordLesson(l *domain.Lesson) (la *constant.LessonAnswerRecord, e
 		QuestionAnswerRecord: make([]*constant.QuestionAnswerRecord, 10),
 	}
 	tx := db.Begin()
+	err = tx.Raw("select exam_id as paper_id from lessons where id = ?", l.ID).Scan(&la.PaperID).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
 	err = tx.Raw("select count(class_users.user_id) as lesson_member_num "+
-		"from (select lessons.class_id as class_id from lessons where lessons.id = ?) as lci"+
+		"from (select lessons.class_id as class_id from lessons where lessons.id = ?) as lci "+
 		"join class_users on class_users.class_id = lci.class_id ", l.ID).Scan(&la.LessonMemberNum).Error
 	if err != nil {
 		tx.Rollback()

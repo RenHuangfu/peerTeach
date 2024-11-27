@@ -15,8 +15,8 @@ insert into classes (id,name,course_id)
     values (1,'class_1',1),(2,'class_2',1),(3,'class_3',1),
            (4,'class_1',2),(5,'class_2',2),(6,'class_3',3);
 
-insert into class_rooms (id,created,name,class_id)
-    values (1,current_time,'777',1),(2,current_time,'888',1),(3,current_time,'666',2);
+insert into lessons (id,created,name,class_id)
+values (1,current_time,'777',1),(2,current_time,'888',1),(3,current_time,'666',2);
 
 INSERT INTO `class_users` (`class_id`,`user_id`,`created_at`)
     VALUES (3,3,'2024-11-13 19:19:19.805'),(1,3,current_time),(1,4,current_time);;
@@ -47,10 +47,10 @@ select * from users;
 select * from courses;
 select * from classes;
 select * from class_users;
-select * from class_rooms;
 select * from announcements;
 select * from announcement_classes;
 select * from posts;
+select * from lessons;
 select * from post_users;
 select * from comment_users;
 
