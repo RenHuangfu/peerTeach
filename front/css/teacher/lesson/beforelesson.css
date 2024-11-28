@@ -104,7 +104,7 @@ html {
 .swiper-container {
   flex: 1;
   height: 100%;
-  /* background-color: #cecece; */
+  background-color: white;
   overflow: auto;
   border-right-style: ridge;
   border-right-width: 1px;
@@ -143,7 +143,10 @@ html {
 }
 .slide-content {
   flex: 2;
-  margin:50px;
+  margin: 0 auto;
+  margin-top: 10px;
+  width: 600px;
+  height: 337.5px;
   border-color: #000000;
   border-width: 1px;
   border-style:dashed;
@@ -168,17 +171,16 @@ html {
   white-space: nowrap;
   text-align: center;
 }
-.button-container {
-  flex: 1;
+.button-container-1 {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
 }
-.button-container button {
-  flex: 1;
-  margin-left: 20px;
-  margin-right: 20px;
+.button-container-1 button {
+  width: 40%;
   height: 40px;
+  flex: 1;
+  margin:0 auto;
   text-align: center;
   color: #6666ff;
   border: none;
@@ -189,11 +191,8 @@ html {
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-.button-endclass {
-  display: flex;
-  justify-content: center;
-}
-.button-endclass button {
+
+#startLesson {
   height: 40px;
   width: 40%;
   margin-bottom: 30px;
@@ -207,12 +206,25 @@ html {
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
-.button-container button:hover,
-.button-endclass button:hover {
+.button-container-1 button:hover,
+#startLesson:hover {
   background-color: #3030b0;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   color: white;
 }
+
+.modal {
+  display: none; /* 默认隐藏 */
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
 .upslide-dialog {
   position: fixed;
   top: 50%;
@@ -221,7 +233,7 @@ html {
   background: #ffffff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   box-sizing: border-box;
-  width: 50%;
+  width: 400px;
   z-index: 1;
 }
 .upslide-dialog-header {
@@ -311,7 +323,15 @@ html {
   padding: 20px;
   color: #606266;
   font-size: 14px;
-  display: none;
+}
+
+#papername {
+height: 400px;
+  overflow-y: auto;
+}
+
+.tabcontent.active {
+  display: block;
 }
 .select-type {
   display: flex;
@@ -407,4 +427,123 @@ html {
   cursor: pointer;
   color: #a94442; 
   line-height: 1; 
+}
+
+.file-name {
+  text-align: center;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+}
+
+#countdown {
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+/*条形图*/
+.chart {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+.bar {
+  height: 20px;
+  margin-bottom: 10px;
+  background-color: #4CAF50;
+  transition: width 0.5s;
+}
+.correct-bar {
+  background-color: #2196F3;
+}
+
+
+/*创建题目*/
+.modal-content {
+  width: 300px;
+  margin:0 auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#question-container-content {
+  width: 600px;
+}
+
+/* 讨论区 */
+.discussion-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs {
+  display: flex;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.option-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  outline: none;
+}
+
+.option-tab.active {
+  background-color: #fff;
+  font-weight: bold;
+  border-bottom: 2px solid #007bff;
+}
+
+.reason-display {
+  padding: 20px;
+  height: 100px; /* 设置讨论区的最大高度 */
+  overflow-y: auto; /* 启用垂直滚动条 */
+  background-color: #fff;
+}
+
+.reason-item {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.like-button {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  color: #007bff;
+  border: none;
+  background: none;
+  font-size: 14px;
+  outline: none;
+}
+
+.like-button.liked {
+  color: #ff4500;
+}
+
+.like-count {
+  margin-left: 5px;
+  font-size: 14px;
 }

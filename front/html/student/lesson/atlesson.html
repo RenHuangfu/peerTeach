@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link type="text/css" rel="stylesheet" href="atlesson.css" />
+    
+    <title>课前准备</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- 侧边栏 -->
+      <div class="sidebar">
+        <button>课程班级</button>
+        <button>个人信息</button>
+      </div>
+
+      <!-- 主内容区域 -->
+      <div class="main-content">
+        <!-- 顶部固定栏 -->
+        <div class="top-bar">
+          <button>查看通知</button>
+          <div class="user-info">
+            <img src="user-avatar.png" alt="用户头像" />
+            <span>用户名称</span>
+          </div>
+        </div>
+        <div class="part-container">
+
+          <!--PPT内容显示区-->
+          <div class="slide-container" id="slide-container">
+            <div class="slide-content">
+            </div>
+            <div class="discussion-container">
+                <div class="tabs" id="tabs"></div>
+                <div class="reason-display" id="reason-display">
+                讨论区关闭中，发布题目后开放
+                </div>
+            </div>
+          </div>
+
+          <!--题目预览区-->
+          <div class="swiper-container" style="right: 0">
+            <span style="
+                font-size: 24px;
+                text-align: center;
+                display: block;
+                margin-top: 20px;
+              " >题目预览</span>
+            <div class="swiperproflie" id="swiperproflie2"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript" src="discussion.js"></script>
+  <script type="text/javascript" src="beforelesson2.js"></script>
+  <script type="text/javascript" src="atlesson.js"></script>
+</html>

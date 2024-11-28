@@ -24,7 +24,6 @@ var getRoute = map[string]func(*gin.Context){
 	"/resource":            controller.ViewResource,
 	"/paperDetail":         controller.ViewPaperDetail,
 	"/lesson":              controller.ViewLesson,
-	"/before_lesson":       controller.ViewBeforeLesson,
 	"/at_lesson":           controller.ViewAtLesson,
 	"/at_lesson/ws":        controller.AtLessonWebsocket,
 }

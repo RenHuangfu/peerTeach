@@ -44,14 +44,6 @@ func ViewLesson(c *gin.Context) {
 	}
 }
 
-func ViewBeforeLesson(c *gin.Context) {
-	req := service.HttpResponse{
-		HtmlPath: config.TeacherBeforeLessonPath,
-	}
-	req.ResponseWithHtml(c)
-	return
-}
-
 func ViewAtLesson(c *gin.Context) {
 	req := service.HttpResponse{
 		HtmlPath: config.TeacherAtLessonPath,

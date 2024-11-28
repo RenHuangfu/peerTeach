@@ -1,84 +1,293 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link type="text/css" rel="stylesheet" href="atlesson.css" />
+    <link type="text/css" rel="stylesheet" href="beforelesson.css" />
+    
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <title>课前准备</title>
+  </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="../../../css/teacher/lesson/atlesson.css" <title>页面布局示例</title>
-</head>
-
-<body>
+  <body>
     <div class="container">
-        <!-- 侧边栏 -->
-        <div class="sidebar">
-            <button>课程班级</button>
-            <button>资源中心</button>
-        </div>
+      <!-- 侧边栏 -->
+      <div class="sidebar">
+        <button>课程班级</button>
+        <button>资源中心</button>
+      </div>
 
-        <!-- 主内容区域 -->
-        <div class="main-content">
-            <!-- 顶部固定栏 -->
-            <div class="top-bar">
-                <button>查看通知</button>
-                <div class="user-info">
-                    <img src="user-avatar.png" alt="用户头像">
-                    <span>用户名称</span>
-                </div>
-            </div>
-            <div class="part-content">
-                <!-- PPT预览区-->>
-                <div class="swiper-container">
-                    <span>PPT预览</span>
-                    <div class="swiper-slide">
-                        <img src="./pic1.png" alt="ppt" style="width: 100%; height:100%">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="./pic2.png" alt="ppt" style="width: 100%; height:100%">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="./pic3.png" alt="ppt" style="width: 100%; height:100%">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="./pic1.png" alt="ppt" style="width: 100%; height:100%">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="./pic2.png" alt="ppt" style="width: 100%; height:100%">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="./pic3.png" alt="ppt" style="width: 100%; height:100%">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="./pic1.png" alt="ppt" style="width: 100%; height:100%">
-                    </div>
-                </div>
-                <!--PPT内容显示区-->
-                <div class="ppt-container">
-                    <div class="slide-content">
-                        <img src="./pic2.png" alt="ppt" style="width: 100%; height:100%">
-                    </div>
-                    <div class="button-container">
-                        <button>上一张</button>
-                        <button>添加题目</button>
-                        <button>展示</button>
-                        <button>下一张</button>
-                    </div>
-                    <div class="button1">
-                        <button>下课</button>
-                    </div>
-                </div>
-                <!--题目预览区-->
-                <div class="swiper-container2">
-                    <span>题目预览</span>
-                    <div class="swiper-slide">
-                        <img src="./pic1.png" alt="试题" style="width: 100%; height: 100%">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="./pic2.png" alt="试题" style="width: 100%; height: 100%">
-                    </div>
-                </div>
-            </div>
+      <!-- 主内容区域 -->
+      <div class="main-content">
+        <!-- 顶部固定栏 -->
+        <div class="top-bar">
+          <button>查看通知</button>
+          <div class="user-info">
+            <img src="user-avatar.png" alt="用户头像" />
+            <span>用户名称</span>
+          </div>
         </div>
+        <div class="part-container">
+
+          <!--PPT内容显示区-->
+          <div class="slide-container" id="slide-container">
+            <div class="form-container">
+              <h2>创建课堂</h2>
+              <div class="form-group">
+                  <label for="course">课程</label>
+                  <select id="course" onchange="updateClasses()">
+                      <option value="">请选择课程</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="class">班级</label>
+                  <select id="class">
+                      <option value="">请选择班级</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="course-name">课堂名称</label>
+                  <input type="text" id="course-name" placeholder="请输入课堂名称">
+              </div>
+          </div>
+            <div class="button-container-1">
+              <p class="file-name" id="ppt-name"></p>
+              <button id="addSlide" onclick="openDialog1()">添加课件</button>
+              <p class="file-name" id="paper-name"></p>
+              <button id="addQuestion" onclick="openDialog2()">添加试卷</button>
+              <p class="error-message" id="error-message"></p>
+              <button id="startLesson" onclick="startLesson()">开课</button>
+            </div>
+          </div>
+
+          <!--题目预览区-->
+          <div class="swiper-container" style="right: 0">
+            <span style="
+                font-size: 24px;
+                text-align: center;
+                display: block;
+                margin-top: 20px;
+              " >题目预览</span>
+            <div class="swiperproflie" id="swiperproflie2"></div>
+          </div>
+
+          <!--上传课件-->
+          <div class="modal" id="myDialog1">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="添加课件"
+            class="upslide-dialog"
+          >
+            <div class="upslide-dialog-header">
+              <span style="font-size: 25px">添加课件</span>
+              <button
+                type="button"
+                class="close-button"
+                aria-label="Close"
+                onclick="closeDialog1()"
+              >
+                <span>×</span>
+              </button>
+            </div>
+            <div class="upslide-dialog-body">
+              <div style="font-size: 20px">上传文件</div>
+              <div
+                class="cover-size"
+                style="
+                  font-size: 12px;
+                  line-height: 16px;
+                  margin: 10px 0px 10px;
+                "
+              >
+                请选择PPT上传
+              </div>
+              <input type="file" id="input-ppt" accept=".ppt,.pptx" />
+            </div>
+            <div class="upslide-dialog-footer">
+              <button
+                type="button"
+                class="upload-button"
+                onclick="closeDialog1()"
+              >
+                <span> 取消</span>
+              </button>
+              <button
+                type="button"
+                class="upload-button"
+                onclick="selectPPT()"
+              >
+                <span> 确定</span>
+              </button>
+            </div>
+          </div>
+          </div>
+          
+          <!--上传题目-->
+          <div class="modal" id="myDialog2">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="添加题目"
+            class="upslide-dialog"
+          >
+            <div class="upslide-dialog-header">
+              <button
+                type="button"
+                class="close-button2"
+                aria-label="Close"
+                onclick="closeDialog2()"
+              >
+                <span>×</span>
+              </button>
+            </div>
+            <div class="tabcontent" id="paper">
+              <h2>试卷列表</h2>
+              <div id="papername">
+                <!-- 放置试卷 -->
+              </div>
+
+              <div class="upslide-dialog-footer">
+                <p id="paper-select-error" style="color: red;"></p>
+                <button
+                  type="button"
+                  class="upload-button"
+                  onclick="closeDialog2()"
+                >
+                  <span> 取消</span>
+                </button>
+                <button
+                  type="button"
+                  class="upload-button"
+                  onclick="selectPaper()"
+                >
+                  <span> 确定</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          <!--选择答题时间-->
+          <div class="modal" id="myDialog3">
+          <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="选择答题时间"
+          class="upslide-dialog"
+        >
+          <div class="upslide-dialog-header">
+            <button
+              type="button"
+              class="close-button2"
+              aria-label="Close"
+              onclick="closeDialog3()"
+            >
+              <span>×</span>
+            </button>
+          </div>
+          <div class="tabcontent">
+            <h2>设置答题时间</h2>
+            <div class="input-group">
+              <label for="minutes">分钟:</label>
+              <input type="number" id="minutes" min="0" value="0" />
+              <label for="seconds">秒钟:</label>
+              <input type="number" id="seconds" min="0" value="0" />
+            </div>
+            <div class="upslide-dialog-footer">
+              <p id="timer-error" style="color: red;"></p>
+              <button
+                type="button"
+                class="upload-button"
+                onclick="closeDialog3()"
+              >
+                <span> 取消</span>
+              </button>
+              <button
+                type="button"
+                class="upload-button"
+                onclick="postQuestion()"
+              >
+                <span> 确定</span>
+              </button>
+            </div>
+          </div>
+          </div>
+          </div>
+
+          <!--创建题目弹窗-->
+          <div class="modal" id="question-container">
+              <div class="modal-content" id="question-container-content">
+              <h1>创建题目</h1>
+              <div id="form-container">
+                  <div style="padding:40px">
+                      <p contenteditable="true" style="text-align:center; font-size:20px" id="title"> 在此编辑题干</p>
+                      <div class="radio-group">
+                          <input type="radio" id="option1" name="options" value="option1" checked>
+                          <label for="option1">选择题</label>
+
+                          <input type="radio" id="option2" name="options" value="option2">
+                          <label for="option2">判断题</label>
+                      </div>
+                      <div id="options">
+
+                      </div>
+                  </div>
+              </div>
+              <div style=" width: 10%; margin: 0 auto;margin-top: 20px;">
+                  <button onclick="showPopup()">创建</button>
+                  <button id = "cancelCreateQuestion" onclick="closeDialog4()">取消</button>
+              </div>
+              </div>
+          </div>
+          <div class="modal" id="popup">
+              <div class="modal-content">
+              <button class="close-btn" onclick="hidePopup()">×</button>
+              <h3>上传题目</h3>
+              <div>
+                  <a>学科：</a>
+                  <select id="dropdown1">
+                      <option value="">/</option>
+                  </select>
+              </div>
+              <br>
+              <!-- 第二个下拉菜单 -->
+              <div>
+                  <a>课程：</a>
+                  <select id="dropdown2">
+                      <option value="">/</option>
+                  </select>
+              </div>
+              <br>
+              <!-- 第三个下拉菜单 -->
+              <div>
+                  <a>章节：</a>
+                  <select id="dropdown3">
+                      <option value="">/</option>
+                  </select>
+              </div>
+              <br>
+              <!-- 下拉菜单 -->
+              <div>
+                  <a>是否发布到公共题库：</a>
+                  <select id="dropdown4">
+                      <option value=true>是</option>
+                      <option value=false>否</option>
+                  </select>
+              </div>
+              <p id="error_message" style="color: rgb(217, 13, 13); font-size: 12px;">  </p>
+              <button onclick="ws_insert_question()">上传</button>
+              <button onclick="hidePopup()">取消</button>
+              </div>
+          </div>
+
+        </div>
+      </div>
     </div>
-</body>
-
+  </body>
+  <script type="text/javascript" src="discussion.js"></script>
+  <script type="text/javascript" src="beforelesson.js"></script>
+  <script type="text/javascript" src="atlesson.js"></script>
+  <script type="text/javascript" src="create_question.js"></script>
 </html>

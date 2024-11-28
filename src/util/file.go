@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 	"strings"
 )
 
@@ -52,14 +53,21 @@ func UploadFile(file *multipart.FileHeader) (err error) {
 }
 
 func ConvertPPTtoJPG(pptFilePath string) error {
-	// 使用开源工具如unoconv或者Go的库（如unidoc）来转换PPT文件
-	// 这里是调用一个外部命令的示例：unoconv工具来转换PPT为JPG
-	// 请先安装unoconv并确保其路径正确
-
-	cmd := exec.Command("unoconv", "-f", "jpg", "-o", "../file/", pptFilePath) // 使用unoconv转换
+	_, name := filepath.Split(pptFilePath)
+	ext := path.Ext(name)
+	filename := strings.TrimSuffix(name, ext)
+	cmd := exec.Command("unoconv", "-f", "pdf", "-o", "../file/"+filename, pptFilePath) // 使用unoconv转换
 	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("error during conversion: %v", err)
+	}
+	cmd = exec.Command("pdftoppm", "../file/"+filename+".pdf", "../file/"+filename, "-jpeg") // 使用unoconv转换
+	err = cmd.Run()
 	if err != nil {
 		return fmt.Errorf("error during conversion: %v", err)
 	}
 	return nil
 }
+
+//unoconv -f pdf -o ./file/ ./temp/PPTJPG_1.ppt
+//pdftoppm ./file/PPTJPG_1.pdf ./file/PPTJPG_1 -jpeg

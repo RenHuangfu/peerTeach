@@ -117,17 +117,18 @@ func ReadyLesson(t *constant.Teacher, lts *constant.LessonTeacherRequest) (err e
 			LessonID   uint `json:"lesson_id"`
 		}{IsResponse: true, LessonID: lesson.ID},
 	})
-	RecPPT(t.Conn)
+	RecPPT(t)
 	return
 }
 
-func RecPPT(conn *websocket.Conn) {
+func RecPPT(t *constant.Teacher) {
+	conn := t.Conn
 	_, pptData, err := conn.ReadMessage()
 	if err != nil {
 		fmt.Println("pptData error")
 	}
 	// 保存PPT文件到临时文件
-	tmpFile, err := os.CreateTemp("../temp/", "uploaded-*.pptx")
+	tmpFile, err := os.CreateTemp("../temp/", fmt.Sprintf("PPTJPG_%d.ppt", t.Lesson.Lesson.ID))
 	if err != nil {
 		log.Println("Failed to create temp file:", err)
 		return
