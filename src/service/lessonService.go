@@ -25,10 +25,10 @@ const (
 	pongWait = 60 * time.Second
 
 	// Send pings to peer with this period. Must be less than pongWait.
-	pingPeriod = (pongWait * 9) / 10
+	pingPeriod = writeWait
 
 	// Maximum message size allowed from peer.
-	maxMessageSize = 512
+	maxMessageSize = 4096
 )
 
 var rdb = util.GetRedisCli()
@@ -44,11 +44,25 @@ func WebSocketWrite(conn *websocket.Conn, res interface{}) {
 	if err != nil {
 		return
 	}
+
 	Msg, err := json.Marshal(res)
 	if err != nil {
+		fmt.Println("Error marshaling message:", err)
 		return
 	}
+
 	_, err = w.Write(Msg)
+	if err != nil {
+		fmt.Println("Error writing message:", err)
+		return
+	}
+
+	// 关闭 writer，确保消息被发送出去
+	err = w.Close()
+	if err != nil {
+		fmt.Println("Error closing writer:", err)
+		return
+	}
 }
 
 func GetDiscussion(l *domain.Lesson, u *domain.User) (r *constant.LessonDiscussionRes, err error) {
@@ -62,8 +76,9 @@ func GetDiscussion(l *domain.Lesson, u *domain.User) (r *constant.LessonDiscussi
 		Comments:   make([]*constant.LessonComment, len(comments)),
 	}
 	for k, v := range comments {
+		r.Comments[k] = &constant.LessonComment{}
 		r.Comments[k].Content = v
-		comment := fmt.Sprintf("lesson_%d_discussion_%d", l.ID, k)
+		comment := fmt.Sprintf("lesson_%d_comment_%d", l.ID, k)
 		num, err := rdb.SCard(ctx, comment).Result()
 		r.Comments[k].Likes = uint(num)
 		if err != nil {
@@ -74,6 +89,7 @@ func GetDiscussion(l *domain.Lesson, u *domain.User) (r *constant.LessonDiscussi
 			return nil, err
 		}
 	}
+	fmt.Printf("%+v\n", r)
 	return
 }
 
@@ -100,11 +116,11 @@ func ReadyLesson(t *constant.Teacher, lts *constant.LessonTeacherRequest) (err e
 	for _, v := range ques {
 		que := fmt.Sprintf("lesson_%d_question_%d", lesson.ID, v.QuestionID)
 		rdb.HSet(ctx, que, "content", v.Title)
-		rdb.HSet(ctx, que, "correct", 0)
+		//rdb.HSet(ctx, que, "correct", 0)
 		rdb.HSet(ctx, que, "optionNum", len(v.Options.Ops))
 		for k, w := range v.Options.Ops {
 			rdb.HSet(ctx, que, fmt.Sprintf("option_%d", k), w.Text)
-			rdb.HSet(ctx, que, fmt.Sprintf("option_%d_count", k), 0)
+			//rdb.HSet(ctx, que, fmt.Sprintf("option_%d_count", k), 0)
 		}
 	}
 	t.Lesson = t.NewLesson(lesson)
@@ -115,18 +131,23 @@ func ReadyLesson(t *constant.Teacher, lts *constant.LessonTeacherRequest) (err e
 		ReadyLesson: struct {
 			IsResponse bool `json:"is_response"`
 			LessonID   uint `json:"lesson_id"`
-		}{IsResponse: true, LessonID: lesson.ID},
+			IsStart    bool `json:"is_start"`
+		}{IsResponse: true, LessonID: lesson.ID, IsStart: true},
 	})
-	RecPPT(t)
+	RecPPT(t, lts.ReadyLesson.PPTSize)
+	WebSocketWrite(t.Conn, constant.LessonTeacherResponse{
+		ReadyLesson: struct {
+			IsResponse bool `json:"is_response"`
+			LessonID   uint `json:"lesson_id"`
+			IsStart    bool `json:"is_start"`
+		}{IsResponse: true, LessonID: lesson.ID, IsStart: false},
+	})
+	t.Start <- struct{}{}
 	return
 }
 
-func RecPPT(t *constant.Teacher) {
-	conn := t.Conn
-	_, pptData, err := conn.ReadMessage()
-	if err != nil {
-		fmt.Println("pptData error")
-	}
+func RecPPT(t *constant.Teacher, size uint) {
+
 	// 保存PPT文件到临时文件
 	tmpFile, err := os.CreateTemp("../temp/", fmt.Sprintf("PPTJPG_%d.ppt", t.Lesson.Lesson.ID))
 	if err != nil {
@@ -135,12 +156,28 @@ func RecPPT(t *constant.Teacher) {
 	}
 	defer os.Remove(tmpFile.Name())
 
-	err = os.WriteFile(tmpFile.Name(), pptData, 0644)
+	conn := t.Conn
+	var cur uint
+	file, err := os.OpenFile(tmpFile.Name(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Println("Failed to write PPT to temp file:", err)
+		fmt.Println("Error opening file:", err)
 		return
 	}
+	defer file.Close()
 
+	// 写入数据
+	for cur < size {
+		_, pptData, err := conn.ReadMessage()
+		cur += uint(len(pptData))
+		if err != nil {
+			fmt.Println("pptData error")
+		}
+		_, err = file.Write(pptData)
+		if err != nil {
+			fmt.Println("Error writing to file:", err)
+			return
+		}
+	}
 	// 转换PPT为JPG
 	err = util.ConvertPPTtoJPG(tmpFile.Name())
 	if err != nil {
@@ -181,8 +218,16 @@ func TeacherRunRead(t *constant.Teacher) {
 	t.Conn.SetReadLimit(maxMessageSize)
 	_ = t.Conn.SetReadDeadline(time.Now().Add(pongWait))
 	t.Conn.SetPongHandler(func(string) error { return t.Conn.SetReadDeadline(time.Now().Add(pongWait)) })
+	WebSocketWrite(t.Conn, constant.LessonTeacherResponse{
+		StartLesson: struct {
+			IsResponse bool `json:"is_response"`
+		}{IsResponse: true},
+	})
 	for {
 		_, message, err := t.Conn.ReadMessage()
+		if len(message) == 0 {
+			continue
+		}
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
@@ -194,6 +239,7 @@ func TeacherRunRead(t *constant.Teacher) {
 		if err != nil {
 			fmt.Println("err")
 		}
+		fmt.Println(lts)
 		if lts.ReadyLesson.IsRequest {
 			err = ReadyLesson(t, lts)
 			if err != nil {
@@ -221,10 +267,10 @@ func TeacherRunRead(t *constant.Teacher) {
 			}
 			lq := fmt.Sprintf("lesson_%d_question_%d", t.Lesson.Lesson.ID, que.ID)
 			rdb.HSet(ctx, lq, "content", que.Name)
-			rdb.HSet(ctx, lq, "correct", 0)
+			//rdb.HSet(ctx, lq, "correct", 0)
 			for k, w := range que.Options.Ops {
 				rdb.HSet(ctx, lq, fmt.Sprintf("option_%d", k), w.Text)
-				rdb.HSet(ctx, lq, fmt.Sprintf("option_%d_count", k), 0)
+				//rdb.HSet(ctx, lq, fmt.Sprintf("option_%d_count", k), 0)
 			}
 			WebSocketWrite(t.Conn, constant.LessonTeacherResponse{
 				InsertQuestion: struct {
@@ -233,11 +279,13 @@ func TeacherRunRead(t *constant.Teacher) {
 				}{IsResponse: true, QuestionID: que.ID},
 			})
 		} else if lts.ShowPPT.IsRequest {
+			fmt.Println("teacher:ShowPPT", lts.ShowPPT.ShowID)
 			t.Lesson.NewPPT <- lts.ShowPPT.ShowID
 		} else if lts.ShowQuestion.IsRequest {
-			t.Lesson.NewQuestion <- &constant.QuestionShow{
+			t.Lesson.NewQuestion <- constant.QuestionShow{
 				QuestionID: lts.ShowQuestion.ShowID,
 				Time:       lts.ShowQuestion.Time,
+				Round:      lts.ShowQuestion.Round,
 			}
 		} else if lts.OverLesson.IsRequest {
 			break
@@ -246,6 +294,7 @@ func TeacherRunRead(t *constant.Teacher) {
 }
 
 func TeacherRunWrite(t *constant.Teacher) {
+	fmt.Println(t.Lesson)
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
@@ -254,6 +303,7 @@ func TeacherRunWrite(t *constant.Teacher) {
 	for {
 		select {
 		case <-t.NewMsg:
+			fmt.Println("newMsg")
 			data, err := GetDiscussion(t.Lesson.Lesson, t.User)
 			if err != nil {
 				fmt.Println(err)
@@ -261,8 +311,9 @@ func TeacherRunWrite(t *constant.Teacher) {
 			WebSocketWrite(t.Conn, constant.LessonTeacherResponse{
 				DiscussionRes: *data,
 			})
-		case queId := <-t.Lesson.NewAnswer:
-			que := fmt.Sprintf("lesson_%d_question_%d", t.Lesson.Lesson.ID, queId)
+		case queMsg := <-t.Lesson.NewAnswer:
+			fmt.Println("t.Lesson.NewAnswer")
+			que := fmt.Sprintf("lesson_%d_question_%d", t.Lesson.Lesson.ID, queMsg.QuestionID)
 			opNum, err := rdb.HGet(ctx, que, "optionNum").Result()
 			if err != nil {
 				fmt.Println(err)
@@ -270,23 +321,24 @@ func TeacherRunWrite(t *constant.Teacher) {
 			n, _ := strconv.Atoi(opNum)
 			optNum := make([]uint, n)
 			for i := 0; i < n; i++ {
-				strNum, _ := rdb.HGet(ctx, que, fmt.Sprintf("option_%d_count", i)).Result()
+				strNum, _ := rdb.HGet(ctx, que, fmt.Sprintf("option_%d_count_%d", i, queMsg.Round)).Result()
 				num, _ := strconv.Atoi(strNum)
 				optNum[i] = uint(num)
 			}
-			correctNum, _ := rdb.HGet(ctx, que, "correct").Result()
+			correctNum, _ := rdb.HGet(ctx, que, fmt.Sprintf("correct_%d", queMsg.Round)).Result()
 			crt, _ := strconv.Atoi(correctNum)
 			WebSocketWrite(t.Conn, constant.LessonTeacherResponse{
 				QuestionResponse: constant.LessonQuestionResponse{
 					IsResponse: true,
 					QuestionRes: constant.LessonQuestionRes{
-						QuestionID: queId,
+						QuestionID: queMsg.QuestionID,
 						OptionNum:  optNum,
 					},
 					CorrectNum: uint(crt),
 				},
 			})
 		case <-ticker.C:
+			fmt.Println("ticker.C")
 			_ = t.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := t.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
@@ -300,7 +352,6 @@ func StudentRunRead(s *constant.Student) {
 		_ = s.Conn.Close()
 		s.Lesson.UnRegister <- s
 	}()
-	s.Lesson.Register <- s
 	s.Conn.SetReadLimit(maxMessageSize)
 	_ = s.Conn.SetReadDeadline(time.Now().Add(pongWait))
 	s.Conn.SetPongHandler(func(string) error { return s.Conn.SetReadDeadline(time.Now().Add(pongWait)) })
@@ -323,24 +374,31 @@ func StudentRunRead(s *constant.Student) {
 				return
 			}
 			s.Lesson = lesson.(*constant.Lesson)
+			s.Lesson.Register <- s
+			s.Start <- struct{}{}
 		} else if lts.MakeLike.IsRequest {
 			cls := fmt.Sprintf("lesson_%d_comment_%d", s.Lesson.Lesson.ID, lts.MakeLike.CommentID)
 			rdb.SAdd(ctx, cls, s.Student.ID)
 			s.Lesson.NewMsg <- struct{}{}
 		} else if lts.MakeDiscuss.IsRequest {
 			discussion := fmt.Sprintf("lesson_%d_discussion", s.Lesson.Lesson.ID)
+			fmt.Println(discussion)
 			rdb.LPush(ctx, discussion, lts.MakeDiscuss.Content)
 			s.Lesson.NewMsg <- struct{}{}
 		} else if lts.AnswerQuestion.IsRequest {
 			que := fmt.Sprintf("lesson_%d_question_%d", s.Lesson.Lesson.ID, lts.AnswerQuestion.QuestionID)
+			fmt.Println(que)
 			if lts.AnswerQuestion.IsCorrect {
-				rdb.HIncrBy(ctx, que, "correct", 1)
+				rdb.HIncrBy(ctx, que, fmt.Sprintf("correct_%d", lts.AnswerQuestion.Round), 1)
 			}
 			for _, v := range lts.AnswerQuestion.Option {
-				option := fmt.Sprintf("option_%d_count", v)
+				option := fmt.Sprintf("option_%d_count_%d", v, lts.AnswerQuestion.Round)
 				rdb.HIncrBy(ctx, que, option, 1)
 			}
-			s.Lesson.NewAnswer <- lts.AnswerQuestion.QuestionID
+			s.Lesson.NewAnswer <- constant.QuestionMsg{
+				QuestionID: lts.AnswerQuestion.QuestionID,
+				Round:      lts.AnswerQuestion.Round,
+			}
 		}
 	}
 }
@@ -362,14 +420,17 @@ func StudentRunWrite(s *constant.Student) {
 				DiscussionRes: *data,
 			})
 		case que := <-s.NewQuestion:
+			fmt.Println("NewQuestion")
 			WebSocketWrite(s.Conn, constant.LessonStudentResponse{
 				QuestionRes: constant.LessonQuestion{
 					IsResponse: true,
 					QuestionID: que.QuestionID,
 					Time:       que.Time,
+					Round:      que.Round,
 				},
 			})
 		case ppt := <-s.NewPPT:
+			fmt.Println("NewPPT")
 			WebSocketWrite(s.Conn, constant.LessonStudentResponse{
 				PPTRes: constant.LessonPPT{
 					IsResponse: true,
@@ -393,14 +454,18 @@ func BeginLesson(c *gin.Context) (err error) {
 		fmt.Println("err")
 		return
 	}
+	tea := user.(domain.User)
 	teacher := &constant.Teacher{
 		Conn:       conn,
-		User:       user.(*domain.User),
+		User:       &tea,
+		Start:      make(chan struct{}),
 		NewMsg:     make(chan struct{}),
 		OverLesson: make(chan struct{}),
 	}
 	go TeacherRunRead(teacher)
+	_ = <-teacher.Start
 	go TeacherRunWrite(teacher)
+	fmt.Println("ready")
 	return
 }
 
@@ -412,14 +477,17 @@ func EnterIntoLesson(c *gin.Context) (err error) {
 		fmt.Println("err")
 		return
 	}
+	stu := user.(domain.User)
 	student := &constant.Student{
 		Conn:        conn,
-		Student:     user.(*domain.User),
+		Student:     &stu,
+		Start:       make(chan struct{}),
 		NewMsg:      make(chan struct{}),
-		NewQuestion: make(chan *constant.QuestionShow),
+		NewQuestion: make(chan constant.QuestionShow),
 		NewPPT:      make(chan uint),
 	}
 	go StudentRunRead(student)
+	_ = <-student.Start
 	go StudentRunWrite(student)
 	return
 }

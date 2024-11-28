@@ -40,13 +40,14 @@ function showTab(tabId) {
         })
             .then(response => response.json())
             .then(data => {
-                if (data.data && Array.isArray(data.data)) {
-                    messages = data.data.map(post => ({
-                        id: post.ClassroomID,
+                console.log("class list:",data);
+                if (data.data.lessons && Array.isArray(data.data.lessons)) {
+                    messages = data.data.lessons.map(post => ({
+                        id: post.lesson_id,
                         name : post.name,
-                        time: post.time
+                        time: post.created
                     }));
-                    console.log(messages);
+                    console.log("class list:",messages);
                     renderMessages(currentPage);
                 } else {
                     console.error('Data format error: PostList is not an array or does not exist.');
@@ -205,7 +206,9 @@ function renderMessages(page) {
             details.appendChild(time);
 
             // 添加点击事件以根据id跳转
-            li.addEventListener('click', () => window.location.href = `course.html?id=${msg.id}`);
+            li.addEventListener('click', () => {
+                window.location.href = `/lesson?lessonID=${msg.id}`
+            });
 
             // 将详情元素添加到列表项中
             li.appendChild(details);

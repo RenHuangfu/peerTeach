@@ -12,12 +12,12 @@
         tabsContainer = document.getElementById("tabs");
         reasonDisplay = document.getElementById("reason-display");
         var question = currentQuestion;
-        reasons = question.option.map(() => []); // 每个选项的理由列表
+        reasons = question.options.Options.map(() => []); // 每个选项的理由列表
         selectedTab = 0; 
         tabsContainer.innerHTML = ""; // 清空选项卡容器
         reasonDisplay.innerHTML = "暂无理由"; // 清空理由展示区
         // 初始化选项卡
-        question.option.forEach((opt, idx) => {
+        question.options.Options.forEach((opt, idx) => {
         const tab = document.createElement("button");
         tab.className = "option-tab";
         tab.textContent = opt.text;
@@ -29,7 +29,7 @@
         }
         tabsContainer.appendChild(tab);
         });
-        simulateWebSocket();
+        //simulateWebSocket();
     }
 
     // 选项卡切换逻辑
@@ -64,7 +64,7 @@
         const likeButton = document.createElement("button");
         likeButton.className = `like-button ${reasonText.is_like ? "liked" : ""}`;
         likeButton.innerHTML = "&#x1F44D;"; // 👍 Emoji
-        likeButton.addEventListener("click", () => toggleLike(index,comment_index));
+        //likeButton.addEventListener("click", () => toggleLike(index,comment_index));
 
         const likeCount = document.createElement("span");
         likeCount.className = "like-count";
@@ -78,26 +78,27 @@
     }
 
     // 点赞功能
-    function toggleLike(index, comment_index) {
-        // 当前选项的第一个评论点赞状态切换
-        const firstComment = reasons[index][comment_index];
-        firstComment.is_like = !firstComment.is_like;
-        firstComment.is_like ? firstComment.likes++ : firstComment.likes--;
-  
-        updateReasonDisplay(index); // 更新显示
-      }
+    // function toggleLike(index, comment_index) {
+    //     // 当前选项的第一个评论点赞状态切换
+    //     const firstComment = reasons[index][comment_index];
+    //     firstComment.is_like = !firstComment.is_like;
+    //     firstComment.is_like ? firstComment.likes++ : firstComment.likes--;
+    //
+    //     updateReasonDisplay(index); // 更新显示
+    //   }
   
       // 处理服务器返回的评论数据
       function handleServerUpdate(data) {
+        reasons = currentQuestion.options.Options.map(() => []);
         if (data.is_response) {
           data.comments.forEach((comment) => {
             const [questionId, optionIndex, reasonText] = comment.content.split("##");
             const index = parseInt(optionIndex); // 获取评论的选项索引
   
             // 确保只有该题目的评论被处理
-            //if (parseInt(questionId) === currentQuestion.questionId) {
-            if (parseInt(questionId) === 62) {
-              // 将评论添加到对应选项的理由列表中
+            if (parseInt(questionId) === currentQuestion.questionId) {
+            // if (parseInt(questionId) === 62) {
+              // 将评论添加到对应选项的理由列表
               reasons[index].push({
                 content: reasonText,
                 likes: comment.likes,

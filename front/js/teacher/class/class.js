@@ -795,6 +795,10 @@ function postFile(file, fileName, url){  //文件和该文件的文件名
         });
 }
 
+function startLesson(){
+    window.location.href = "/at_lesson";
+    sessionStorage.setItem("class_id",classId)
+}
 
 // window.addEventListener('load', function () {
 //     // 页面完全加载后执行的代码

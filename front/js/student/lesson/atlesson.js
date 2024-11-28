@@ -1,8 +1,7 @@
 var urlParams = new URLSearchParams(window.location.search);
-var lessonId = urlParams.get('lesson_id');
-var lessonId = 1;
+var lessonId = parseInt(urlParams.get('lessonID'));
 let socket = {}; // WebSocket对象 
-let wsurl = 'ws://localhost:8080';
+let wsurl = 'ws://'+document.location.host+'/at_lesson/ws';
 let slide_list=[];
 let questions_list=[];
 let currentIndex = 0;  //给每道题一个单独的index，因为可能会多次发送同一道题
@@ -11,27 +10,6 @@ let havePPT = false;
 const alphabet = Array.from({ length: 26 }).map((_, i) => String.fromCharCode(65 + i));
 
 // 获取图片的函数
-async function fetchImages(index = 1) {
-    // 构建图片 URL
-    const imageUrl = `PPTJPG_${lessonId}_${index}.jpg`;
-
-    // 尝试获取图片
-    try {
-        const response = await fetch(imageUrl);
-        // 如果图片存在，继续获取下一张图片
-        if (response.ok) {
-            slide_list.push(imageUrl);
-            fetchImages(index + 1);
-        } else {
-            // 如果图片不存在，停止递归
-            console.log(`No more images found after index ${index - 1}`);
-        }
-    } catch (error) {
-        // 如果发生错误，停止递归
-        console.error(`Error fetching image at index ${index}:`, error);
-    }
-}
-
 function startLesson() {
     socket = new WebSocket(wsurl);  //建立连接
         
@@ -58,7 +36,7 @@ function startLesson() {
 
 function processMessage(event) {
     const data = JSON.parse(event.data);
-    console.log('Received data:', receivedData);
+    console.log('Received data:', data);
     var types = Object.keys(data);  //获取所有键值
     var type = "";
     types.forEach( key => {
@@ -73,11 +51,11 @@ function processMessage(event) {
             break;
         }
         case 'question_res':{   //获取问题id
-            getQuestion(data.question_res.question, data.question_res.time)
+            getQuestion(data.question_res.question, data.question_res.time, data.question_res.round)
             break;
         }
         case 'discussion_res':{  //获取所有讨论内容
-
+            handleServerUpdate(data.discussion_res);
             break;
         }
     }
@@ -106,7 +84,7 @@ function renderSinglePPT(index){
 
     // 创建一个新的img元素
     const img = document.createElement("img");
-    img.src = `PPTJPG_${lessonId}-${(index<9)?"0"+index+1:index+1}.jpg`;
+    img.src = `/file/PPTJPG_${lessonId}-${index+1}.jpg`;
     img.alt = "ppt";
 
     // 将img元素添加到div元素中
@@ -119,10 +97,10 @@ function renderSinglePPT(index){
 function showSlide(index){
     var container = document.querySelector(".slide-content")
     container.innerHTML = `<img id="slideImage" src="./pic2.png" alt="ppt" style="width: 100%; height:100%">`
-    document.getElementById("slideImage").src = `PPTJPG_${lessonId}-${(index<9)?"0"+index+1:index+1}.jpg`; // 显示图片
+    document.getElementById("slideImage").src = `/file/PPTJPG_${lessonId}-${index+1}.jpg`; // 显示图片
 }
 
-function getQuestion(questionIds, time) {
+function getQuestion(questionIds, time, round) {
     var data = {
         get_question_detail:{isRequest: true, question_id:parseInt(questionIds)}
     };
@@ -138,9 +116,10 @@ function getQuestion(questionIds, time) {
         .then(_data => {
             console.log("get_question",_data);
             var q = _data.data;
+            q.round = round;
             q.index = currentIndex++;  //给每道题一个单独的index，因为可能会多次发送同一道题
             questions_list.push(q);
-            renderQuestion(q, time);
+            renderQuestion(q, time, round);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -177,6 +156,7 @@ function renderQuestion(question, time){   //将题目渲染到右侧列表中
 function showQuestion(index){  //查看题目详情
     console.log("showQuestion ",index);
     var question = questions_list.find((item) => item.index === index);
+    currentQuestion = question;
     if(question){
     const isMultipleChoice = question.options.Options.filter(opt => opt.IsCorrect).length > 1;
 
@@ -185,7 +165,11 @@ function showQuestion(index){  //查看题目详情
     container.setAttribute("index",index);  //给当前题目一个index，方便提交答案时获取
     //添加倒计时模块
     const countdown = document.createElement("div");
-    countdown.innerHTML = `<div id="countdown">时间到</div>`;
+    const countdown2 = document.createElement("div");
+    countdown2.id = "countdown";
+    countdown2.textContent = "未开始";
+    countdown2.setAttribute("index",index);
+    countdown.appendChild(countdown2)
     container.appendChild(countdown);
     //添加题目
     const questionDiv = document.createElement("div");
@@ -223,6 +207,8 @@ function showQuestion(index){  //查看题目详情
     const buttonDiv = document.createElement("div");
     buttonDiv.innerHTML = `<button type="button" class="submit-button" id="submit-button" onclick="submitAnswer()">提交答案</button>`;
     container.appendChild(buttonDiv);
+
+    generateDiscussion();
     }
 }
 
@@ -245,7 +231,7 @@ function updateCountdown(index, secondsRemaining) {   //默认一次只有一个
     const formattedMinutes = String(minutes).padStart(2, '0');
     const formattedSeconds = String(seconds).padStart(2, '0');
 
-    if(countdownElement){
+    if(countdownElement && countdownElement.getAttribute("index") == index){
         // 如果倒计时结束，显示提示信息
         if (secondsRemaining <= 0) {
             countdownElement.textContent = '时间到';
@@ -275,12 +261,12 @@ function submitAnswer(){
     const answerbutton = document.getElementById('submit-button');
     answerbutton.disabled = true;
 
-    const selectedOptions = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(input => input.value);
+    const selectedOptions = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(input => parseInt(input.value));
     const selectedOption = document.querySelector('input[type="radio"]:checked')?.value;
     const questionIndex = parseInt(document.querySelector('.slide-content').getAttribute('index'));
     const question = questions_list.find((item) => item.index === questionIndex);
     const isMultipleChoice = question.options.Options.filter(opt => opt.IsCorrect).length > 1;
-    const selectedOptionIndex = isMultipleChoice ? selectedOptions : [selectedOption];
+    const selectedOptionIndex = isMultipleChoice ? selectedOptions : [parseInt(selectedOption)];
     console.log(selectedOptionIndex);
 
     //发送回答
@@ -295,17 +281,19 @@ function submitAnswer(){
             answer_question:{
                 isRequest: true,
                 is_correct: flag,
-                option: selectedOptionIndex
+                question_id: question.questionId,
+                option: selectedOptionIndex,
+                round: question.round
             }
         }
         console.log("data1:",data1);
-        socket.send(data1);
+        socket.send(JSON.stringify(data1));
     }
     
 
     //发送理由
     const reasonInputs = document.querySelectorAll('.reason-input');
-    const reasons = Array.from(reasonInputs).filter(input => selectedOptionIndex.includes(input.getAttribute("index"))).map(input => {if(input.value!=="") return lessonId+"##"+input.getAttribute("index")+"##"+input.value; else return ""});
+    const reasons = Array.from(reasonInputs).filter(input => selectedOptionIndex.includes(parseInt(input.getAttribute("index")))).map(input => {if(input.value!=="") return question.questionId+"##"+input.getAttribute("index")+"##"+input.value; else return ""});
     console.log(reasons);
 
     if(reasons.length !== 0){
@@ -317,7 +305,8 @@ function submitAnswer(){
                         content:reason
                     }
                 }
-                socket.send(data2);
+                console.log(" make_discuss:",data2)
+                socket.send(JSON.stringify(data2));
             }
         })
     }
@@ -326,33 +315,3 @@ function submitAnswer(){
 // 开始获取图片
 //fetchImages();
 startLesson();
-
-var sample={
-    index: 0,
-    title: "第一题",
-    options:{
-        Options:[
-            {
-                text: "选项1",
-                IsCorrect: false
-            },
-            {
-                text: "选项2",
-                IsCorrect: true
-            },
-            {
-                text: "选项3",
-                IsCorrect: true
-            },
-            {
-                text: "选项4",
-                IsCorrect: false
-            }
-        ]
-    }
-}
-
-questions_list.push(sample);
-renderQuestion(sample,60);
-currentQuestion = sample;
-generateDiscussion();

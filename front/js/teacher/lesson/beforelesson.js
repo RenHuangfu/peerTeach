@@ -2,7 +2,7 @@ let exam_list =[];
 let questions_list =[];
 let havePaperList = false;
 let paperId = "";  //为""表示没有选择试卷
-let course = [];
+let courses = [];
 let attachment = {};   //保存附件
 
 function openDialog1() {  //上传课件
@@ -49,7 +49,7 @@ function getPaperList(){  //获取试卷列表
         get_paper:{isRequest: true}
     };
 
-    fetch('https://mock.apipost.net/mock/3610001ac4e5000/mock/3610001ac4e5000/?apipost_id=23834377b60061', {
+    fetch('/resource', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -119,11 +119,11 @@ function renderPaperDetail(){
       questionDiv.appendChild(questionSpan);
   
       var answer=""
-      question.option.forEach((option,index) => {
+      question.options.Options.forEach((option,index) => {
         const optionSpan = document.createElement("span");
         optionSpan.textContent = `${alphabet[index]}. ${option.text}`;
         questionDiv.appendChild(optionSpan);
-        if(option.isCorrect){
+        if(option.IsCorrect){
             answer+=`${alphabet[index]}`
         }
       });
@@ -147,6 +147,7 @@ function selectPaper() {  //选择试卷
           document.getElementById("paper-name").textContent = "选择试卷："+radioButtons[i].getAttribute("title");
           closeDialog2();
           paperId = radioButtons[i].value;
+          console.log("paperId:",paperId)
           getPaper(radioButtons[i].value);
           return;
         }
@@ -160,7 +161,7 @@ function getPaper(paperId) {  //获取试卷详情
         get_paper_detail:{isRequest: true, paper_id: parseInt(paperId)}
     };
 
-    fetch('https://mock.apipost.net/mock/3610001ac4e5000/?apipost_id=3afe5fb9b56011', {
+    fetch('/resourceDetail', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -174,7 +175,7 @@ function getPaper(paperId) {  //获取试卷详情
             return response.json();  // 将响应的 JSON 数据解析成对象
         })
         .then(_data => {
-            questions_list = _data.question;
+            questions_list = _data.data.question;
             console.log("questions_list",questions_list)
             renderPaperDetail();
         })
@@ -193,7 +194,7 @@ function selectPPT() {  //选择课件
 
 function getCourses() {
     // 构建带有查询参数的 URL
-    var url = "https://mock.apipost.net/mock/3610001ac4e5000/?apipost_id=21010a90f59003";
+    var url = "/course";
     var postData = {
         get_course: {isRequest: true}
     };
@@ -226,6 +227,16 @@ function getCourses() {
             option.innerText = course.course_name;
 
             courseSelect.appendChild(option);
+
+            // course.classes.forEach(cls=>{
+            //     if(cls.id===parseInt(sessionStorage.getItem("class_id"))){
+            //         courseSelect.value = course.course_id;
+            //         courseSelect.textContent = course.course_name;
+            //         const classSelect = document.getElementById('class');
+            //         classSelect.value = cls.id;
+            //         classSelect.textContent = cls.name;
+            //     }
+            // })
             });
         })
         .catch(error => {

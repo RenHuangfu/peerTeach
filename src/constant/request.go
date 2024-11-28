@@ -175,6 +175,7 @@ type LessonReq struct {
 	ExamID    uint   `json:"paper_id"`
 	ClassID   uint   `json:"class_id"`
 	LessonID  uint   `json:"lesson_id"`
+	PPTSize   uint   `json:"ppt_size"`
 }
 
 // websocket
@@ -183,6 +184,7 @@ type lessonShow struct {
 	IsRequest bool `json:"isRequest"`
 	ShowID    uint `json:"show_id"`
 	Time      uint `json:"time"`
+	Round     uint `json:"round"`
 }
 
 type LessonTeacherRequest struct {
@@ -204,6 +206,7 @@ type AnswerReq struct {
 	QuestionID uint   `json:"question_id"`
 	Option     []uint `json:"option"`
 	IsCorrect  bool   `json:"is_correct"`
+	Round      uint   `json:"round"`
 }
 
 type LessonStudentRequest struct {

@@ -54,7 +54,7 @@ type DetailLesson struct {
 	ExamID   uint      `json:"exam_id" gorm:"exam_id"`
 	PPTName  *string   `json:"ppt_name" gorm:"ppt_name"`
 	ClassID  uint      `json:"class_id" gorm:"class_id"`
-	Name     uint      `json:"name" gorm:"name"`
+	Name     *string   `json:"name" gorm:"name"`
 }
 
 type LessonsResponse struct {
@@ -171,6 +171,9 @@ type LessonQuestionResponse struct {
 }
 
 type LessonTeacherResponse struct {
+	StartLesson struct {
+		IsResponse bool `json:"is_response"`
+	} `json:"start_lesson"`
 	DiscussionRes    LessonDiscussionRes    `json:"discussion_res"`
 	QuestionResponse LessonQuestionResponse `json:"question_response"`
 	InsertQuestion   struct {
@@ -180,6 +183,7 @@ type LessonTeacherResponse struct {
 	ReadyLesson struct {
 		IsResponse bool `json:"is_response"`
 		LessonID   uint `json:"lesson_id"`
+		IsStart    bool `json:"is_start"`
 	} `json:"ready_lesson"`
 }
 
@@ -187,6 +191,7 @@ type LessonQuestion struct {
 	IsResponse bool `json:"is_response"`
 	QuestionID uint `json:"question"`
 	Time       uint `json:"time"`
+	Round      uint `json:"round"`
 }
 
 type LessonPPT struct {

@@ -29,7 +29,6 @@
         }
         tabsContainer.appendChild(tab);
         });
-        simulateWebSocket();
     }
 
     // 选项卡切换逻辑
@@ -99,14 +98,15 @@
   
       // 处理服务器返回的评论数据
       function handleServerUpdate(data) {
+        reasons = currentQuestion.options.Options.map(() => []);
+        console.log("handleServerUpdate:",data)
         if (data.is_response) {
           data.comments.forEach((comment,comment_id) => {
             const [questionId, optionIndex, reasonText] = comment.content.split("##");
             const index = parseInt(optionIndex); // 获取评论的选项索引
-  
+            console.log("提取评论：",questionId, optionIndex, reasonText)
             // 确保只有该题目的评论被处理
-            //if (parseInt(questionId) === currentQuestion.questionId) {
-            if (parseInt(questionId) === 62) {
+            if (parseInt(questionId) === currentQuestion.questionId) {
               // 将评论添加到对应选项的理由列表中
               reasons[index].push({
                 content: reasonText,

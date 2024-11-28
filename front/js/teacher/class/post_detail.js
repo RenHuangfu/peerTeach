@@ -396,7 +396,7 @@ function confirmDelete1(){
 function confirm1(){
     var data = {
         get_post_detail:{isRequest:false},
-        delete_post:{isRequest: true,post_id:postId},
+        delete_post:{isRequest: true, post_id:parseInt(postId)},
         delete_comment:{isRequest:false},
         like_post:{isRequest:false},
         like_comment:{isRequest:false},
@@ -417,7 +417,7 @@ function confirm1(){
         })
         .then(data => {
             console.log("Response data:",data);
-            var newUrl = 'post.html?ClassID=' + encodeURIComponent(classId);
+            var newUrl = `/class?class_id=${classId}`;
             // 跳转到新URL
             window.location.href = newUrl;
         })

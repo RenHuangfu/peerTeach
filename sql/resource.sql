@@ -11,7 +11,7 @@ VALUES (1,current_time,current_time,'111','111','111','111','option',true,
        (2,current_time,current_time,'222','222','222','222','option',true,
         '{"Options":[{"text":"222","isCorrect":true},{"text":"999","isCorrect":false}]}',1);
 
-insert into exam_questions (exam_id, question_id) VALUES (1,1),(2,1),(1,2);
+insert into exam_questions (exam_id, question_id) VALUES (1,1),(2,1),(1,2),(1,3),(1,4);
 
 select q.id as question_id,q.created as time,q.name as title,q.options as options
     from questions as q where q.id in
@@ -31,6 +31,10 @@ delete from questions where id < 100;
 select * from questions;
 select * from exams;
 
+delete from lessons where id >10;
+select * from answer_records;
+
+select * from lessons;
 
 
 

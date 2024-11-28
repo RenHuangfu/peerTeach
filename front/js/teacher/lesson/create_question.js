@@ -16,6 +16,7 @@ var tem_create_section = document.getElementById('tem_create_section');
 var lastDrop1 = "-3", lastDrop2 = "-3", flag = true;
 
 function newOption() {
+    if(option_list.len>=26) return;
     const ele = document.createElement("span");
     const textElement = document.createElement("span");
     textElement.textContent = "在此编辑选项";

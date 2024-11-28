@@ -12,7 +12,7 @@ import (
 )
 
 func ViewLesson(c *gin.Context) {
-	lessonID := c.Param("lessonID")
+	lessonID := c.Query("lessonID")
 	id, _ := strconv.Atoi(lessonID)
 	lid := uint(id)
 	_, ok := persistence.Lessons.Load(lid)

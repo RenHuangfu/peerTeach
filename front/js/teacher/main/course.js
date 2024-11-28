@@ -209,7 +209,7 @@ function generateTable(tasks, title, tableId) {
     }
     else {  //如果没有班级
         const createClass = document.createElement('button');
-        createClass.innerHTML = '<i class="fas fa-plus"></i> 添加班级';
+        createClass.innerHTML = '<i class="fas fa-plus"></i> 创建班级';
         createClass.onclick = function(){openCreateClassModal();}
         tableWrapper.appendChild(createClass);
     }

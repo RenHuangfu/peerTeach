@@ -128,7 +128,7 @@ func GetLesson(c *domain.Class) (r *constant.LessonsResponse, err error) {
 	r = &constant.LessonsResponse{}
 	r.Lessons = make([]*constant.DetailLesson, 10)
 	err = db.Raw("select id as lesson_id,created,exam_id,ppt_name,class_id,name "+
-		"from lessons where class_id = ?", c.ID).Scan(&r.Lessons).Error
+		"from lessons where class_id = ? order by lesson_id desc", c.ID).Scan(&r.Lessons).Error
 	if err != nil {
 		return nil, err
 	}

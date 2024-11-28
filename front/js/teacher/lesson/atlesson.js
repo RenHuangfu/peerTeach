@@ -1,10 +1,13 @@
 let socket = {}; // WebSocket对象 
-let wsurl = 'ws://localhost:8080';
+let wsurl = 'ws://'+document.location.host+'/at_lesson/ws';
 let lesson_id = 0;  //保存课堂id
 let PPT_length = 0; //保存PPT幻灯片数量
 let currentSlideIndex = 0; //保存当前幻灯片索引
 let currentQuestionIndex = 0; //保存当前题目索引
 let isShowPPT = true;   //当前选中的是否是幻灯片
+let courseInput = '';
+let classId = '';
+let courseId = '';
 
 let currentQuestion = {}; //保存当前题目
 let totalResponses = 0;
@@ -15,12 +18,21 @@ let new_insert_question = {};
 
 const alphabet = Array.from({ length: 26 }).map((_, i) => String.fromCharCode(65 + i));
 
+const CHUNK_SIZE = 4*1024;
+let totalChunks, currentChunk = 0;
+
+let question_round = {}; //记录每道题发布了多少次
 
 /*--------处理websocket--------*/
 function startLesson() {
-    var courseId = document.getElementById('course').value;
-    var classId = document.getElementById('class').value;
-    var courseInput = document.getElementById('course-name').value;
+    courseId = document.getElementById('course').value;
+    classId = document.getElementById('class').value;
+    courseInput = document.getElementById('course-name').value;
+
+    questions_list.forEach((question) => {
+        question_round[question.questionId] = 0;
+    });   //所有问题的发布次数为0
+
 
     if(!courseId || !classId){
         document.getElementById('error-message').textContent = '请选择课程和班级'
@@ -30,59 +42,58 @@ function startLesson() {
         rePaint(); //重绘页面
 
         socket = new WebSocket(wsurl);  //建立连接
-        
+        console.log(wsurl)
         // 监听连接打开事件
         socket.onopen = function(event) {
             console.log('WebSocket is open now.');
-
-            const data = {
-                ready_lesson: {
-                is_request:true,
-                lesson_name: courseInput,
-                paper_id: parseInt(paperId),
-                class_id: parseInt(classId)
-                }
-            };
-
-            const jsonString = JSON.stringify(data);
-            socket.send(jsonString);
         };
 
         socket.onmessage = function(event){
+            console.log("get message from server")
             processMessage(event);
         }
-        
-    }  
+    }
+
 }
 
 function postPPT() {
-    var newName = `PPT_${lesson_id}_${attachment.name}`
-    var metadata = {
-        post_PPT:{
-            is_request: true,
-            size: attachment.size,
-            name: newName
-        }
-        
-    }
-    socket.send(JSON.stringify(metadata));
-
-    const fileReader = new FileReader();
-
-    fileReader.onload = function(event) {
-        socket.send(event.target.result);
-    };
-
-    fileReader.onerror = function(error) {
-        console.error('FileReader error:', error);
-    };
-
-    fileReader.readAsArrayBuffer(attachment);   //以二进制形式发送
+    totalChunks = Math.ceil(attachment.size / CHUNK_SIZE);  // 计算总块数
+    currentChunk = 0;  // 重置当前块
+    console.log(totalChunks)
+    console.log(attachment.size)
+    // 发送每个文件块
+    sendNextChunk(attachment);
 }
+
+// 发送下一个文件块
+function sendNextChunk() {
+    const reader = new FileReader();
+    const start = currentChunk * CHUNK_SIZE;
+    const end = Math.min((currentChunk + 1) * CHUNK_SIZE, attachment.size);
+    const chunk = attachment.slice(start, end);  // 获取文件的当前块
+
+    reader.onload = function(e) {
+        const data = e.target.result;
+
+        // 通过 WebSocket 发送文件块
+        socket.send(data);
+
+        // 更新当前块索引，发送下一个块
+        currentChunk++;
+        if (currentChunk < totalChunks) {
+            sendNextChunk(attachment);  // 递归发送下一个块
+        } else {
+            console.log(currentChunk)
+            console.log('File upload complete');
+        }
+    };
+    reader.readAsArrayBuffer(chunk);  // 读取文件块为 ArrayBuffer
+}
+
 
 function processMessage(event) {
     const data = JSON.parse(event.data);
-    console.log('Received data:', receivedData);
+    console.log('Received data:', data);
     var types = Object.keys(data);  //获取所有键值
     var type = "";
     types.forEach( key => {
@@ -92,10 +103,30 @@ function processMessage(event) {
         }
     })
     switch (type) {
+        case 'start_lesson':{
+            const data = {
+                ready_lesson: {
+                    is_request:true,
+                    lesson_name: courseInput,
+                    paper_id: parseInt(paperId),
+                    class_id: parseInt(classId),
+                    ppt_size: attachment.size
+                }
+            };
+            console.log(data)
+            const jsonString = JSON.stringify(data);
+            console.log('start_lesson:',jsonString)
+            socket.send(jsonString);
+            break;
+        }
         case 'ready_lesson':{   //开启课堂
-            lesson_id = parseInt(data.ready_lesson.lesson_id);
-            postPPT();  //发送PPT
-            fetchImages();  //获取PPT
+            if(attachment && data.ready_lesson.is_start){
+                lesson_id = parseInt(data.ready_lesson.lesson_id);
+                postPPT();  //发送PPT
+            }
+            if(attachment && !data.ready_lesson.is_start){
+                fetchImages();  //获取PPT
+            }
             break;
         }
         case 'question_response':{  //获取答题情况
@@ -104,10 +135,11 @@ function processMessage(event) {
         }
         case 'insert_question': {   //返回插入的题目的id
             questions_list.push({
-                questionId: 0,
-                option: new_insert_question.options.Options,
+                questionId: data.insert_question.question_id,
+                options:{Options:new_insert_question.options.Options},
                 title: new_insert_question.title
             })
+            question_round[data.insert_question.question_id] = 0;  //设置新题目的轮次
             renderPaperDetail();  //重新渲染试卷
             break;
         } 
@@ -143,7 +175,6 @@ function rePaint(){
                     
     document.getElementById("slide-container").innerHTML = 
                     `<div class="slide-content">
-                        <img id="slideImage" src="./pic2.png" alt="ppt" style="width: 100%; height:100%">
                     </div>
                     <div class="discussion-container">
                         <div class="tabs" id="tabs"></div>
@@ -155,8 +186,8 @@ function rePaint(){
                         <button onclick="prevSlide()">上一张</button>
                         <button onclick="openDialog4()">添加题目</button>
                         <button onclick="showToStudent()">展示</button>
-                        <button onclick="showSlide()">下一张</button>
-                        <button>下课</button>
+                        <button onclick="nextSlide()">下一张</button>
+                        <button onclick="endLesson()">下课</button>
                     </div>`
 }
 
@@ -164,7 +195,8 @@ function rePaint(){
 async function fetchImages(index = 0) {
     // 构建图片 URL
 
-    const imageUrl = `PPTJPG_${lesson_id}-${(index<9)?"0"+index+1:index+1}.jpg`;
+    const imageUrl = `/file/PPTJPG_${lesson_id}-${index+1}.jpg`;
+    console.log("fetch:",imageUrl)
 
     // 尝试获取图片
     try {
@@ -205,8 +237,8 @@ function showSlide(index) { //在中间栏展示PPt
     isShowPPT = true;
     currentSlideIndex = index; // 更新当前选中的图片索引
     var container = document.querySelector(".slide-content")
-    container.innerHTML = `<img id="slideImage" src="./pic2.png" alt="ppt" style="width: 100%; height:100%">`
-    document.getElementById("slideImage").src = `PPTJPG_${lesson_id}_${index + 1}.jpg`; // 显示图片
+    container.innerHTML = `<img id="slideImage" src="/file/PPTJPG_${lesson_id}-${index + 1}.jpg" alt="ppt" style="width: 100%; height:100%">`
+    //document.getElementById("slideImage").src = `/file/PPTJPG_${lesson_id}-${index + 1}.jpg`; // 显示图片
 }
 
 function prevSlide() {
@@ -219,7 +251,7 @@ function prevSlide() {
 }
 
 function nextSlide() {
-    if (currentSlideIndex < PPT_length - 1) {
+    if (currentSlideIndex < PPT_length-1) {
         currentSlideIndex++;
     } else {
         currentSlideIndex = 0; // 回到第一张
@@ -240,7 +272,7 @@ function showQuestion(id){  //在中间栏展示题目
         questionSpan.textContent = `${question.title}`;
         questionDiv.appendChild(questionSpan);
     
-        question.option.forEach((option,index) => {
+        question.options.Options.forEach((option,index) => {
             const optionSpan = document.createElement("span");
             optionSpan.textContent = `${alphabet[index]}. ${option.text}`;
             questionDiv.appendChild(optionSpan);
@@ -259,12 +291,13 @@ function showToStudent(){  //发布给学生
     if(isShowPPT){
         data = {
             show_ppt: {
-            is_request:true,
+                isRequest:true,
             show_id: currentSlideIndex  //当前展示的PPT的index，从0开始
             }
         };
 
         var jsonString = JSON.stringify(data);
+        console.log("show_ppt:",jsonString)
         socket.send(jsonString);
     }
     else{
@@ -277,15 +310,19 @@ function postQuestion() {   //发布题目
     var seconds = document.getElementById('seconds').value;
     var time = parseInt(minutes) * 60 + parseInt(seconds);
 
+    question_round[parseInt(currentQuestionIndex)]++;  //发布次数+1
+
     var data = {
         show_question: {
-            is_request:true,
+            isRequest:true,
             show_id: parseInt(currentQuestionIndex),
+            round: question_round[parseInt(currentQuestionIndex)],
             time: time   //单位：秒
         }
     };
     console.log(data);
     var jsonString = JSON.stringify(data);
+    console.log("show_question:",jsonString)
     socket.send(jsonString);
     closeDialog3();
     showResult(time);  //展示答题结果
@@ -300,6 +337,9 @@ function showResult(time){  //展示答题结果
                             <div id="chart-container"></div>`
 
     updateCountdown(time);
+    totalResponses = 0;
+    correctResponses = 0;
+    optionResponses = question.options.Options.map(option => 0);
     generateChart();  //生成条形统计图
     generateDiscussion();  //生成讨论区
 }
@@ -332,10 +372,8 @@ function updateCountdown(secondsRemaining) {
 function generateChart(){
     var question = currentQuestion;
     // 初始化答题记录
-    totalResponses = 0;
-    correctResponses = 0;
-    optionResponses = question.option.map(option => 0);
 
+    document.getElementById("chart-container").innerHTML = '';  //清空
     // 生成初始统计图
     const svgWidth = 500;
     const svgHeight = 200;
@@ -348,7 +386,7 @@ function generateChart(){
         .attr('height', svgHeight);
 
     const data = optionResponses.map((count, index) => ({
-        option: `${question.option[index].text}`,
+        option: `${alphabet[index]}. ${question.options.Options[index].text}`,
         count,
         percentage: (count / totalResponses) * 100 || 0
     }));
@@ -367,21 +405,28 @@ function generateChart(){
         .attr('y', (d, i) => i * (barHeight + barMargin))
         .attr('width', d => d.percentage * 5)
         .attr('height', barHeight)
-        .attr('fill', d => d.option === 'Correct' ? '#2196F3' : '#4CAF50');
+        .attr('fill', d => d.option === '正确率' ? '#2196F3' : '#4CAF50');
 
     svg.selectAll('text')
         .data(data)
         .join('text')
-        .attr('x', d => (d.percentage * 5) + 5)
+        .attr('x', d => {
+            const barWidth = d.percentage * 5;
+            return barWidth < 50 ? barWidth + 5 : 5; // 如果条形图宽度小于50，标签放在右侧，否则放在左侧
+        })
         .attr('y', (d, i) => i * (barHeight + barMargin) + (barHeight / 2))
         .attr('dy', '0.35em')
+        .attr('text-anchor', d => {
+            const barWidth = d.percentage * 5;
+            return barWidth < 50 ? 'start' : 'start'; // 如果条形图宽度小于50，标签左对齐，否则左对齐
+        })
         .text(d => `${d.option}: ${d.percentage.toFixed(2)}%`);
 }
 
 // 更新统计图
 function updateChart(data) {
     totalResponses += 1;
-    correctResponses = data.question_response.question_res.correct_num;
+    correctResponses = data.question_response.correct_num;
     optionResponses = data.question_response.question_res.option_num;
     generateChart();
 }
@@ -453,13 +498,27 @@ function ws_insert_question(){
         error_message.textContent = "请选择章节";
     }else{
         error_message.textContent = "";
-        console.log("insert_question",data);
+        console.log("insert_question:",data);
 
         new_insert_question = data.insert_question;
 
         const jsonString = JSON.stringify(data);
         socket.send(jsonString);
+
+        hidePopup();
+        closeDialog4();
     }
+}
+
+function endLesson(){
+    var data = {
+        over_lesson:{
+            isRequest:true
+        }
+    }
+    console.log("over_lesson:",JSON.stringify(data))
+    socket.send(JSON.stringify(data))
+    window.location.href = "/after_lesson";
 }
 
 let subject_list = {

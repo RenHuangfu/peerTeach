@@ -8,15 +8,21 @@ import (
 type QuestionShow struct {
 	QuestionID uint
 	Time       uint
+	Round      uint
+}
+
+type QuestionMsg struct {
+	QuestionID uint
+	Round      uint
 }
 
 type Lesson struct {
 	Lesson      *domain.Lesson
 	Students    map[*Student]bool
 	Teacher     *Teacher
-	NewQuestion chan *QuestionShow
+	NewQuestion chan QuestionShow
 	NewPPT      chan uint
-	NewAnswer   chan uint
+	NewAnswer   chan QuestionMsg
 	NewMsg      chan struct{}
 	Register    chan *Student
 	UnRegister  chan *Student
@@ -26,6 +32,7 @@ type Teacher struct {
 	Lesson     *Lesson
 	Conn       *websocket.Conn
 	User       *domain.User
+	Start      chan struct{}
 	NewMsg     chan struct{}
 	OverLesson chan struct{}
 }
@@ -34,8 +41,9 @@ type Student struct {
 	Lesson      *Lesson
 	Conn        *websocket.Conn
 	Student     *domain.User
+	Start       chan struct{}
 	NewMsg      chan struct{}
-	NewQuestion chan *QuestionShow
+	NewQuestion chan QuestionShow
 	NewPPT      chan uint
 }
 
@@ -44,9 +52,9 @@ func (t *Teacher) NewLesson(l *domain.Lesson) (lesson *Lesson) {
 		Lesson:      l,
 		Students:    make(map[*Student]bool),
 		Teacher:     t,
-		NewQuestion: make(chan *QuestionShow),
+		NewQuestion: make(chan QuestionShow),
 		NewPPT:      make(chan uint),
-		NewAnswer:   make(chan uint),
+		NewAnswer:   make(chan QuestionMsg),
 		NewMsg:      make(chan struct{}),
 		Register:    make(chan *Student),
 		UnRegister:  make(chan *Student),
@@ -76,12 +84,7 @@ func (l *Lesson) Run() {
 					close(student.NewPPT)
 				}
 			}
-			select {
-			case l.Teacher.NewMsg <- message:
-			default:
-				close(l.Teacher.NewMsg)
-				return
-			}
+			l.Teacher.NewMsg <- message
 		case NewQuestion := <-l.NewQuestion:
 			for student := range l.Students {
 				select {

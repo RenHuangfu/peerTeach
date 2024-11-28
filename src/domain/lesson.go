@@ -8,14 +8,13 @@ import (
 
 // Lesson 课堂
 type Lesson struct {
-	ID         uint      `gorm:"primary_key"`
-	Created    time.Time `gorm:"column:created;autoCreateTime"`
-	Name       *string   `json:"name"`
-	SchoolTime time.Time
-	ExamID     uint
-	PPTName    *string
-	ClassID    uint
-	Class      Class `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	ID      uint      `gorm:"primary_key"`
+	Created time.Time `gorm:"column:created;autoCreateTime"`
+	Name    *string   `json:"name"`
+	ExamID  uint
+	PPTName *string
+	ClassID uint
+	Class   Class `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 type AnswerOption []string
