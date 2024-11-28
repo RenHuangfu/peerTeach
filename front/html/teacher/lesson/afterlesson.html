@@ -1,23 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>课堂答题统计</title>
     <link rel="stylesheet" href="/css/teacher/lesson/afterlesson.css">
+    <title>课后统计</title>
 </head>
 <body>
-<!-- 题目列表 -->
-<div class="question-list" id="question-list"></div>
+<div class="container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <button onclick ="turnCourse()">课程班级</button>
+        <button onclick ="turnResource()">资源中心</button>
+        <button onclick ="turnUserInfo()">个人信息</button>
+    </div>
 
-<!-- 弹窗 -->
-<div class="modal" id="modal">
-    <div class="modal-content">
-        <span class="close" id="close-btn">&times;</span>
-        <h2 id="question-title"></h2>
-        <!-- 扇形图容器 -->
-        <canvas id="pie-chart" class="pie-chart"></canvas>
-        <div id="progress-bars" class="progress-bars"></div>
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 顶部固定栏 -->
+        <div class="top-bar">
+            <button  onclick ="turnNotice()">查看通知</button>
+            <div class="user-info">
+                <img src="user-avatar.png" alt="用户头像">
+                <span>用户名称</span>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content">
+            <!-- 题目列表 -->
+            <div class="question-list" id="question-list"></div>
+
+            <!-- 弹窗 -->
+            <div class="modal" id="modal">
+                <div class="modal-content">
+                    <span class="close" id="close-btn">&times;</span>
+                    <h2 id="question-title"></h2>
+                    <!-- 扇形图容器 -->
+                    <div id="chart-container">
+                    <canvas id="pie-chart" class="pie-chart"></canvas>
+                    </div>
+                    <div id="progress-bars" class="progress-bars"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

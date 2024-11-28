@@ -516,9 +516,10 @@ function endLesson(){
             isRequest:true
         }
     }
+    socket.close();
     console.log("over_lesson:",JSON.stringify(data))
     socket.send(JSON.stringify(data))
-    window.location.href = "/after_lesson";
+    window.location.href = `/lesson?lessonID=${lesson_id}`;
 }
 
 let subject_list = {

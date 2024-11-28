@@ -34,8 +34,14 @@ select * from exams;
 delete from lessons where id >10;
 select * from answer_records;
 
-select * from lessons;
+select * from lessons where id = 95;
 
+
+select count(class_users.user_id) as lesson_member_num
+from (select lessons.class_id as class_id from lessons where lessons.id = 95) as lci
+    join class_users on class_users.class_id = lci.class_id;
+
+select ar.correct_num, ar.option_num from answer_records as ar where ar.lesson_id = 95;
 
 
 select p.id as paper_id, p.name as title, p.updated as time

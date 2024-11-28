@@ -77,6 +77,7 @@ func PostAfterLesson(c *gin.Context) {
 		return
 	}
 	if req.LessonAnswerRecord.IsRequest {
+		fmt.Printf("%+v\n", req.LessonAnswerRecord)
 		data, err := persistence.GetAnswerRecordLesson(&domain.Lesson{
 			ID: req.LessonAnswerRecord.LessonID,
 		})

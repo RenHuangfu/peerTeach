@@ -91,7 +91,7 @@
       function handleServerUpdate(data) {
         reasons = currentQuestion.options.Options.map(() => []);
         if (data.is_response) {
-          data.comments.forEach((comment) => {
+          data.comments.forEach((comment,comment_id) => {
             const [questionId, optionIndex, reasonText] = comment.content.split("##");
             const index = parseInt(optionIndex); // 获取评论的选项索引
   
@@ -102,7 +102,7 @@
               reasons[index].push({
                 content: reasonText,
                 likes: comment.likes,
-                is_like: comment.is_like
+                is_like: comment.is_like, comment_id: comment_id   //索引就是id
               });
   
               // 如果当前显示的是该选项，更新显示

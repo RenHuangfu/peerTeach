@@ -33,6 +33,7 @@ type Teacher struct {
 	Conn       *websocket.Conn
 	User       *domain.User
 	Start      chan struct{}
+	End        chan struct{}
 	NewMsg     chan struct{}
 	OverLesson chan struct{}
 }
@@ -42,6 +43,7 @@ type Student struct {
 	Conn        *websocket.Conn
 	Student     *domain.User
 	Start       chan struct{}
+	End         chan struct{}
 	NewMsg      chan struct{}
 	NewQuestion chan QuestionShow
 	NewPPT      chan uint

@@ -98,6 +98,7 @@
   
       // 处理服务器返回的评论数据
       function handleServerUpdate(data) {
+        console.log("discussion:",data)
         reasons = currentQuestion.options.Options.map(() => []);
         console.log("handleServerUpdate:",data)
         if (data.is_response) {

@@ -1,46 +1,7 @@
-// 后端发送的题目数据
-// = {
-//     name: '课程答题',
-//     question: [
-//         {
-//             questionId: 1,
-//             title: '题目1',
-//             options: [
-//                 { text: '选项A', IsCorrect: true },
-//                 { text: '选项B', IsCorrect: false },
-//                 { text: '选项C', IsCorrect: false },
-//             ]
-//         },
-//         {
-//             questionId: 2,
-//             title: '题目2',
-//             options: [
-//                 { text: '选项A', IsCorrect: false },
-//                 { text: '选项B', IsCorrect: true },
-//                 { text: '选项C', IsCorrect: false },
-//             ]
-//         }
-//     ]
-// }
-// 后端发送的答题记录数据
-// = {
-//     paperId : 1,
-//     lesson_member_num: 30,
-//     question_answer_record: [
-//         {
-//             correct_num: 20,
-//             option_num: [5, 10, 15]
-//         },
-//         {
-//             correct_num: 15,
-//             option_num: [10, 15, 5]
-//         }
-//     ]
-// }
 let questionData ;
 let answerData ;
 let urlParams = new URLSearchParams(window.location.search);
-let lesson_id = urlParams.get('lesson_id');
+let lesson_id = urlParams.get('lessonID');
 
 const questionListContainer = document.getElementById('question-list');
 const modal = document.getElementById('modal');
@@ -100,6 +61,7 @@ function TakeQuestion(){
 
 // 创建题目列表
 function createQuestionItems() {
+    console.log("questionData:",questionData)
     questionData.question.forEach((question, index) => {
         const questionItem = document.createElement('div');
         questionItem.classList.add('question-item');
@@ -160,13 +122,14 @@ function drawProgressBars(question, index) {
         const progressBar = document.createElement('div');
         progressBar.classList.add('progress-bar');
 
+        console.log(answerData)
         const selectedCount = answerData.question_answer_record[index].option_num[optionIndex];
         const percentage = (selectedCount / answerData.lesson_member_num) * 100;
-
-        progressBar.innerHTML = `
-        <span style="width: ${percentage}%; background-color: #2196F3;">${option.text} (${percentage.toFixed(2)}%)</span>
-      `;
-
+        progressBar.style.width = percentage*2;
+        const optionSpan = document.createElement('span');
+        optionSpan.innerText = `${option.text} (${percentage.toFixed(2)}%)`
+            //`<span style="font-size: 10px; background-color: #2196F3; color: #1f1f1f">${option.text} (${percentage.toFixed(2)}%)</span>`;
+        progressBarsContainer.appendChild(optionSpan);
         progressBarsContainer.appendChild(progressBar);
     });
 }

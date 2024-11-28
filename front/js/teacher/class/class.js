@@ -206,7 +206,7 @@ function renderMessages(page) {
             details.appendChild(time);
 
             // 添加点击事件以根据id跳转
-            li.addEventListener('click', () => window.location.href = `/lesson?lesson_id=${msg.id}`);
+            li.addEventListener('click', () => window.location.href = `/lesson?lessonID=${msg.id}`);
 
             // 将详情元素添加到列表项中
             li.appendChild(details);
