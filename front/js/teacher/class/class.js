@@ -8,6 +8,9 @@ var messages = [];
 const perPage = 15; // 每页显示的消息数
 let currentPage = 1; // 当前页码
 
+
+document.getElementById("className").innerText = "班级名称："+localStorage.getItem("className")
+
 function showTab(tabId) {
     // 隐藏所有标签页内容
     var contents = document.getElementsByClassName('tab-content');
@@ -592,7 +595,6 @@ function cancelCreateAnno(type){
 function deleteAnnoForm(){
     document.getElementById('anno-title').value ="";
     document.getElementById('anno-content').value ="";
-    document.getElementById('anno-attachment').value ="";
 }
 
 function CreateMes(){
@@ -622,15 +624,12 @@ function submitPost(){
 
     let title = document.getElementById('title').value;
     let content = document.getElementById('content').value;
-    let attachment = document.getElementById('upload-input').files;
-    let file_number = attachment.length;
 
     console.log('Title:', title);
     console.log('Content:', content);
-    console.log('image:', attachment);
 
     var data = {
-        create_post:{isRequest: true, title:title, content:content, file_number:file_number, class_id:parseInt(classId)},  //发贴
+        create_post:{isRequest: true, title:title, content:content, class_id:parseInt(classId)},  //发贴
     }
 
     var url = "/class";
@@ -653,17 +652,8 @@ function submitPost(){
         })
         .then(data => {
             if(data.code === 0){
-                console.log("帖子发送成功",data.data.post_id);
-                postAttachment(attachment, data.data.post_id, 1)   //调用函数发送附件
-                    .then(responses => {
-                        console.log('所有文件上传成功', responses);
-                        deleteMesForm();  //清空表单
-                        showTab('discussion-tab');
-                    })
-                    .catch(error => {
-                        console.error('文件上传失败', error);
-                    });
-
+                console.log("帖子发送成功",data.data.post_id)
+                showTab('discussion-tab')
             }
             else{
                 alert(`服务器错误：${data.msg}`)
@@ -681,15 +671,12 @@ function submitAnno(){
 
     let title = document.getElementById('anno-title').value;
     let content = document.getElementById('anno-content').value;
-    let attachment = document.getElementById('anno-attachment').files;
-    let file_number = attachment.length;
 
     console.log('Title:', title);
     console.log('Content:', content);
-    console.log('Attachment:', attachment);
 
     var data = {
-        create_announcements:{isRequest: true, title:title, content:content, file_number:file_number, class_id:parseInt(classId)},  //发公告
+        create_announcements:{isRequest: true, title:title, content:content, class_id:parseInt(classId)},  //发公告
     }
 
     var url = "/class";
@@ -713,16 +700,7 @@ function submitAnno(){
         .then(data => {
             if(data.code === 0){
                 console.log("公告发送成功",data.data.announcement_id);
-                postAttachment(attachment, data.data.announcement_id, 2)   //调用函数发送附件
-                    .then(responses => {
-                        console.log('所有文件上传成功', responses);
-                        deleteAnnoForm();
-                        showTab('anno-tab');
-                    })
-                    .catch(error => {
-                        console.error('文件上传失败', error);
-                    });
-
+                showTab('anno-tab')
             }
             else{
                 alert(`服务器错误：${data.msg}`)

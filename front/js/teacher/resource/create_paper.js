@@ -192,7 +192,7 @@ function getData(questionIds) {
 }
 
 function savePaper(){  //保存试卷
-    var ids = questionIds.map(item => parseInt(item.questionId));
+    var ids = questionIds.map(item => item);
     console.log("questionIds",questionIds)
     var data = {
         create_paper:{

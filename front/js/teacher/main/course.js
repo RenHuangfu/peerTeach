@@ -183,6 +183,8 @@ function generateTable(tasks, title, tableId) {
                 if(event.target.className !== "fas fa-trash"){
                     console.log(tr.id);
                     window.location.href = '/class?class_id='+tr.id;
+                    console.log("name:",task.name)
+                    localStorage.setItem("className",task.name)
                 }
             }
 

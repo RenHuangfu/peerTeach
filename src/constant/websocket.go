@@ -111,6 +111,7 @@ func (l *Lesson) Run() {
 			}
 		case <-l.Teacher.OverLesson:
 			for student := range l.Students {
+				student.End <- struct{}{}
 				delete(l.Students, student)
 				close(student.NewMsg)
 				close(student.NewQuestion)

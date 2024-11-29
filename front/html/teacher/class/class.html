@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>雪课堂</title>
     <link rel="stylesheet" href="/css/teacher/class/class.css">
-    <script src="/js/teacher/class/class.js"></script>
-    <script src="/js/global/global.js"></script>
+
 </head>
 <body>
 <div class="container">
@@ -23,9 +22,8 @@
         <div class="top-bar">
             <button  onclick ="turnNotice()">查看通知</button>
             <div class="user-info">
-                <img src="user-avatar.png" alt="用户头像">
-                <span>用户名称</span>
             </div>
+            <label id="className" style="color: white; font-size: 20px">班级名称：</label>
         </div>
 
         <!-- 内容区域 -->
@@ -125,10 +123,6 @@
                             </div>
 
                             <div class="form-group">
-                                <div class="upload-dragger">
-                                    <img class="upload-icon" src="img/upload_picture.jpg">
-                                </div>
-                                <input type="file" id="upload-input" multiple accept="image/*">
                             </div>
                             <div class="modal-content">
                                 <button class="button2"  type='button' onclick="submitPost()">发布</button>
@@ -177,8 +171,6 @@
                             <textarea id="anno-content" name="content" placeholder="请输入公告内容"></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="attachment">附件</label>
-                            <input type="file" id="anno-attachment" name="attachment" multiple>
                         </div>
                         <div class="modal-content">
                             <button id="confirm-post" class="submit-button" onclick="submitAnno()">发送</button>
@@ -191,5 +183,7 @@
         </div>
     </div>
 </div>
+<script src="/js/teacher/class/class.js"></script>
+<script src="/js/global/global.js"></script>
 </body>
 </html>

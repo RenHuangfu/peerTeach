@@ -191,13 +191,13 @@ func LessonOver(lessonId uint) {
 	que := fmt.Sprintf("lesson_%d_question_*", lessonId)
 	keys, _ := rdb.Keys(ctx, que).Result()
 	for _, v := range keys {
-		correct, _ := rdb.HGet(ctx, v, "correct").Result()
+		correct, _ := rdb.HGet(ctx, v, "correct_1").Result()
 		correctNum, _ := strconv.Atoi(correct)
 		strNum, _ := rdb.HGet(ctx, v, "optionNum").Result()
 		num, _ := strconv.Atoi(strNum)
 		opt := make([]string, num)
 		for i := 0; i < num; i++ {
-			opt[i], _ = rdb.HGet(ctx, v, fmt.Sprintf("option_%d_count", i)).Result()
+			opt[i], _ = rdb.HGet(ctx, v, fmt.Sprintf("option_%d_count_1", i)).Result()
 		}
 		_ = persistence.InsertAnswerRecord(&domain.AnswerRecord{
 			CorrectNum: uint(correctNum),
@@ -350,7 +350,6 @@ func TeacherRunWrite(t *constant.Teacher) {
 
 func StudentRunRead(s *constant.Student) {
 	defer func() {
-		s.Lesson.UnRegister <- s
 		s.End <- struct{}{}
 		_ = s.Conn.Close()
 	}()
@@ -362,8 +361,9 @@ func StudentRunRead(s *constant.Student) {
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
+				s.Lesson.UnRegister <- s
 			}
-			break
+			return
 		}
 		lts := &constant.LessonStudentRequest{}
 		err = json.Unmarshal(message, lts)
@@ -445,6 +445,7 @@ func StudentRunWrite(s *constant.Student) {
 			}
 		case <-s.End:
 			fmt.Println("end")
+			_ = s.Conn.Close()
 			return
 		}
 	}

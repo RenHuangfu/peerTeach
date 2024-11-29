@@ -406,9 +406,6 @@ function fillTable(data) {
                                         </td>
                                         <td>${formatDate(data[i].LastChangeTime)}</td>
                                         <td>
-                                            <button class="btn-img" onclick="editRow()">
-                                                <img src="/images/resource/edit.png" alt="编辑">
-                                            </button>
                                             <button class="btn-img" onclick="deletePaper(${data[i].paperId})">
                                                 <img src="/images/resource/delete.png" alt="删除">
                                             </button>

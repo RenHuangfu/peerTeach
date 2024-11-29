@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link type="text/css" rel="stylesheet" href="/css/teacher/lesson/atlesson.css" />
     <link type="text/css" rel="stylesheet" href="/css/teacher/lesson/beforelesson.css" />
-    
+      <script src="/js/global/global.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <title>课前准备</title>
   </head>
@@ -14,8 +14,9 @@
     <div class="container">
       <!-- 侧边栏 -->
       <div class="sidebar">
-        <button>课程班级</button>
-        <button>资源中心</button>
+          <button onclick ="turnCourse()">课程班级</button>
+          <button onclick ="turnResource()">资源中心</button>
+          <button onclick ="turnUserInfo()">个人信息</button>
       </div>
 
       <!-- 主内容区域 -->
@@ -24,8 +25,6 @@
         <div class="top-bar">
           <button>查看通知</button>
           <div class="user-info">
-            <img src="user-avatar.png" alt="用户头像" />
-            <span>用户名称</span>
           </div>
         </div>
         <div class="part-container">

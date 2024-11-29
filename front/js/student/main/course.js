@@ -28,11 +28,13 @@ fetch(url, {
     .then(data => {
         if(data.code === 0){
             // 清空现有的表格数据
-            class_list = data.data.classes;
-            const container = document.querySelector('.table-container');
-            container.innerHTML = '';
-            // 生成新的表格
-            data.data.classes.forEach(course => generateTable(course));
+            if(data.data.classes[0]){
+                class_list = data.data.classes;
+                            const container = document.querySelector('.table-container');
+                            container.innerHTML = '';
+                            // 生成新的表格
+                            data.data.classes.forEach(course => generateTable(course));
+            }
         }
         else{
             alert(`服务器错误：${data.msg}`)

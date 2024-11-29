@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", function() {
             if (data.code===0) {
                 document.getElementById("name").value = data.data.user_name || "未提供";
                 document.getElementById("school").value = data.data.school || "未提供";
-                document.querySelector(".user-id").textContent = ("ID:"+data.data.email) || "未提供";
                 document.getElementById("avatarImage").src = "/file/avatar_"+data.data.user_id+".jpg"; // 替换为实际的头像图片路径
                 userId = data.data.user_id; // 将用户ID存储在全局变量中
             } else {

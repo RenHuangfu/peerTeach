@@ -24,8 +24,6 @@
         <div class="top-bar">
             <button  onclick ="turnNotice()">查看通知</button>
             <div class="user-info">
-                <img src="user-avatar.png" alt="用户头像">
-                <span>用户名称</span>
             </div>
         </div>
 
@@ -34,7 +32,6 @@
             <div class="top-button">
                 <button id="createCourseModalButton">创建课程</button>
                 <button id="createClassModalButton">创建班级</button>
-                <button id="groupPostModalButton">群发公告</button>
             </div>
             <div class="table-container">
             </div>
@@ -111,10 +108,6 @@
         <div class="form-group">
             <label for="content">内容</label>
             <textarea id="content" name="content" placeholder="请输入公告内容"></textarea>
-        </div>
-        <div class="form-group">
-            <label for="attachment">附件</label>
-            <input type="file" id="attachment" name="attachment" multiple>
         </div>
         <div class="form-group">
             <button id="confirm-post" class="submit-button">发送</button>

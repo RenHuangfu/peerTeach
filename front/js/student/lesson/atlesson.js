@@ -31,6 +31,10 @@ function startLesson() {
     socket.onmessage = function(event){
         processMessage(event);
     }
+
+    socket.onclose = function(event){
+        window.location.href = "/lesson?lessonID="+lessonId
+    }
 }
 
 

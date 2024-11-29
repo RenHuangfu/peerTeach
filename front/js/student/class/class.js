@@ -445,15 +445,12 @@ function submitPost(){
 
     let title = document.getElementById('title').value;
     let content = document.getElementById('content').value;
-    let attachment = document.getElementById('upload-input').files;
-    let file_number = attachment.length;
 
     console.log('Title:', title);
     console.log('Content:', content);
-    console.log('image:', attachment);
 
     var data = {
-        create_post:{isRequest: true, title:title, content:content, file_number:file_number, class_id:parseInt(classId)},  //发贴
+        create_post:{isRequest: true, title:title, content:content,class_id:parseInt(classId)},  //发贴
     }
 
     var url = "/class";
@@ -477,15 +474,7 @@ function submitPost(){
         .then(data => {
             if(data.code === 0){
                 console.log("帖子发送成功",data.data.post_id);
-                postAttachment(attachment, data.data.post_id, 1)   //调用函数发送附件
-                    .then(responses => {
-                        console.log('所有文件上传成功', responses);
-                        deleteMesForm();  //清空表单
-                        showTab('discussion-tab');
-                    })
-                    .catch(error => {
-                        console.error('文件上传失败', error);
-                    });
+                showTab('discussion-tab')
 
             }
             else{
